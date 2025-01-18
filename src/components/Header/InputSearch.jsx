@@ -21,7 +21,7 @@ function InputSearch() {
       onClick={() => SetIsShow(true)}
       onBlur={handelHideInput}
     >
-      <MagnifyingGlassIcon className="text-white w-6 transition-all hover:text-primary absolute after: left-2 top-2" />
+      <MagnifyingGlassIcon className="text-white w-6 transition-all hover:text-primary absolute top-2 left-2" />
       <input
         type="text"
         value={searchText}
@@ -29,7 +29,7 @@ function InputSearch() {
         onChange={(e) => setSearchText(e.target.value)}
         className={`${
           isShow ? "w-80" : "w-4"
-        } h-10 border-spacing-1 bg-gray-500 rounded-md pl-10 text-sm focus:outline-none cursor-pointer transition-all`}
+        } h-10 border-spacing-1 bg-gray-500 rounded-md pl-10 text-sm focus:outline-none active:outline-none cursor-pointer transition-all`}
       />
 
       {isShow && (

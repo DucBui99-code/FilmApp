@@ -1,4 +1,5 @@
 import { Footer, Header } from "./components";
+import Login from "./components/auth/Login";
 
 function App() {
   return (
