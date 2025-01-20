@@ -9,7 +9,6 @@ import {
   Input,
   Typography,
 } from "@material-tailwind/react";
-import Login from "./Login";
 
 function Register({ handleOpen, open, handelSwitchModal }) {
   const [showPass, setShowPass] = useState(false);
@@ -42,12 +41,12 @@ function Register({ handleOpen, open, handelSwitchModal }) {
               icon={
                 showPass ? (
                   <EyeSlashIcon
-                    className="cursor-pointer"
+                    className="cursor-pointer text-white"
                     onClick={() => setShowPass(!showPass)}
                   />
                 ) : (
                   <EyeIcon
-                    className="cursor-pointer"
+                    className="cursor-pointer text-white"
                     onClick={() => setShowPass(!showPass)}
                   />
                 )
@@ -58,19 +57,6 @@ function Register({ handleOpen, open, handelSwitchModal }) {
               size="lg"
               color="white"
               type={showPass ? "text" : "password"}
-              icon={
-                showPass ? (
-                  <EyeSlashIcon
-                    className="cursor-pointer"
-                    onClick={() => setShowPass(!showPass)}
-                  />
-                ) : (
-                  <EyeIcon
-                    className="cursor-pointer"
-                    onClick={() => setShowPass(!showPass)}
-                  />
-                )
-              }
             />
           </CardBody>
           <CardFooter className="pt-0">

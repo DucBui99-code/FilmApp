@@ -4,8 +4,6 @@ import {
   Popover,
   PopoverHandler,
   PopoverContent,
-  Button,
-  Input,
   Typography,
   Badge,
 } from "@material-tailwind/react";
@@ -19,11 +17,11 @@ function NotificationPopup() {
       <Badge content="2">
         <PopoverHandler>
           <IconButton>
-            <BellAlertIcon className="w-6 text-white"></BellAlertIcon>
+            <BellAlertIcon className="w-6 text-white hover:text-primary transition-colors"></BellAlertIcon>
           </IconButton>
         </PopoverHandler>
       </Badge>
-      <PopoverContent className="w-96 min-h-72 bg-black border-black">
+      <PopoverContent className="w-96 min-h-72 bg-black border-black z-40">
         <Typography variant="h4" color="white" className="mb-6">
           Thông báo
         </Typography>

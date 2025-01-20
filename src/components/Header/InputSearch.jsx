@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/16/solid";
 
-function InputSearch() {
+function InputSearch({ isFull = false }) {
   const [searchText, setSearchText] = useState("");
   const [isShow, SetIsShow] = useState(false);
 
@@ -17,7 +17,7 @@ function InputSearch() {
 
   return (
     <div
-      className="cursor-pointer relative"
+      className={`cursor-pointer relative ${isFull && "w-full"}`}
       onClick={() => SetIsShow(true)}
       onBlur={handelHideInput}
     >
@@ -28,8 +28,8 @@ function InputSearch() {
         placeholder="Search Film..."
         onChange={(e) => setSearchText(e.target.value)}
         className={`${
-          isShow ? "w-80" : "w-4"
-        } h-10 border-spacing-1 bg-gray-500 rounded-md pl-10 text-sm focus:outline-none active:outline-none cursor-pointer transition-all`}
+          isFull ? "w-full" : isShow ? "w-80" : "w-4"
+        } h-10 border-spacing-1 bg-gray-700 rounded-md pl-10 text-sm focus:outline-none active:outline-none cursor-pointer transition-all text-white hover:opacity-75 `}
       />
 
       {isShow && (

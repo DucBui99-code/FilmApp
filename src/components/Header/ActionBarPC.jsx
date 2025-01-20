@@ -1,13 +1,11 @@
 import { UserCircleIcon } from "@heroicons/react/16/solid";
 import React, { useState } from "react";
 import InputSearch from "./InputSearch";
-import NotificationPopup from "./NotificationPopup";
-import Login from "../auth/Login";
-import Register from "../auth/Register";
 import { IconButton } from "@material-tailwind/react";
-import { Button } from "@material-tailwind/react";
+import Register from "../auth/Register";
+import Login from "../auth/Login";
 
-function ActionBar() {
+function ActionBarPC() {
   const [openLogin, setOpenLogin] = useState(false);
   const [openRegister, setOpenRegister] = useState(false);
 
@@ -16,10 +14,8 @@ function ActionBar() {
     setOpenRegister((prev) => !prev);
   };
   return (
-    <div className="flex items-center justify-center gap-5">
+    <div className={`hidden lg:flex items-center justify-center gap-5`}>
       <div className="flex items-center justify-center gap-4">
-        <NotificationPopup></NotificationPopup>
-        <Button className="bg-primary">Đăng ký gói</Button>
         <InputSearch></InputSearch>
       </div>
       <div>
@@ -44,4 +40,4 @@ function ActionBar() {
   );
 }
 
-export default ActionBar;
+export default ActionBarPC;
