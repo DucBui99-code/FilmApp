@@ -100,10 +100,10 @@ function Login({ handleOpen, open, handelSwitchModal }) {
 
             <div className="flex items-center justify-center gap-4 mt-3">
               <IconButton>
-                <img src={IconGG} className="w-6"></img>
+                <img src={IconGG} alt="GG Icon" className="w-6"></img>
               </IconButton>
               <IconButton>
-                <img src={IconQR} className="w-6"></img>
+                <img src={IconQR} alt="QR Icon" className="w-6"></img>
               </IconButton>
             </div>
           </CardFooter>

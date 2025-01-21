@@ -12,11 +12,7 @@ import {
 
 function Register({ handleOpen, open, handelSwitchModal }) {
   const [showPass, setShowPass] = useState(false);
-  const [openLogin, setOpenLogin] = useState(false);
-  const handelChangeOpen = () => {
-    handleOpen(!open);
-    setOpenLogin(true);
-  };
+
   return (
     <>
       <Dialog

@@ -21,8 +21,9 @@ import "swiper/css/autoplay";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
-import getMoviesHeaderServices from "../../services/getMoviesHeader";
+import getMoviesHeaderServices from "../../services/getMovies";
 import { Button, Typography } from "@material-tailwind/react";
+import { Link } from "react-router";
 
 const Slider = () => {
   const topSwiperRef = useRef(null);
@@ -37,10 +38,10 @@ const Slider = () => {
 
   useEffect(() => {
     getMoviesHeaderServices
-      .getList()
+      .getList({ page: 0 })
       .then((res) => {
-        setPathUrl(res.data.pathImage);
-        setData(res.data.items);
+        setPathUrl(res.pathImage);
+        setData(res.items);
         setIsLoaded(true);
       })
       .catch((err) => console.log(err));
@@ -86,19 +87,30 @@ const Slider = () => {
                 >
                   {e.origin_name}
                 </Typography>
-                <div className="flex items-center justify-start mt-2 gap-3">
+                <div className="flex items-center justify-start mt-2 gap-3 text-white">
                   <div className="border-[1px] px-2 py-1 rounded-md text-white text-sm">
                     HD
                   </div>
+                  |
+                  <div className="border-[1px] px-2 py-1 rounded-md text-white text-sm uppercase">
+                    {e.tmdb.type}
+                  </div>
+                  |
                   <div className="bg-gray-700 rounded-lg px-2 py-1 text-primary font-bold">
                     T13
                   </div>
-                  <div className="font-bold text-white">{e.year}</div>
+                  |<div className="font-bold text-white">{e.year}</div>
                 </div>
-                <Button className="flex items-center gap-3 bg-primary mt-6 text-lg">
-                  <PlayCircleIcon className="w-6"></PlayCircleIcon>
-                  Xem Ngay
-                </Button>
+                <div className="text-white py-1 text-sm font-bold mt-3">
+                  <span>⭐ {e.tmdb.vote_average.toFixed(1)}</span> |{" "}
+                  <span>{e.tmdb.vote_count} votes</span>
+                </div>
+                <Link to={`/watch/${e.slug}`}>
+                  <Button className="flex items-center gap-3 bg-primary mt-6 text-lg">
+                    <PlayCircleIcon className="w-6"></PlayCircleIcon>
+                    Xem Ngay
+                  </Button>
+                </Link>
               </div>
             </div>
           </SwiperSlide>
@@ -126,6 +138,23 @@ const Slider = () => {
             swiper.params.navigation.nextEl = nextRef.current;
             swiper.navigation.init();
             swiper.navigation.update();
+          }}
+          breakpoints={{
+            320: {
+              slidesPerView: 2,
+            },
+            640: {
+              slidesPerView: 2,
+            },
+            768: {
+              slidesPerView: 3,
+            },
+            1024: {
+              slidesPerView: 5,
+            },
+            1280: {
+              slidesPerView: 6,
+            },
           }}
         >
           {data.map((e, index) => (
