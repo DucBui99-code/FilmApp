@@ -7,6 +7,7 @@ import {
 import React, { useRef } from "react";
 import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { Link } from "react-router";
 
 import "swiper/css";
 import "swiper/css/autoplay";
@@ -61,7 +62,7 @@ function SliderStatic({ title = "Test", data }) {
           >
             {data.items.map((e, index) => (
               <SwiperSlide key={index}>
-                <div>
+                <Link to={`/watch/${e.slug}`}>
                   <div className="relative group">
                     <img
                       src={data.pathImage + e.thumb_url}
@@ -75,7 +76,7 @@ function SliderStatic({ title = "Test", data }) {
                   <Typography as={"small"} className="text-white font-bold">
                     {e.origin_name}
                   </Typography>
-                </div>
+                </Link>
               </SwiperSlide>
             ))}
             <button

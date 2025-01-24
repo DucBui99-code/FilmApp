@@ -22,6 +22,7 @@ import "swiper/css/autoplay";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
+import { Link } from "react-router";
 
 function SliderHover({ title = "Test", data }) {
   const prevRef = useRef(null);
@@ -129,14 +130,17 @@ function SliderHover({ title = "Test", data }) {
                           </div>
                         </CardBody>
                         <CardFooter className="flex items-center justify-between bg-black">
-                          <Button
-                            className="flex items-center gap-3 mt-6 text-base"
-                            variant="outlined"
-                            color="light-green"
-                          >
-                            <PlayCircleIcon className="w-6" />
-                            Xem Ngay
-                          </Button>
+                          <Link to={`/watch/${e.slug}`}>
+                            <Button
+                              className="flex items-center gap-3 mt-6 text-base"
+                              variant="outlined"
+                              color="light-green"
+                            >
+                              <PlayCircleIcon className="w-6" />
+                              Xem Ngay
+                            </Button>
+                          </Link>
+
                           <Button
                             className="flex items-center gap-3 mt-6 text-base"
                             color="light-blue"
