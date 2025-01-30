@@ -1,2 +1,2 @@
-# npm run star: Let run project
+# npm run start: Let run project
 # Have nice day and nice code
