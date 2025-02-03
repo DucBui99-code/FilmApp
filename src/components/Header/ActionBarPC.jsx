@@ -1,9 +1,9 @@
-import { UserCircleIcon } from "@heroicons/react/16/solid";
-import React, { useState } from "react";
-import InputSearch from "./InputSearch";
-import { IconButton } from "@material-tailwind/react";
-import Register from "../auth/Register";
-import Login from "../auth/Login";
+import { UserCircleIcon } from '@heroicons/react/16/solid';
+import React, { useState } from 'react';
+import InputSearch from './InputSearch';
+import { IconButton } from '@material-tailwind/react';
+import Register from '../auth/Register';
+import Login from '../auth/Login';
 
 function ActionBarPC() {
   const [openLogin, setOpenLogin] = useState(false);

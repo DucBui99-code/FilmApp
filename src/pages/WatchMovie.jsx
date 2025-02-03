@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router";
-import { Button, IconButton, Typography } from "@material-tailwind/react";
-import { ArrowLeftIcon } from "@heroicons/react/16/solid";
-import SliderStatic from "../components/body/SliderStatic";
-import getMoviesServices from "../services/getMovies";
-import Error404 from "../assets/error-404.png";
-import InformationMovie from "../components/watchMovie/InformationMovie";
-import EpisodesMovie from "../components/watchMovie/EpisodesMovie";
-import CommentMovie from "../components/watchMovie/CommentMovie";
-import { useDispatch } from "react-redux";
-import { setLoading } from "../store/appStore";
-import { useAlert } from "../components/Message/AlertContext";
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate, useParams } from 'react-router';
+import { Button, IconButton, Typography } from '@material-tailwind/react';
+import { ArrowLeftIcon } from '@heroicons/react/16/solid';
+import SliderStatic from '../components/body/SliderStatic';
+import getMoviesServices from '../services/getMovies';
+import Error404 from '../assets/error-404.png';
+import InformationMovie from '../components/watchMovie/InformationMovie';
+import EpisodesMovie from '../components/watchMovie/EpisodesMovie';
+import CommentMovie from '../components/watchMovie/CommentMovie';
+import { useDispatch } from 'react-redux';
+import { setLoading } from '../store/appStore';
+import { useAlert } from '../components/Message/AlertContext';
 
 function WatchMovie() {
   const { name } = useParams();
@@ -52,7 +52,7 @@ function WatchMovie() {
         </IconButton>
         <Typography className="text-white font-bold uppercase">
           {data?.name +
-            " - Tập " +
+            ' - Tập ' +
             episodes[0]?.server_data[currentEpisode]?.name}
         </Typography>
       </div>
@@ -65,7 +65,7 @@ function WatchMovie() {
           allow="autoplay; fullscreen"
           title="Movie"
         ></iframe>
-        <Typography className="absolute top-0 right-2" color="white" as={"h2"}>
+        <Typography className="absolute top-0 right-2" color="white" as={'h2'}>
           Helô
         </Typography>
       </div>

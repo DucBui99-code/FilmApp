@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
-import Slider from "../components/body/Slider";
-import SliderStatic from "../components/body/SliderStatic";
-import getMoviesServices from "../services/getMovies";
-import SliderHover from "../components/body/SliderHover";
+import React, { useEffect, useState } from 'react';
+import Slider from '../components/body/Slider';
+import SliderStatic from '../components/body/SliderStatic';
+import getMoviesServices from '../services/getMovies';
+import SliderHover from '../components/body/SliderHover';
 
 function Home() {
   const [moviesData, setMoviesData] = useState({}); // Lưu trữ kết quả theo từng trang
@@ -31,7 +31,7 @@ function Home() {
     <div>
       <Slider></Slider>
       <SliderStatic
-        title={"Phim hay mỗi ngày"}
+        title={'Phim hay mỗi ngày'}
         data={moviesData[1]}
       ></SliderStatic>
       <SliderHover title="TOP 10 TRONG NGÀY" data={moviesData[2]}></SliderHover>

@@ -1,4 +1,4 @@
-import { EyeIcon, EyeSlashIcon } from "@heroicons/react/16/solid";
+import { EyeIcon, EyeSlashIcon } from '@heroicons/react/16/solid';
 import {
   Button,
   Card,
@@ -9,10 +9,10 @@ import {
   IconButton,
   Input,
   Typography,
-} from "@material-tailwind/react";
-import React, { useState } from "react";
-import IconGG from "../../assets/IconGG.png";
-import IconQR from "../../assets/IconQR.png";
+} from '@material-tailwind/react';
+import React, { useState } from 'react';
+import IconGG from '../../assets/IconGG.png';
+import IconQR from '../../assets/IconQR.png';
 
 function Login({ handleOpen, open, handelSwitchModal }) {
   const [showPass, setShowPass] = useState(false);
@@ -42,7 +42,7 @@ function Login({ handleOpen, open, handelSwitchModal }) {
               label="Password"
               size="lg"
               color="white"
-              type={showPass ? "text" : "password"}
+              type={showPass ? 'text' : 'password'}
               icon={
                 showPass ? (
                   <EyeSlashIcon

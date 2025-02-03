@@ -3,10 +3,12 @@
 ## 🚀 Getting Started
 
 ### Prerequisites
+
 - **Node.js** (LTS recommended)
 - **npm** or **yarn** (package manager)
 
 ### Installation
+
 1. Clone the repository:
    ```sh
    git clone <repository-url>
@@ -32,6 +34,7 @@
 - `npm run lint` – Check and fix linting issues.
 
 ## 📂 Project Structure
+
 ```
 📁 src
  ┣ 📁 components    # Reusable UI components
@@ -43,10 +46,10 @@
 ```
 
 ## 🌟 Features
+
 ✔️ Stream and watch movies online  
 ✔️ Search and filter movies  
 ✔️ Responsive design for all devices  
-✔️ User authentication and favorites list (if applicable)  
+✔️ User authentication and favorites list (if applicable)
 
 ---
-

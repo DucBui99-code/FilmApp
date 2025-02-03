@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   IconButton,
   Popover,
@@ -6,10 +6,10 @@ import {
   PopoverContent,
   Typography,
   Badge,
-} from "@material-tailwind/react";
-import { BellAlertIcon } from "@heroicons/react/16/solid";
+} from '@material-tailwind/react';
+import { BellAlertIcon } from '@heroicons/react/16/solid';
 
-import Empty from "../../assets/man.png";
+import Empty from '../../assets/man.png';
 
 function NotificationPopup() {
   return (

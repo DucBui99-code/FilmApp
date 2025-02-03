@@ -6,26 +6,26 @@ import {
   Autoplay,
   Controller,
   A11y,
-} from "swiper/modules";
-import { Swiper, SwiperSlide } from "swiper/react";
+} from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react';
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from 'react';
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
   PlayCircleIcon,
-} from "@heroicons/react/16/solid";
+} from '@heroicons/react/16/solid';
 
-import "swiper/css";
-import "swiper/css/autoplay";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
-import "swiper/css/scrollbar";
-import getMoviesHeaderServices from "../../services/getMovies";
-import { Button, Typography } from "@material-tailwind/react";
-import { Link } from "react-router";
-import LoadingOverlay from "../Loading/LoadingOverlay";
-import { useAlert } from "../Message/AlertContext";
+import 'swiper/css';
+import 'swiper/css/autoplay';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+import 'swiper/css/scrollbar';
+import getMoviesHeaderServices from '../../services/getMovies';
+import { Button, Typography } from '@material-tailwind/react';
+import { Link } from 'react-router';
+import LoadingOverlay from '../Loading/LoadingOverlay';
+import { useAlert } from '../Message/AlertContext';
 
 const Slider = () => {
   const topSwiperRef = useRef(null);
@@ -33,7 +33,7 @@ const Slider = () => {
   const prevRef = useRef(null);
   const nextRef = useRef(null);
 
-  const [pathUrl, setPathUrl] = useState(""); // Sử dụng state để quản lý PathUrl
+  const [pathUrl, setPathUrl] = useState(''); // Sử dụng state để quản lý PathUrl
   const [currentSlide, setCurrentSlide] = useState(0);
   const [data, setData] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -52,11 +52,7 @@ const Slider = () => {
   }, []);
 
   if (!pathUrl || !data.length || !isLoaded) {
-    return (
-      <div>
-        loading..
-      </div>
-    ); // Hiển thị "Loading..." khi dữ liệu chưa sẵn sàng
+    return <div>loading..</div>; // Hiển thị "Loading..." khi dữ liệu chưa sẵn sàng
   }
 
   return (
@@ -90,7 +86,7 @@ const Slider = () => {
 
               <div className="absolute top-1/3 left-2">
                 <Typography
-                  as={"h2"}
+                  as={'h2'}
                   className="text-white uppercase font-bold text-5xl"
                 >
                   {e.origin_name}
@@ -110,7 +106,7 @@ const Slider = () => {
                   |<div className="font-bold text-white">{e.year}</div>
                 </div>
                 <div className="text-white py-1 text-sm font-bold mt-3">
-                  <span>⭐ {e.tmdb.vote_average.toFixed(1)}</span> |{" "}
+                  <span>⭐ {e.tmdb.vote_average.toFixed(1)}</span> |{' '}
                   <span>{e.tmdb.vote_count} votes</span>
                 </div>
                 <Link to={`/watch/${e.slug}`}>
@@ -171,7 +167,7 @@ const Slider = () => {
                 src={pathUrl + e.poster_url}
                 alt={`Thumbnail ${index}`}
                 className={`w-full h-32 transition-all object-cover cursor-pointer rounded-sm ${
-                  index === currentSlide && "border-2 border-primary"
+                  index === currentSlide && 'border-2 border-primary'
                 }`}
               />
             </SwiperSlide>

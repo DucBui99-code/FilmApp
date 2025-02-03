@@ -1,21 +1,21 @@
-import { Typography } from "@material-tailwind/react";
+import { Typography } from '@material-tailwind/react';
 
 const SITEMAP = [
   {
-    title: "Company",
-    links: ["About Us", "Careers", "Our Team", "Projects"],
+    title: 'Company',
+    links: ['About Us', 'Careers', 'Our Team', 'Projects'],
   },
   {
-    title: "Help Center",
-    links: ["Discord", "Twitter", "GitHub", "Contact Us"],
+    title: 'Help Center',
+    links: ['Discord', 'Twitter', 'GitHub', 'Contact Us'],
   },
   {
-    title: "Resources",
-    links: ["Blog", "Newsletter", "Free Products", "Affiliate Program"],
+    title: 'Resources',
+    links: ['Blog', 'Newsletter', 'Free Products', 'Affiliate Program'],
   },
   {
-    title: "Products",
-    links: ["Templates", "UI Kits", "Icons", "Mockups"],
+    title: 'Products',
+    links: ['Templates', 'UI Kits', 'Icons', 'Mockups'],
   },
 ];
 

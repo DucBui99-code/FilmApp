@@ -1,24 +1,24 @@
-import React from "react";
-import ActionBarPC from "./ActionBarPC";
+import React from 'react';
+import ActionBarPC from './ActionBarPC';
 import {
   Button,
   Collapse,
   IconButton,
   Navbar,
   Typography,
-} from "@material-tailwind/react";
-import Logo from "../../assets/logo-danet.png";
-import { Link, useLocation } from "react-router";
-import ActionBarMobile from "./ActionBarMobile";
-import NotificationPopup from "./NotificationPopup";
-import { useDispatch } from "react-redux";
-import { setLoading, setLoadingAsync } from "../../store/appStore";
+} from '@material-tailwind/react';
+import Logo from '../../assets/logo-danet.png';
+import { Link, useLocation } from 'react-router';
+import ActionBarMobile from './ActionBarMobile';
+import NotificationPopup from './NotificationPopup';
+import { useDispatch } from 'react-redux';
+import { setLoading, setLoadingAsync } from '../../store/appStore';
 
 function Header() {
   const ListMenu = [
-    { name: "Miễn phí", router: "/mien-phi" },
-    { name: "Phim Gói", router: "/phim-goi" },
-    { name: "Truyền Hình", router: "/truyen-hinh" },
+    { name: 'Miễn phí', router: '/mien-phi' },
+    { name: 'Phim Gói', router: '/phim-goi' },
+    { name: 'Truyền Hình', router: '/truyen-hinh' },
   ];
   const [openNav, setOpenNav] = React.useState(false);
   const dispatch = useDispatch();
@@ -26,7 +26,7 @@ function Header() {
   const location = useLocation();
   React.useEffect(() => {
     window.addEventListener(
-      "resize",
+      'resize',
       () => window.innerWidth >= 960 && setOpenNav(false)
     );
   }, []);
@@ -44,7 +44,7 @@ function Header() {
             to={el.router}
             onClick={() => dispatch(setLoadingAsync(true))}
             className={`hover:text-primary transition-colors ${
-              location.pathname.includes(el.router) ? "text-primary" : ""
+              location.pathname.includes(el.router) ? 'text-primary' : ''
             }`}
           >
             {el.name}

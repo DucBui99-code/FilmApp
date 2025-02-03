@@ -1,9 +1,7 @@
-import React from 'react'
+import React from 'react';
 
 const Television = () => {
-  return (
-    <div>Television</div>
-  )
-}
+  return <div>Television</div>;
+};
 
-export default Television
+export default Television;

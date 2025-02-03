@@ -5,26 +5,26 @@ import {
   CardFooter,
   CardHeader,
   Typography,
-} from "@material-tailwind/react";
+} from '@material-tailwind/react';
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
   InformationCircleIcon,
   PlayCircleIcon,
-} from "@heroicons/react/16/solid";
-import React, { useRef, useState } from "react";
-import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { motion } from "framer-motion";
+} from '@heroicons/react/16/solid';
+import React, { useRef, useState } from 'react';
+import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { motion } from 'framer-motion';
 
-import "swiper/css";
-import "swiper/css/autoplay";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
-import "swiper/css/scrollbar";
-import { Link } from "react-router";
+import 'swiper/css';
+import 'swiper/css/autoplay';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+import 'swiper/css/scrollbar';
+import { Link } from 'react-router';
 
-function SliderHover({ title = "Test", data }) {
+function SliderHover({ title = 'Test', data }) {
   const prevRef = useRef(null);
   const nextRef = useRef(null);
 
@@ -35,7 +35,7 @@ function SliderHover({ title = "Test", data }) {
   }
   return (
     <div className="mt-3 p-3 ">
-      <Typography as={"h1"} className="text-white text-2xl font-bold">
+      <Typography as={'h1'} className="text-white text-2xl font-bold">
         {title}
       </Typography>
       <div className="cursor-grab relative">
@@ -125,7 +125,7 @@ function SliderHover({ title = "Test", data }) {
                             <div className="font-bold text-white">{e.year}</div>
                           </div>
                           <div className="text-white py-1 text-sm font-bold mt-3">
-                            <span>⭐ {e.tmdb.vote_average.toFixed(1)}</span> |{" "}
+                            <span>⭐ {e.tmdb.vote_average.toFixed(1)}</span> |{' '}
                             <span>{e.tmdb.vote_count} votes</span>
                           </div>
                         </CardBody>
@@ -159,7 +159,7 @@ function SliderHover({ title = "Test", data }) {
             <button
               ref={prevRef}
               className={`absolute top-1/2 z-10 left-0 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full cursor-pointer ${
-                data.items.length < 2 ? "opacity-50 cursor-not-allowed" : ""
+                data.items.length < 2 ? 'opacity-50 cursor-not-allowed' : ''
               }`}
               disabled={data.items.length < 2}
             >
@@ -168,7 +168,7 @@ function SliderHover({ title = "Test", data }) {
             <button
               ref={nextRef}
               className={`absolute top-1/2 z-10 right-0 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full cursor-pointer ${
-                data.items.length < 2 ? "opacity-50 cursor-not-allowed" : ""
+                data.items.length < 2 ? 'opacity-50 cursor-not-allowed' : ''
               }`}
               disabled={data.items.length < 2}
             >

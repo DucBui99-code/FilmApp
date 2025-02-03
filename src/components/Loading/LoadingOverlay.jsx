@@ -1,5 +1,5 @@
-import * as React from "react";
-import { Spinner } from "@material-tailwind/react";
+import * as React from 'react';
+import { Spinner } from '@material-tailwind/react';
 
 const LoadingOverlay = () => {
   return (

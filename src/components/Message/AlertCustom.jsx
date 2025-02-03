@@ -1,7 +1,7 @@
 // AlertCustom.js
-import React, { useEffect, useState } from "react";
-import { Alert } from "@material-tailwind/react";
-import { useAlert } from "./AlertContext"; // Import useAlert hook
+import React, { useEffect, useState } from 'react';
+import { Alert } from '@material-tailwind/react';
+import { useAlert } from './AlertContext'; // Import useAlert hook
 
 const AlertCustom = () => {
   const { alerts } = useAlert();

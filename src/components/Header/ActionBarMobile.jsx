@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import InputSearch from "./InputSearch";
-import { Button } from "@material-tailwind/react";
-import Register from "../auth/Register";
-import Login from "../auth/Login";
+import React, { useState } from 'react';
+import InputSearch from './InputSearch';
+import { Button } from '@material-tailwind/react';
+import Register from '../auth/Register';
+import Login from '../auth/Login';
 
 function ActionBarMobile() {
   const [openLogin, setOpenLogin] = useState(false);

@@ -1,9 +1,7 @@
-import React from 'react'
+import React from 'react';
 
 const FilmPackage = () => {
-  return (
-    <div>FilmPackage</div>
-  )
-}
+  return <div>FilmPackage</div>;
+};
 
-export default FilmPackage
+export default FilmPackage;

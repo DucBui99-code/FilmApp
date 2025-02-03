@@ -1,16 +1,16 @@
-import apiClient from "./apiClient";
+import apiClient from './apiClient';
 
 const getMoviesServices = {
   getList: async ({ page = 0 }) => {
     try {
-      const response = await apiClient.get("/movie/getListMovie", {
+      const response = await apiClient.get('/movie/getListMovie', {
         params: {
           page: page,
         },
       });
       return response.data;
     } catch (error) {
-      console.error("API error:", error);
+      console.error('API error:', error);
       throw error;
     }
   },
@@ -19,7 +19,7 @@ const getMoviesServices = {
       const response = await apiClient.get(`/getMovieDetail/${slug}`);
       return response.data;
     } catch (error) {
-      console.error("API error:", error);
+      console.error('API error:', error);
       throw error;
     }
   },
