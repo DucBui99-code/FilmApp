@@ -5,11 +5,11 @@ import {
   HeartIcon,
   LanguageIcon,
   ShareIcon,
-} from "@heroicons/react/16/solid";
-import { IconButton, Tooltip, Typography } from "@material-tailwind/react";
-import React from "react";
-import { useCopyToClipboard } from "usehooks-ts";
-import DOMPurify from "dompurify";
+} from '@heroicons/react/16/solid';
+import { IconButton, Tooltip, Typography } from '@material-tailwind/react';
+import React from 'react';
+import { useCopyToClipboard } from 'usehooks-ts';
+import DOMPurify from 'dompurify';
 
 function InformationMovie({ data }) {
   const [value, copy] = useCopyToClipboard();
@@ -25,7 +25,7 @@ function InformationMovie({ data }) {
     )}`;
 
     // Mở tab mới với URL chia sẻ của Facebook
-    window.open(facebookShareUrl, "_blank", "noopener,noreferrer");
+    window.open(facebookShareUrl, '_blank', 'noopener,noreferrer');
   };
   return (
     <div className="mt-4 p-3 flex flex-col items-center justify-between gap-5 lg:flex-row">
@@ -69,19 +69,19 @@ function InformationMovie({ data }) {
         <div className="mt-4 text-white flex flex-col gap-2">
           <div className="flex items-center gap-2">
             <EyeIcon className="w-6"></EyeIcon>
-            <Typography as={"small"} className="font-bold">
+            <Typography as={'small'} className="font-bold">
               {data.view} Views
             </Typography>
           </div>
           <div className="flex items-center gap-2">
             <ClockIcon className="w-5"></ClockIcon>
-            <Typography as={"small"} className="font-bold">
+            <Typography as={'small'} className="font-bold">
               {data.time}
             </Typography>
           </div>
           <div className="flex items-center gap-2">
             <LanguageIcon className="w-5"></LanguageIcon>
-            <Typography as={"small"} className="font-bold">
+            <Typography as={'small'} className="font-bold">
               {data.lang}
             </Typography>
           </div>
@@ -95,44 +95,44 @@ function InformationMovie({ data }) {
       <div className="self-center w-full lg:self-start lg:w-1/4 flex flex-col gap-4">
         <div className="flex items-center gap-4">
           <Typography className="text-gray-700 font-bold">
-            Đạo diễn:{" "}
+            Đạo diễn:{' '}
           </Typography>
           <Typography className="text-white font-bold">
             {data?.director?.length && data?.director[0]
-              ? data.director.join(",")
-              : "Not Found Information"}
+              ? data.director.join(',')
+              : 'Not Found Information'}
           </Typography>
         </div>
         <div className="flex items-center gap-4">
           <Typography className="text-gray-700 font-bold">
-            Diễn viên:{" "}
+            Diễn viên:{' '}
           </Typography>
           <Typography className="text-white font-bold">
             {data?.actor?.length && data?.actor[0]
-              ? data.actor.join(", ")
-              : "Not Found Information"}
+              ? data.actor.join(', ')
+              : 'Not Found Information'}
           </Typography>
         </div>
         <div className="flex items-center gap-4">
           <Typography className="text-gray-700 font-bold">Danh mục:</Typography>
           <Typography className="text-white font-bold first-letter:uppercase">
-            {data?.type ? data.type : "Not Found Information"}
+            {data?.type ? data.type : 'Not Found Information'}
           </Typography>
         </div>
         <div className="flex items-center gap-4">
           <Typography className="text-gray-700 font-bold">Quốc gia:</Typography>
           <Typography className="text-white font-bold">
             {data?.country?.length && data?.country[0]
-              ? data.country.map((c) => c.name).join(", ")
-              : "Not Found Information"}
+              ? data.country.map((c) => c.name).join(', ')
+              : 'Not Found Information'}
           </Typography>
         </div>
         <div className="flex items-center gap-4">
           <Typography className="text-gray-700 font-bold">Thể loại:</Typography>
           <Typography className="text-white font-bold">
             {data?.category && data?.category?.length > 0
-              ? data.category.map((c) => c.name).join(", ")
-              : "Not Found Information"}
+              ? data.category.map((c) => c.name).join(', ')
+              : 'Not Found Information'}
           </Typography>
         </div>
         <div className="flex items-center gap-4">
@@ -140,7 +140,7 @@ function InformationMovie({ data }) {
             Năm phát hành:
           </Typography>
           <Typography className="text-white font-bold">
-            {data?.year ? data.year : "Not Found Information"}
+            {data?.year ? data.year : 'Not Found Information'}
           </Typography>
         </div>
       </div>

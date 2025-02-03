@@ -9,16 +9,16 @@ import {
   Option,
   Select,
   Typography,
-} from "@material-tailwind/react";
-import EmojiPicker from "emoji-picker-react";
-import React, { useState } from "react";
-import BlockComment from "./BlockComment";
-import dataComments from "./test.json";
-import { FaceSmileIcon } from "@heroicons/react/16/solid";
+} from '@material-tailwind/react';
+import EmojiPicker from 'emoji-picker-react';
+import React, { useState } from 'react';
+import BlockComment from './BlockComment';
+import dataComments from './test.json';
+import { FaceSmileIcon } from '@heroicons/react/16/solid';
 
 function CommentMovie() {
   const limitCharacters = 100;
-  const [text, setText] = useState("");
+  const [text, setText] = useState('');
   const [isShowAction, setIsShowAction] = useState(false);
 
   const handelTextComment = (value) => {
@@ -39,7 +39,7 @@ function CommentMovie() {
   return (
     <div className="p-3 flex flex-col items-center justify-center">
       <Typography
-        as={"h1"}
+        as={'h1'}
         className="text-white font-bold text-2xl self-start"
       >
         Bình Luận
@@ -76,8 +76,8 @@ function CommentMovie() {
               <div
                 className={`absolute right-2 bottom-2 ${
                   text.length >= limitCharacters
-                    ? "text-red-500"
-                    : "text-gray-500"
+                    ? 'text-red-500'
+                    : 'text-gray-500'
                 } text-sm font-medium flex items-center justify-center gap-1`}
               >
                 <div>{text.length}</div>/<div>{limitCharacters}</div>
@@ -94,8 +94,8 @@ function CommentMovie() {
                   <MenuList className="bg-black">
                     <EmojiPicker
                       theme="dark"
-                      width={"500px"}
-                      height={"400px"}
+                      width={'500px'}
+                      height={'400px'}
                       onEmojiClick={onEmojiClick}
                     ></EmojiPicker>
                   </MenuList>
@@ -107,7 +107,7 @@ function CommentMovie() {
                     variant="text"
                     className="rounded-md"
                     onClick={() => {
-                      setText("");
+                      setText('');
                       setIsShowAction(false);
                     }}
                   >

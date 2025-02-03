@@ -1,7 +1,7 @@
-import React from "react";
-import { Link } from "react-router";
+import React from 'react';
+import { Link } from 'react-router';
 
-const ListMenu = ["Miễn phí", "Phim Gói", "Truyền Hình"];
+const ListMenu = ['Miễn phí', 'Phim Gói', 'Truyền Hình'];
 
 function Navigation() {
   return (

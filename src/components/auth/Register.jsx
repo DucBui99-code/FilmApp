@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { EyeIcon, EyeSlashIcon } from "@heroicons/react/16/solid";
+import React, { useState } from 'react';
+import { EyeIcon, EyeSlashIcon } from '@heroicons/react/16/solid';
 import {
   Button,
   Card,
@@ -8,8 +8,8 @@ import {
   Dialog,
   Input,
   Typography,
-} from "@material-tailwind/react";
-import { useForm } from "react-hook-form";
+} from '@material-tailwind/react';
+import { useForm } from 'react-hook-form';
 
 function Register({ handleOpen, open, handelSwitchModal }) {
   const regex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
@@ -47,11 +47,11 @@ function Register({ handleOpen, open, handelSwitchModal }) {
               label="Email"
               size="lg"
               color="white"
-              {...register("email", {
-                required: "Email is required",
+              {...register('email', {
+                required: 'Email is required',
                 pattern: {
                   value: regex,
-                  message: "Invalid email address",
+                  message: 'Invalid email address',
                 },
               })}
             />
@@ -64,7 +64,7 @@ function Register({ handleOpen, open, handelSwitchModal }) {
               label="Username"
               size="lg"
               color="white"
-              {...register("username", { required: "Username is required" })}
+              {...register('username', { required: 'Username is required' })}
             />
             {errors.username && (
               <Typography variant="small" color="red" className="-mt-3">
@@ -75,7 +75,7 @@ function Register({ handleOpen, open, handelSwitchModal }) {
               label="Mật khẩu"
               size="lg"
               color="white"
-              type={showPass ? "text" : "password"}
+              type={showPass ? 'text' : 'password'}
               icon={
                 showPass ? (
                   <EyeSlashIcon
@@ -89,8 +89,8 @@ function Register({ handleOpen, open, handelSwitchModal }) {
                   />
                 )
               }
-              {...register("password", {
-                required: "Password is required",
+              {...register('password', {
+                required: 'Password is required',
                 minLength: {
                   value: minLength,
                   message: `Password must be greater than ${minLength} characters`,
@@ -110,11 +110,11 @@ function Register({ handleOpen, open, handelSwitchModal }) {
               label="Nhập lại mật khẩu"
               size="lg"
               color="white"
-              type={showPass ? "text" : "password"}
-              {...register("confirmPassword", {
+              type={showPass ? 'text' : 'password'}
+              {...register('confirmPassword', {
                 validate: (val) => {
-                  if (watch("password") != val) {
-                    return "Your passwords do not match";
+                  if (watch('password') != val) {
+                    return 'Your passwords do not match';
                   }
                 },
               })}

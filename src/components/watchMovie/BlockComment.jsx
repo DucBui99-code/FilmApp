@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   Avatar,
   Button,
@@ -10,7 +10,7 @@ import {
   MenuItem,
   MenuList,
   Typography,
-} from "@material-tailwind/react";
+} from '@material-tailwind/react';
 import {
   HandThumbUpIcon,
   HandThumbDownIcon,
@@ -20,9 +20,9 @@ import {
   PencilIcon,
   TrashIcon,
   FlagIcon,
-} from "@heroicons/react/16/solid";
-import { FaceSmileIcon } from "@heroicons/react/16/solid";
-import EmojiPicker from "emoji-picker-react";
+} from '@heroicons/react/16/solid';
+import { FaceSmileIcon } from '@heroicons/react/16/solid';
+import EmojiPicker from 'emoji-picker-react';
 
 // Render menu items
 const RenderMenu = ({ isOwner, menuItemsSelf, menuItemsAnother }) => (
@@ -108,7 +108,7 @@ const Reply = ({ reply, menuItemsSelf, menuItemsAnother }) => (
 
 const ReplyInput = ({ data }) => {
   const limitCharacters = 100;
-  const [text, setText] = useState("");
+  const [text, setText] = useState('');
   const [isShowAction, setIsShowAction] = useState(false);
 
   const handelTextComment = (value) => {
@@ -141,7 +141,7 @@ const ReplyInput = ({ data }) => {
           />
           <div
             className={`absolute right-2 bottom-2 ${
-              text.length >= limitCharacters ? "text-red-500" : "text-gray-500"
+              text.length >= limitCharacters ? 'text-red-500' : 'text-gray-500'
             } text-sm font-medium flex items-center justify-center gap-1`}
           >
             <div>{text.length}</div>/<div>{limitCharacters}</div>
@@ -158,8 +158,8 @@ const ReplyInput = ({ data }) => {
               <MenuList className="bg-black">
                 <EmojiPicker
                   theme="dark"
-                  width={"500px"}
-                  height={"400px"}
+                  width={'500px'}
+                  height={'400px'}
                   onEmojiClick={onEmojiClick}
                 ></EmojiPicker>
               </MenuList>
@@ -171,7 +171,7 @@ const ReplyInput = ({ data }) => {
                 variant="text"
                 className="rounded-md"
                 onClick={() => {
-                  setText("");
+                  setText('');
                   setIsShowAction(false);
                 }}
               >
@@ -197,12 +197,12 @@ const BlockComment = ({ data }) => {
   const [replyInput, setReplyInput] = useState(false);
 
   const MenuListCommentSelf = [
-    { id: 0, content: "Chỉnh sửa", icon: <PencilIcon className="w-4" /> },
-    { id: 1, content: "Xóa", icon: <TrashIcon className="w-4" /> },
+    { id: 0, content: 'Chỉnh sửa', icon: <PencilIcon className="w-4" /> },
+    { id: 1, content: 'Xóa', icon: <TrashIcon className="w-4" /> },
   ];
 
   const MenuListCommentAnother = [
-    { id: 0, content: "Báo cáo", icon: <FlagIcon className="w-4" /> },
+    { id: 0, content: 'Báo cáo', icon: <FlagIcon className="w-4" /> },
   ];
 
   return (

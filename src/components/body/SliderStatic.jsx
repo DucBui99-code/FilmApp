@@ -1,21 +1,21 @@
-import { Typography } from "@material-tailwind/react";
+import { Typography } from '@material-tailwind/react';
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
   PlayCircleIcon,
-} from "@heroicons/react/16/solid";
-import React, { useRef } from "react";
-import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Link } from "react-router";
+} from '@heroicons/react/16/solid';
+import React, { useRef } from 'react';
+import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Link } from 'react-router';
 
-import "swiper/css";
-import "swiper/css/autoplay";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
-import "swiper/css/scrollbar";
+import 'swiper/css';
+import 'swiper/css/autoplay';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+import 'swiper/css/scrollbar';
 
-function SliderStatic({ title = "Test", data }) {
+function SliderStatic({ title = 'Test', data }) {
   const prevRef = useRef(null);
   const nextRef = useRef(null);
 
@@ -24,7 +24,7 @@ function SliderStatic({ title = "Test", data }) {
   }
   return (
     <div className="mt-3 p-3 ">
-      <Typography as={"h1"} className="text-white text-2xl font-bold">
+      <Typography as={'h1'} className="text-white text-2xl font-bold">
         {title}
       </Typography>
       <div className="cursor-grab relative">
@@ -73,7 +73,7 @@ function SliderStatic({ title = "Test", data }) {
                       <PlayCircleIcon className="text-primary w-20"></PlayCircleIcon>
                     </div>
                   </div>
-                  <Typography as={"small"} className="text-white font-bold">
+                  <Typography as={'small'} className="text-white font-bold">
                     {e.origin_name}
                   </Typography>
                 </Link>
@@ -82,7 +82,7 @@ function SliderStatic({ title = "Test", data }) {
             <button
               ref={prevRef}
               className={`absolute top-1/2 z-10 left-0 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full cursor-pointer ${
-                data.items.length < 2 ? "opacity-50 cursor-not-allowed" : ""
+                data.items.length < 2 ? 'opacity-50 cursor-not-allowed' : ''
               }`}
               disabled={data.items.length < 2}
             >
@@ -91,7 +91,7 @@ function SliderStatic({ title = "Test", data }) {
             <button
               ref={nextRef}
               className={`absolute top-1/2 z-10 right-0 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full cursor-pointer ${
-                data.items.length < 2 ? "opacity-50 cursor-not-allowed" : ""
+                data.items.length < 2 ? 'opacity-50 cursor-not-allowed' : ''
               }`}
               disabled={data.items.length < 2}
             >

@@ -1,7 +1,7 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router";
-import routesConfig from "./routesConfig";
-import PublicRoutes from "./PublicRoutes";
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router';
+import routesConfig from './routesConfig';
+import PublicRoutes from './PublicRoutes';
 
 const AppRouter = () => (
   <Router>

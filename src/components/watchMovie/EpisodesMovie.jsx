@@ -3,14 +3,14 @@ import {
   AccordionBody,
   AccordionHeader,
   Typography,
-} from "@material-tailwind/react";
-import React, { useState } from "react";
+} from '@material-tailwind/react';
+import React, { useState } from 'react';
 
 function EpisodesMovie({ data, currentEpisode, setCurrentEpisode }) {
   const [showEpisodes, setShowEpisodes] = useState(true);
 
   const RenderEpisodes = ({ Episodes, CurrentEpisode }) => {
-    const normalizeEpisodes = Episodes?.split(" ")[0];
+    const normalizeEpisodes = Episodes?.split(' ')[0];
 
     const handelChangeEpisode = (i) => {
       if (i === currentEpisode) {
@@ -19,7 +19,7 @@ function EpisodesMovie({ data, currentEpisode, setCurrentEpisode }) {
       setCurrentEpisode(i);
       window.scrollTo({
         top: 0,
-        behavior: "smooth",
+        behavior: 'smooth',
       });
     };
 
@@ -35,17 +35,17 @@ function EpisodesMovie({ data, currentEpisode, setCurrentEpisode }) {
               key={index}
               className="bg-gray-800 rounded-lg px-4 py-1 font-bold text-gray-600 cursor-not-allowed"
             >
-              {index + 1 >= 10 ? index + 1 : "0" + (index + 1)}
+              {index + 1 >= 10 ? index + 1 : '0' + (index + 1)}
             </div>
           ) : (
             <div
               key={index}
               className={`bg-gray-800 rounded-lg px-4 py-1 font-bold text-primary cursor-pointer hover:opacity-70 ${
-                index === currentEpisode && "border border-primary"
+                index === currentEpisode && 'border border-primary'
               }`}
               onClick={() => handelChangeEpisode(index)}
             >
-              {index + 1 >= 10 ? index + 1 : "0" + (index + 1)}
+              {index + 1 >= 10 ? index + 1 : '0' + (index + 1)}
             </div>
           )
         )}
@@ -62,12 +62,12 @@ function EpisodesMovie({ data, currentEpisode, setCurrentEpisode }) {
             </Typography>
             |
             <Typography className="text-white text-2xl font-bold">
-              {data.episode_total?.split(" ")[0] + " Tập"}
+              {data.episode_total?.split(' ')[0] + ' Tập'}
             </Typography>
             |
             <div
               className={`bg-gray-800 rounded-lg px-2 py-1 font-bold first-letter:uppercase ${
-                data.status === "ongoing" ? "text-yellow-500" : "text-primary"
+                data.status === 'ongoing' ? 'text-yellow-500' : 'text-primary'
               } first-letter:uppercas`}
             >
               {data.status}
@@ -78,7 +78,7 @@ function EpisodesMovie({ data, currentEpisode, setCurrentEpisode }) {
           <div>
             <RenderEpisodes
               Episodes={data.episode_total}
-              CurrentEpisode={data?.episode_current?.split(" ")[1]}
+              CurrentEpisode={data?.episode_current?.split(' ')[1]}
             ></RenderEpisodes>
           </div>
         </AccordionBody>
