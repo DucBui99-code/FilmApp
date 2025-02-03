@@ -24,6 +24,8 @@ import "swiper/css/scrollbar";
 import getMoviesHeaderServices from "../../services/getMovies";
 import { Button, Typography } from "@material-tailwind/react";
 import { Link } from "react-router";
+import LoadingOverlay from "../Loading/LoadingOverlay";
+import { useAlert } from "../Message/AlertContext";
 
 const Slider = () => {
   const topSwiperRef = useRef(null);
@@ -36,6 +38,8 @@ const Slider = () => {
   const [data, setData] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
 
+  const { showAlert } = useAlert();
+
   useEffect(() => {
     getMoviesHeaderServices
       .getList({ page: 0 })
@@ -44,11 +48,15 @@ const Slider = () => {
         setData(res.items);
         setIsLoaded(true);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => showAlert(err.message));
   }, []);
 
   if (!pathUrl || !data.length || !isLoaded) {
-    return <div>Loading...</div>; // Hiển thị "Loading..." khi dữ liệu chưa sẵn sàng
+    return (
+      <div>
+        loading..
+      </div>
+    ); // Hiển thị "Loading..." khi dữ liệu chưa sẵn sàng
   }
 
   return (

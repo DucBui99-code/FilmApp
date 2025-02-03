@@ -8,17 +8,23 @@ import Error404 from "../assets/error-404.png";
 import InformationMovie from "../components/watchMovie/InformationMovie";
 import EpisodesMovie from "../components/watchMovie/EpisodesMovie";
 import CommentMovie from "../components/watchMovie/CommentMovie";
+import { useDispatch } from "react-redux";
+import { setLoading } from "../store/appStore";
+import { useAlert } from "../components/Message/AlertContext";
 
 function WatchMovie() {
   const { name } = useParams();
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
   const [data, setData] = useState({});
   const [suggetMovie, setSuggetMovie] = useState({});
   const [episodes, setEpisodes] = useState([]);
   const [currentEpisode, setCurrentEpisode] = useState(0);
 
+  const { showAlert } = useAlert();
+
   useEffect(() => {
+    // dispatch(setLoading(true));
     if (name) {
       getMoviesServices
         .getMovieBySlug({ slug: name })
@@ -26,13 +32,16 @@ function WatchMovie() {
           setData(res.movie);
           setEpisodes(res.episodes);
         })
-        .catch((err) => console.log(err));
+        .catch((err) => showAlert(err.message));
     }
 
     getMoviesServices
       .getList({ page: 2 })
-      .then((res) => setSuggetMovie(res))
-      .catch((err) => console.log(err));
+      .then((res) => {
+        setSuggetMovie(res);
+        // dispatch(setLoading(false));
+      })
+      .catch((err) => showAlert(err.message));
   }, []);
 
   return data.status ? (

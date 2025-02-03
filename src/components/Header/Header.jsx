@@ -8,14 +8,22 @@ import {
   Typography,
 } from "@material-tailwind/react";
 import Logo from "../../assets/logo-danet.png";
-import { Link } from "react-router";
+import { Link, useLocation } from "react-router";
 import ActionBarMobile from "./ActionBarMobile";
 import NotificationPopup from "./NotificationPopup";
+import { useDispatch } from "react-redux";
+import { setLoading, setLoadingAsync } from "../../store/appStore";
 
 function Header() {
-  const ListMenu = ["Miễn phí", "Phim Gói", "Truyền Hình"];
+  const ListMenu = [
+    { name: "Miễn phí", router: "/mien-phi" },
+    { name: "Phim Gói", router: "/phim-goi" },
+    { name: "Truyền Hình", router: "/truyen-hinh" },
+  ];
   const [openNav, setOpenNav] = React.useState(false);
+  const dispatch = useDispatch();
 
+  const location = useLocation();
   React.useEffect(() => {
     window.addEventListener(
       "resize",
@@ -32,8 +40,14 @@ function Header() {
           className="p-1 font-bold"
           key={i}
         >
-          <Link to="#" className="hover:text-primary transition-colors">
-            {el}
+          <Link
+            to={el.router}
+            onClick={() => dispatch(setLoadingAsync(true))}
+            className={`hover:text-primary transition-colors ${
+              location.pathname.includes(el.router) ? "text-primary" : ""
+            }`}
+          >
+            {el.name}
           </Link>
         </Typography>
       ))}
