@@ -30,11 +30,22 @@ function SliderHover({ title = 'Test', data }) {
 
   const [hoveredIndex, setHoveredIndex] = useState(null);
 
-  if (data?.items?.length <= 0) {
-    return <div>Loading...</div>;
+  if (!data) {
+    return (
+      <div className="flex items-center justify-center gap-2 mt-3 animate-pulse p-3">
+        {[...Array(6)].map((_, index) => (
+          <div
+            key={index}
+            className="w-full h-[550px] flex items-center justify-center rounded-lg bg-gray-300"
+          >
+            <PlayCircleIcon className="w-8 text-gray-500" />
+          </div>
+        ))}
+      </div>
+    );
   }
   return (
-    <div className="mt-3 p-3 ">
+    <div className="mt-3 p-3">
       <Typography as={'h1'} className="text-white text-2xl font-bold">
         {title}
       </Typography>

@@ -14,9 +14,9 @@ const getMoviesServices = {
       throw error;
     }
   },
-  getMovieBySlug: async ({ slug }) => {
+  getMovieBySlug: async (slug) => {
     try {
-      const response = await apiClient.get(`/getMovieDetail/${slug}`);
+      const response = await apiClient.get(`/movie/getMovieDetail/${slug}`);
       return response.data;
     } catch (error) {
       console.error('API error:', error);

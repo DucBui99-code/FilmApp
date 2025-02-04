@@ -21,38 +21,48 @@ import 'swiper/css/autoplay';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
-import getMoviesHeaderServices from '../../services/getMovies';
 import { Button, Typography } from '@material-tailwind/react';
 import { Link } from 'react-router';
-import LoadingOverlay from '../Loading/LoadingOverlay';
-import { useAlert } from '../Message/AlertContext';
 
-const Slider = () => {
+const Slider = ({ data }) => {
   const topSwiperRef = useRef(null);
   const bottomSwiperRef = useRef(null);
   const prevRef = useRef(null);
   const nextRef = useRef(null);
 
-  const [pathUrl, setPathUrl] = useState(''); // Sử dụng state để quản lý PathUrl
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [data, setData] = useState([]);
-  const [isLoaded, setIsLoaded] = useState(false);
 
-  const { showAlert } = useAlert();
-
-  useEffect(() => {
-    getMoviesHeaderServices
-      .getList({ page: 0 })
-      .then((res) => {
-        setPathUrl(res.pathImage);
-        setData(res.items);
-        setIsLoaded(true);
-      })
-      .catch((err) => showAlert(err.message));
-  }, []);
-
-  if (!pathUrl || !data.length || !isLoaded) {
-    return <div>loading..</div>; // Hiển thị "Loading..." khi dữ liệu chưa sẵn sàng
+  if (!data) {
+    return (
+      <div className="flex animate-pulse flex-col">
+        <div className="h-[550px] w-full  place-items-center rounded-lg bg-gray-300 flex items-center justify-center">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={2}
+            stroke="currentColor"
+            className="h-12 w-12 text-gray-500"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25h-9A2.25 2.25 0 0 0 2.25 7.5v9a2.25 2.25 0 0 0 2.25 2.25Z"
+            />
+          </svg>
+        </div>
+        <div className="flex items-center justify-center gap-2 mt-3">
+          {[...Array(6)].map((_, index) => (
+            <div
+              key={index}
+              className="w-full h-32 flex items-center justify-center rounded-lg bg-gray-300"
+            >
+              <PlayCircleIcon className="w-8 text-gray-500" />
+            </div>
+          ))}
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -73,11 +83,11 @@ const Slider = () => {
         onSwiper={(swiper) => (topSwiperRef.current = swiper)}
         className="z-10"
       >
-        {data.map((e, index) => (
+        {data?.items.map((e, index) => (
           <SwiperSlide key={index}>
             <div className="relative">
               <img
-                src={pathUrl + e.poster_url}
+                src={data.pathImage + e.poster_url}
                 alt={`Slide ${index}`}
                 className="w-full h-[550px] object-cover cursor-grab"
               />
@@ -161,10 +171,10 @@ const Slider = () => {
             },
           }}
         >
-          {data.map((e, index) => (
+          {data?.items.map((e, index) => (
             <SwiperSlide key={index}>
               <img
-                src={pathUrl + e.poster_url}
+                src={data.pathImage + e.poster_url}
                 alt={`Thumbnail ${index}`}
                 className={`w-full h-32 transition-all object-cover cursor-pointer rounded-sm ${
                   index === currentSlide && 'border-2 border-primary'

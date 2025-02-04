@@ -9,13 +9,13 @@ import InformationMovie from '../components/watchMovie/InformationMovie';
 import EpisodesMovie from '../components/watchMovie/EpisodesMovie';
 import CommentMovie from '../components/watchMovie/CommentMovie';
 import { useDispatch } from 'react-redux';
-import { setLoading } from '../store/appStore';
 import { useAlert } from '../components/Message/AlertContext';
 
 function WatchMovie() {
   const { name } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [status, setStatus] = useState(false);
   const [data, setData] = useState({});
   const [suggetMovie, setSuggetMovie] = useState({});
   const [episodes, setEpisodes] = useState([]);
@@ -24,27 +24,53 @@ function WatchMovie() {
   const { showAlert } = useAlert();
 
   useEffect(() => {
-    // dispatch(setLoading(true));
-    if (name) {
+    const timeout = setTimeout(() => {
+      if (name) {
+        getMoviesServices
+          .getMovieBySlug(name)
+          .then((res) => {
+            setStatus(res.status);
+            setData(res.movie);
+            setEpisodes(res.episodes);
+          })
+          .catch((err) => showAlert(err.message));
+      }
+
       getMoviesServices
-        .getMovieBySlug({ slug: name })
+        .getList({ page: 2 })
         .then((res) => {
-          setData(res.movie);
-          setEpisodes(res.episodes);
+          setSuggetMovie(res);
         })
         .catch((err) => showAlert(err.message));
-    }
+    }, 3000);
 
-    getMoviesServices
-      .getList({ page: 2 })
-      .then((res) => {
-        setSuggetMovie(res);
-        // dispatch(setLoading(false));
-      })
-      .catch((err) => showAlert(err.message));
+    return () => clearTimeout(timeout); // Dọn dẹp timeout nếu component unmount
   }, []);
 
-  return data.status ? (
+  if (!data) {
+    return (
+      <div className="flex animate-pulse flex-col">
+        <div className="h-[550px] w-full  place-items-center rounded-lg bg-gray-300 flex items-center justify-center">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={2}
+            stroke="currentColor"
+            className="h-12 w-12 text-gray-500"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25h-9A2.25 2.25 0 0 0 2.25 7.5v9a2.25 2.25 0 0 0 2.25 2.25Z"
+            />
+          </svg>
+        </div>
+      </div>
+    );
+  }
+
+  return status ? (
     <div>
       <div className="flex items-center justify-start gap-2 p-2">
         <IconButton onClick={() => navigate(-1)}>
