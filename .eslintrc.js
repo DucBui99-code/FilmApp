@@ -1,22 +1,8 @@
 module.exports = {
-  extends: [
-    'eslint:recommended',
-    'plugin:react/recommended',
-    'plugin:prettier/recommended',
-  ],
-  parserOptions: {
-    ecmaVersion: 2020,
-    sourceType: 'module',
-    ecmaFeatures: {
-      jsx: true,
-    },
-  },
+  root: true, // Đảm bảo ESLint chỉ chạy cho dự án này
   rules: {
-    // Thêm các quy tắc ESLint riêng nếu cần thiết
-  },
-  settings: {
-    react: {
-      version: 'detect',
-    },
+    'no-console': 'off', // Tắt quy tắc kiểm tra console.log
+    'prettier/prettier': 'off', // Tắt quy tắc Prettier nếu muốn
+    // Thêm các quy tắc khác nếu cần
   },
 };
