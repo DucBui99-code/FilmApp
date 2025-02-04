@@ -1,7 +1,7 @@
 import apiClient from './apiClient';
 
-const getMoviesServices = {
-  getList: async ({ page = 0 }) => {
+const movieServices = {
+  getListMovie: async ({ page = 0 }) => {
     try {
       const response = await apiClient.get('/movie/getListMovie', {
         params: {
@@ -25,4 +25,4 @@ const getMoviesServices = {
   },
 };
 
-export default getMoviesServices;
+export default movieServices;

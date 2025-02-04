@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import Slider from '../components/body/Slider';
 import SliderStatic from '../components/body/SliderStatic';
-import getMoviesServices from '../services/getMovies';
+import MoviesServices from '../services/movieServices';
 import SliderHover from '../components/body/SliderHover';
-import LoadingOverlay from '../components/Loading/LoadingOverlay';
 
 function Home() {
   const [moviesData, setMoviesData] = useState({}); // Lưu trữ kết quả theo từng trang
 
   const fetchMovies = async (page) => {
     try {
-      const res = await getMoviesServices.getList({ page });
+      const res = await MoviesServices.getListMovie({ page });
       setMoviesData((prev) => ({
         ...prev,
         [page]: {

@@ -3,7 +3,7 @@ import { Link, useNavigate, useParams } from 'react-router';
 import { Button, IconButton, Typography } from '@material-tailwind/react';
 import { ArrowLeftIcon } from '@heroicons/react/16/solid';
 import SliderStatic from '../components/body/SliderStatic';
-import getMoviesServices from '../services/getMovies';
+import MoviesServices from '../services/movieServices';
 import Error404 from '../assets/error-404.png';
 import InformationMovie from '../components/watchMovie/InformationMovie';
 import EpisodesMovie from '../components/watchMovie/EpisodesMovie';
@@ -26,7 +26,7 @@ function WatchMovie() {
   useEffect(() => {
     const timeout = setTimeout(() => {
       if (name) {
-        getMoviesServices
+        MoviesServices
           .getMovieBySlug(name)
           .then((res) => {
             setStatus(res.status);
@@ -36,8 +36,8 @@ function WatchMovie() {
           .catch((err) => showAlert(err.message));
       }
 
-      getMoviesServices
-        .getList({ page: 2 })
+      MoviesServices
+        .getListMovie({ page: 2 })
         .then((res) => {
           setSuggetMovie(res);
         })

@@ -10,8 +10,8 @@ export function useAlert() {
 export const AlertProvider = ({ children }) => {
   const [alerts, setAlerts] = useState([]); // Lưu trữ mảng các thông báo
 
-  const showAlert = (message) => {
-    const newAlert = { id: Date.now(), message }; // Tạo thông báo mới với id duy nhất
+  const showAlert = (message, type) => {
+    const newAlert = { id: Date.now(), message, type }; // Tạo thông báo mới với id duy nhất
     setAlerts((prevAlerts) => [...prevAlerts, newAlert]);
 
     // Tắt thông báo sau 3 giây

@@ -2,24 +2,48 @@
 import React, { useEffect, useState } from 'react';
 import { Alert } from '@material-tailwind/react';
 import { useAlert } from './AlertContext'; // Import useAlert hook
+import {
+  CheckCircleIcon,
+  ExclamationTriangleIcon,
+  InformationCircleIcon,
+  ShieldExclamationIcon,
+} from '@heroicons/react/16/solid';
 
-function Icon() {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      className="h-6 w-6"
-    >
-      <path
-        fillRule="evenodd"
-        d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z"
-        clipRule="evenodd"
-      />
-    </svg>
-  );
-}
 const AlertCustom = () => {
+  const alertStyles = {
+    info: 'border-[#2196f3] bg-[#e3f2fd] text-[#2196f3]',
+    success: 'border-[#2ec946] bg-[#eaf9ec] text-[#2ec946]',
+    error: 'border-[#f44336] bg-[#ffebee] text-[#f44336]',
+    warning: 'border-[#ff9800] bg-[#fff3e0] text-[#ff9800]',
+  };
+
+  const iconStyles = {
+    info: (
+      <InformationCircleIcon
+        fill="currentColor"
+        className="h-6 w-6"
+      ></InformationCircleIcon>
+    ),
+    success: (
+      <CheckCircleIcon
+        fill="currentColor"
+        className="h-6 w-6"
+      ></CheckCircleIcon>
+    ),
+    error: (
+      <ExclamationTriangleIcon
+        fill="currentColor"
+        className="h-6 w-6"
+      ></ExclamationTriangleIcon>
+    ),
+    warning: (
+      <ShieldExclamationIcon
+        fill="currentColor"
+        className="h-6 w-6"
+      ></ShieldExclamationIcon>
+    ),
+  };
+
   const { alerts } = useAlert();
   const [visibleAlerts, setVisibleAlerts] = useState(alerts);
 
@@ -37,16 +61,24 @@ const AlertCustom = () => {
   }, [visibleAlerts]);
 
   return (
-    <div className="absolute top-5 right-5 z-50">
-      {visibleAlerts.map((alert) => (
-        <Alert
-          key={alert.id}
-          icon={<Icon />}
-          className="rounded-none border-l-4 border-[#2ec946] bg-[#eaf9ec] font-medium text-[#2ec946] mb-[4px]"
-        >
-          {alert.message}
-        </Alert>
-      ))}
+    <div className="absolute top-5 right-5 z-[99999]">
+      {visibleAlerts.map((alert) => {
+        return (
+          <Alert
+            key={alert.id}
+            animate={{
+              mount: { y: 0 },
+              unmount: { y: 100 },
+            }}
+            icon={iconStyles[alert.type] || iconStyles['info']}
+            className={`rounded-none font-medium mb-[4px] ${
+              alertStyles[alert.type] || alertStyles['info']
+            } border-l-4`}
+          >
+            {alert.message}
+          </Alert>
+        );
+      })}
     </div>
   );
 };
