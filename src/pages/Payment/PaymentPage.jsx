@@ -63,7 +63,7 @@ const ImageDescription = ({ img }) => {
 
 const CustomLabel = ({ name, description }) => {
   return (
-    <div className="flex justify-between text-white text-[14px] custom-label pr-[10px] font-bold py-[12px]">
+    <div className="flex justify-between items-center text-white text-[14px] custom-label pr-[10px] font-bold py-[12px]">
       <p className="">{name}</p>
       <div>{description}</div>
     </div>
@@ -117,7 +117,9 @@ const PackageFilm = ({
 
 const LinePayMentInfo = ({ label, content, classNameCustom }) => {
   return (
-    <div className={`flex justify-between my-[12px] items-center ${classNameCustom}`}>
+    <div
+      className={`flex justify-between my-[12px] items-center ${classNameCustom}`}
+    >
       <p className="text-[12px] text-[#FFFFFFB3] font-bold">{label}</p>
       <p className="text-[14px] font-bold text-white">{content}</p>
     </div>
@@ -135,8 +137,12 @@ const PaymentInformation = ({
   const onChange = ({ target }) => setVoucher(target.value);
   return (
     <div className="px-[20px]">
-      <h1 className='text-[26px] mb-[10px] font-bold mt-[30px]'>Thông tin thanh toán</h1>
-      <p className='text-[12px] text-[#FFFFFFB3] font-bold my-[16px]'>Tài khoản DANET</p>
+      <h1 className="text-[26px] mb-[10px] font-bold mt-[30px]">
+        Thông tin thanh toán
+      </h1>
+      <p className="text-[12px] text-[#FFFFFFB3] font-bold my-[16px]">
+        Tài khoản DANET
+      </p>
       <LinePayMentInfo label="Dịch vụ" content="Phim gói" />
       <LinePayMentInfo label="" content="Không tự động gia hạn" />
       <LinePayMentInfo label="Giá tiền" content={formatCurrency(price)} />
@@ -148,16 +154,16 @@ const PaymentInformation = ({
       <LinePayMentInfo label="Giá tiền" content={nextPaymentPeriod} />
 
       <div>
-        <h2 class="text-lg font-semibold mb-4">Nhập mã giảm giá</h2>
-        <div class="flex relative">
+        <h2 className="text-lg font-semibold mb-4">Nhập mã giảm giá</h2>
+        <div className="flex relative">
           <input
             type="text"
             value={voucher}
             onChange={onChange}
             placeholder="Nhập mã giảm giá"
-            class="flex-1 p-2 py-[12px] border-none rounded font-bold focus:outline-none text-[#969696] text-[12px] bg-[#2c2c2c]"
+            className="flex-1 p-2 py-[12px] border-none rounded font-bold focus:outline-none text-[#969696] text-[12px] bg-[#2c2c2c]"
           />
-          <button class="bg-primary text-[#3a3a3a] rounded hover:opacity-70 focus:outline-none text-[14px] font-bold px-2 absolute inset-y-0 right-1 my-auto w-[70px] h-[32px] flex items-center justify-center before:content-[''] before:absolute before:left-[-6px] before:top-1/2 before:-translate-y-1/2 before:w-[1px] before:h-[80%] before:bg-[#969696]">
+          <button className="bg-primary text-[#3a3a3a] rounded hover:opacity-70 focus:outline-none text-[14px] font-bold px-2 absolute inset-y-0 right-1 my-auto w-[70px] h-[32px] flex items-center justify-center before:content-[''] before:absolute before:left-[-6px] before:top-1/2 before:-translate-y-1/2 before:w-[1px] before:h-[80%] before:bg-[#969696]">
             Áp dụng
           </button>
         </div>
@@ -177,9 +183,12 @@ const PaymentInformation = ({
       <button className="bg-primary text-white hover:bg-[#80652c] duration-200 w-full rounded py-[6px] font-bold">
         Thanh toán
       </button>
-      <p className='font-bold text-[#FFFFFFB3] text-[14px] mt-[10px]'>
+      <p className="font-bold text-[#FFFFFFB3] text-[14px] mt-[10px]">
         Bằng việc thanh toán, bạn đã đồng ý với các{' '}
-        <span className='text-primary cursor-pointer'>điều khoản sử dụng, chính sách</span> của DANET
+        <span className="text-primary cursor-pointer">
+          điều khoản sử dụng, chính sách
+        </span>{' '}
+        của DANET
       </p>
     </div>
   );
@@ -223,10 +232,11 @@ const PaymentPage = () => {
   const [selectedPaymentMethod, setSelectedPaymentMethod] =
     useState('Credit Card');
   return (
-    <div className="mt-[20px] w-[960px] mx-auto text-white font-lato">
+    <div className="mt-[20px] w-full max-w-[960px] mx-auto text-white font-lato px-4">
       <TimeLine />
-      <div className="grid grid-cols-3 gap-[20px]">
-        <div className="col-span-2">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-[20px]">
+        {/* Cột bên trái (Gói phim + Thanh toán) */}
+        <div className="md:col-span-2">
           <PackageFilm
             selectedValue={selectedValue}
             setSelectedValue={setSelectedValue}
@@ -243,7 +253,9 @@ const PaymentPage = () => {
             classNameTitle="text-[18px] font-bold p-[16px]"
           />
         </div>
-        <div className="col-span-1 bg-[#333333] pb-[200px]">
+
+        {/* Cột bên phải (Thông tin thanh toán) */}
+        <div className="md:col-span-1 bg-[#333333] pb-[200px]">
           <PaymentInformation
             price={50000}
             discountPrice={0}
