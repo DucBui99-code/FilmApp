@@ -30,14 +30,14 @@ function WatchMovie() {
             setData(res.movie);
             setEpisodes(res.episodes);
           })
-          .catch((err) => showAlert(err.message));
+          .catch((err) => showAlert(err.message,'error'));
       }
 
       MoviesServices.getListMovie({ page: 2 })
         .then((res) => {
           setSuggetMovie(res);
         })
-        .catch((err) => showAlert(err.message));
+        .catch((err) => showAlert(err.message,'error'));
     }, 3000);
 
     return () => clearTimeout(timeout); // Dọn dẹp timeout nếu component unmount
