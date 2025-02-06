@@ -24,6 +24,9 @@ module.exports = withMT({
         },
       },
     },
+    fontFamily: {
+      sans: ['Lato', 'sans-serif'],
+    },
   },
   plugins: [],
 });

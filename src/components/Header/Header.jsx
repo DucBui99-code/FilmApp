@@ -19,6 +19,7 @@ function Header() {
     { name: 'Miễn phí', router: '/mien-phi' },
     { name: 'Phim Gói', router: '/phim-goi' },
     { name: 'Truyền Hình', router: '/truyen-hinh' },
+    { name: 'Thanh Toán', router: '/thanh-toan' },
   ];
   const [openNav, setOpenNav] = React.useState(false);
   const dispatch = useDispatch();
@@ -37,7 +38,7 @@ function Header() {
           as="li"
           variant="small"
           color="white"
-          className="p-1 font-bold"
+          className="p-1 font-bold text-[17px]"
           key={i}
         >
           <Link

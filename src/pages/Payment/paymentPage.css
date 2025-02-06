@@ -1,0 +1,11 @@
+.color-radio-ct svg {
+  color: white;
+}
+
+.color-radio-ct div.inline-flex.items-center {
+  width: 100%;
+}
+
+label:has(.custom-label) {
+  width: 100%;
+}
