@@ -35,6 +35,9 @@ module.exports = withMT({
         shake: 'shake 0.5s ease-in-out',
       },
     },
+    fontFamily: {
+      sans: ['Lato', 'sans-serif'],
+    },
   },
   plugins: [],
 });

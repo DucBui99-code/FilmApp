@@ -1,4 +1,7 @@
 import React from 'react';
+import FilmPackage from '../pages/FilmPackage';
+import Television from '../pages/Television';
+import PaymentPage from '../pages/Payment/PaymentPage';
 const HomePage = React.lazy(() => import('../pages/Home'));
 const WatchMoviePage = React.lazy(() => import('../pages/WatchMovie'));
 const FilmPackage = React.lazy(() => import('../pages/FilmPackage'));
@@ -12,6 +15,7 @@ const routesConfig = {
     { path: '/watch/:name', element: WatchMoviePage },
     { path: '/phim-goi', element: FilmPackage },
     { path: '/truyen-hinh', element: Television },
+    { path: '/thanh-toan', element: PaymentPage },
   ],
   private: [{ path: 'auth/profile', element: Profile }],
 };
