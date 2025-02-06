@@ -1,5 +1,4 @@
-import React from 'react';
-import ActionBarPC from './ActionBarPC';
+import { useEffect, useState } from 'react';
 import {
   Button,
   Collapse,
@@ -7,12 +6,14 @@ import {
   Navbar,
   Typography,
 } from '@material-tailwind/react';
-import Logo from '../../assets/logo-danet.png';
+import { useDispatch } from 'react-redux';
 import { Link, useLocation } from 'react-router';
+
+import Logo from '../../assets/logo-danet.png';
 import ActionBarMobile from './ActionBarMobile';
 import NotificationPopup from './NotificationPopup';
-import { useDispatch } from 'react-redux';
-import { setLoading, setLoadingAsync } from '../../store/appStore';
+import { setLoadingAsync } from '../../store/appStore';
+import ActionBarPC from './ActionBarPC';
 
 function Header() {
   const ListMenu = [
@@ -20,16 +21,18 @@ function Header() {
     { name: 'Phim Gói', router: '/phim-goi' },
     { name: 'Truyền Hình', router: '/truyen-hinh' },
   ];
-  const [openNav, setOpenNav] = React.useState(false);
-  const dispatch = useDispatch();
 
+  const [openNav, setOpenNav] = useState(false);
+  const dispatch = useDispatch();
   const location = useLocation();
-  React.useEffect(() => {
+
+  useEffect(() => {
     window.addEventListener(
       'resize',
       () => window.innerWidth >= 960 && setOpenNav(false)
     );
   }, []);
+
   const navList = (
     <ul className="flex flex-col gap-2 mt-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
       {ListMenu.map((el, i) => (

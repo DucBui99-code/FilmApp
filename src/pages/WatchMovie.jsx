@@ -8,13 +8,11 @@ import Error404 from '../assets/error-404.png';
 import InformationMovie from '../components/watchMovie/InformationMovie';
 import EpisodesMovie from '../components/watchMovie/EpisodesMovie';
 import CommentMovie from '../components/watchMovie/CommentMovie';
-import { useDispatch } from 'react-redux';
 import { useAlert } from '../components/Message/AlertContext';
 
 function WatchMovie() {
   const { name } = useParams();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const [status, setStatus] = useState(false);
   const [data, setData] = useState({});
   const [suggetMovie, setSuggetMovie] = useState({});
@@ -26,8 +24,7 @@ function WatchMovie() {
   useEffect(() => {
     const timeout = setTimeout(() => {
       if (name) {
-        MoviesServices
-          .getMovieBySlug(name)
+        MoviesServices.getMovieBySlug(name)
           .then((res) => {
             setStatus(res.status);
             setData(res.movie);
@@ -36,8 +33,7 @@ function WatchMovie() {
           .catch((err) => showAlert(err.message));
       }
 
-      MoviesServices
-        .getListMovie({ page: 2 })
+      MoviesServices.getListMovie({ page: 2 })
         .then((res) => {
           setSuggetMovie(res);
         })
