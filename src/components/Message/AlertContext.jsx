@@ -10,11 +10,14 @@ export function useAlert() {
 export const AlertProvider = ({ children }) => {
   const [alerts, setAlerts] = useState([]); // Lưu trữ mảng các thông báo
 
+  const clearAlert = (id) => {
+    setAlerts((prevAlerts) => prevAlerts.filter((alert) => alert.id !== id));
+  };
+
   const showAlert = (message, type) => {
     const newAlert = { id: Date.now(), message, type }; // Tạo thông báo mới với id duy nhất
     setAlerts((prevAlerts) => [...prevAlerts, newAlert]);
 
-    // Tắt thông báo sau 3 giây
     setTimeout(() => {
       setAlerts((prevAlerts) =>
         prevAlerts.filter((alert) => alert.id !== newAlert.id)
@@ -23,7 +26,7 @@ export const AlertProvider = ({ children }) => {
   };
 
   return (
-    <AlertContext.Provider value={{ alerts, showAlert }}>
+    <AlertContext.Provider value={{ alerts, showAlert, clearAlert }}>
       {children}
     </AlertContext.Provider>
   );
