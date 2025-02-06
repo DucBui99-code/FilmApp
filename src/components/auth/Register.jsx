@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { EyeIcon, EyeSlashIcon } from '@heroicons/react/16/solid';
+import { EyeIcon, EyeSlashIcon, XMarkIcon } from '@heroicons/react/16/solid';
 import {
   Button,
   Card,
@@ -7,46 +7,100 @@ import {
   CardFooter,
   Dialog,
   Input,
+  Spinner,
   Typography,
 } from '@material-tailwind/react';
 import { useForm } from 'react-hook-form';
+import AuthServices from '../../services/authServices';
+import { useAlert } from '../Message/AlertContext';
+import EnterOTP from './EnterOTP';
 
 function Register({ handleOpen, open, handelSwitchModal }) {
   const regex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
   const minLength = 3;
   const maxLength = 15;
 
+  const { showAlert } = useAlert();
+  const [loading, setLoading] = useState(false);
+  const [openOTP, setOpenOTP] = useState({
+    isOpen: false,
+    email: '',
+    timeExpriedMinutes: 1,
+    userId: '',
+  });
+
   const {
     register,
     handleSubmit,
     watch,
+    setError,
+    reset,
     formState: { errors },
   } = useForm();
 
   const [showPass, setShowPass] = useState(false);
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = async (data) => {
+    setLoading(true);
+    delete data.confirmPassword;
+
+    try {
+      const registerResponse = await AuthServices.registerAccount(data);
+      try {
+        const otpResponse = await AuthServices.sendOTP({
+          userId: registerResponse.userId,
+        });
+        setOpenOTP({
+          isOpen: true,
+          email: data.email,
+          timeExpriedMinutes: otpResponse.timeExpired,
+          userId: registerResponse.userId,
+        });
+      } catch (otpError) {
+        showAlert(
+          otpError.response?.data?.message?.[0] || 'Failed to send OTP',
+          'error'
+        );
+      }
+    } catch (registerError) {
+      if (registerError.response?.status === 409) {
+        setError('email', {
+          type: 'manual',
+          message:
+            registerError.response?.data?.message?.[0] ||
+            'Email already exists',
+        });
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handelClose = () => {
+    handleOpen(!open);
+    reset();
   };
 
   return (
     <>
-      <Dialog
-        size="xs"
-        open={open}
-        handler={() => handleOpen(!open)}
-        className="bg-transparent shadow-none"
-      >
+      <Dialog size="xs" open={open} className="bg-transparent shadow-none z-10">
         <Card className="mx-auto w-full max-w-[24rem] bg-black text-white">
           <CardBody className="flex flex-col gap-4">
-            <Typography variant="h4" className="mb-4" color="white">
-              Đăng Ký
-            </Typography>
-
+            <div className="flex items-center justify-between mb-4">
+              <Typography variant="h4" color="white">
+                Đăng Ký
+              </Typography>
+              <XMarkIcon
+                className="w-6 h-6 text-white mb-2 hover:cursor-pointer"
+                onClick={handelClose}
+              ></XMarkIcon>
+            </div>
             <Input
               label="Email"
               size="lg"
-              color="white"
+              color="light-green"
+              className="text-white"
+              autoComplete="off"
               {...register('email', {
                 required: 'Email is required',
                 pattern: {
@@ -61,9 +115,11 @@ function Register({ handleOpen, open, handelSwitchModal }) {
               </Typography>
             )}
             <Input
-              label="Username"
+              label="Tên tài khoản"
               size="lg"
-              color="white"
+              color="light-green"
+              className="text-white"
+              autoComplete="off"
               {...register('username', { required: 'Username is required' })}
             />
             {errors.username && (
@@ -74,7 +130,9 @@ function Register({ handleOpen, open, handelSwitchModal }) {
             <Input
               label="Mật khẩu"
               size="lg"
-              color="white"
+              color="light-green"
+              className="text-white"
+              autoComplete="off"
               type={showPass ? 'text' : 'password'}
               icon={
                 showPass ? (
@@ -109,7 +167,8 @@ function Register({ handleOpen, open, handelSwitchModal }) {
             <Input
               label="Nhập lại mật khẩu"
               size="lg"
-              color="white"
+              color="light-green"
+              className="text-white"
               type={showPass ? 'text' : 'password'}
               {...register('confirmPassword', {
                 validate: (val) => {
@@ -132,8 +191,10 @@ function Register({ handleOpen, open, handelSwitchModal }) {
               onClick={handleSubmit(onSubmit)}
               fullWidth
               type="submit"
+              disabled={loading}
+              className="flex items-center justify-center"
             >
-              Đăng ký
+              {loading ? <Spinner color="white"></Spinner> : 'Đăng ký'}
             </Button>
             <Typography variant="small" className="mt-4 flex justify-center">
               Bạn đã có tài khoản?
@@ -149,6 +210,7 @@ function Register({ handleOpen, open, handelSwitchModal }) {
           </CardFooter>
         </Card>
       </Dialog>
+      <EnterOTP open={openOTP} handleOpen={setOpenOTP}></EnterOTP>
     </>
   );
 }

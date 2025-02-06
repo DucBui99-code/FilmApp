@@ -11,7 +11,7 @@ export const setLoadingAsync = createAsyncThunk(
 );
 
 const appStore = createSlice({
-  name: 'auth',
+  name: 'app',
   initialState: { loading: false },
   reducers: {
     setLoading: (state, action) => {
