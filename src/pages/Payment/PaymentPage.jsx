@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './paymentPage.css';
 import {
   Timeline,
@@ -27,6 +27,7 @@ import { formatCurrency } from '../../utils/utils';
 import visaCredit from '../../assets/creditcard.png';
 import atmCard from '../../assets/AtmCard.png';
 import momo from '../../assets/momo.png';
+import dayjs from 'dayjs';
 const TimeLine = () => {
   return (
     <div className="flex justify-center items-center mb-[60px]">
@@ -228,9 +229,15 @@ const PaymentPage = () => {
     },
   ];
   const [selectedValue, setSelectedValue] = useState('1 Tháng');
+  const [pricePackage, setPricePackage] = useState('0');
   const [voucher, setVoucher] = useState('');
   const [selectedPaymentMethod, setSelectedPaymentMethod] =
     useState('Credit Card');
+  const [discountPrice, setDiscountPrice] = useState(0);
+  useEffect(() => {
+    const packageFilm = listPackage.find((item) => item.name === selectedValue);
+    setPricePackage(packageFilm.price);
+  }, [selectedValue]);
   return (
     <div className="mt-[20px] w-full max-w-[960px] mx-auto text-white font-lato px-4">
       <TimeLine />
@@ -257,13 +264,15 @@ const PaymentPage = () => {
         {/* Cột bên phải (Thông tin thanh toán) */}
         <div className="md:col-span-1 bg-[#333333] pb-[200px]">
           <PaymentInformation
-            price={50000}
-            discountPrice={0}
-            effectiveTime={'23/3/2025'}
-            nextPaymentPeriod={'23/4/2025'}
+            price={pricePackage}
+            discountPrice={discountPrice}
+            effectiveTime={dayjs().format('D/M/YYYY')}
+            nextPaymentPeriod={dayjs()
+              .add(selectedValue.split(' ')[0], 'month')
+              .format('D/M/YYYY')}
             voucher={voucher}
             setVoucher={setVoucher}
-            totalPrice={50000}
+            totalPrice={pricePackage + discountPrice}
           />
         </div>
       </div>
