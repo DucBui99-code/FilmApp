@@ -1,32 +1,13 @@
 import React, { useState } from 'react';
+import { Radio } from '@material-tailwind/react';
+import { CreditCardIcon, ShoppingCartIcon } from '@heroicons/react/16/solid';
+
 import './paymentPage.css';
-import {
-  Timeline,
-  TimelineItem,
-  TimelineConnector,
-  TimelineHeader,
-  TimelineIcon,
-  TimelineBody,
-  Typography,
-  Radio,
-  Input,
-  Button,
-} from '@material-tailwind/react';
-import {
-  HomeIcon,
-  BellIcon,
-  CurrencyDollarIcon,
-} from '@heroicons/react/24/solid';
-import {
-  CheckCircleIcon,
-  CreditCardIcon,
-  ShoppingCartIcon,
-} from '@heroicons/react/16/solid';
-import { IconButton } from '@material-tailwind/react';
 import { formatCurrency } from '../../utils/utils';
 import visaCredit from '../../assets/creditcard.png';
 import atmCard from '../../assets/AtmCard.png';
 import momo from '../../assets/momo.png';
+
 const TimeLine = () => {
   return (
     <div className="flex justify-center items-center mb-[60px]">

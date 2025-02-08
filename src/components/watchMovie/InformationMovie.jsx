@@ -6,16 +6,30 @@ import {
   LanguageIcon,
   ShareIcon,
 } from '@heroicons/react/16/solid';
-import { IconButton, Tooltip, Typography } from '@material-tailwind/react';
-import React from 'react';
+import {
+  Button,
+  IconButton,
+  Tooltip,
+  Typography,
+} from '@material-tailwind/react';
+import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import { useCopyToClipboard } from 'usehooks-ts';
 import DOMPurify from 'dompurify';
 
 function InformationMovie({ data }) {
+  const maxLengthContent = 300;
+
   const [value, copy] = useCopyToClipboard();
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const toggleExpand = () => setIsExpanded((prev) => !prev);
 
   const clearContent = (text) => {
-    return DOMPurify.sanitize(text, { ALLOWED_TAGS: [] });
+    const sanitizedText = DOMPurify.sanitize(text, {
+      ALLOWED_TAGS: ['b', 'i', 'em', 'strong', 'br'],
+    });
+    return sanitizedText.replace(/\n/g, '<br />');
   };
 
   const handelOpenShareFacebook = () => {
@@ -88,8 +102,28 @@ function InformationMovie({ data }) {
         </div>
         <div className="mt-4">
           <Typography className="text-white font-bold">
-            {clearContent(data.content)}
+            <motion.div
+              initial={{ height: 'auto' }}
+              animate={true}
+              transition={{ duration: 0.3 }}
+              className="overflow-hidden"
+              dangerouslySetInnerHTML={{
+                __html: isExpanded
+                  ? clearContent(data.content)
+                  : clearContent(data.content).slice(0, maxLengthContent) +
+                    '...',
+              }}
+            />
           </Typography>
+          {data.content.length > maxLengthContent && (
+            <Button
+              variant="text"
+              onClick={toggleExpand}
+              className="mt-2 text-primary hover:opacity-85 transition p-0"
+            >
+              {isExpanded ? 'Thu gọn ▲' : 'Xem thêm ▼'}
+            </Button>
+          )}
         </div>
       </div>
       <div className="self-center w-full lg:self-start lg:w-1/4 flex flex-col gap-4">

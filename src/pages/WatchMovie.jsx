@@ -13,37 +13,69 @@ import { useAlert } from '../components/Message/AlertContext';
 function WatchMovie() {
   const { name } = useParams();
   const navigate = useNavigate();
-  const [status, setStatus] = useState(false);
-  const [data, setData] = useState({});
-  const [suggetMovie, setSuggetMovie] = useState({});
-  const [episodes, setEpisodes] = useState([]);
-  const [currentEpisode, setCurrentEpisode] = useState(0);
 
+  const [state, setState] = useState({
+    movieId: null,
+    status: null,
+    data: null,
+    suggestMovies: [],
+    episode: {},
+  });
+
+  const [currentEpisode, setCurrentEpisode] = useState(0);
   const { showAlert } = useAlert();
 
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      if (name) {
-        MoviesServices.getMovieBySlug(name)
-          .then((res) => {
-            setStatus(res.status);
-            setData(res.movie);
-            setEpisodes(res.episodes);
-          })
-          .catch((err) => showAlert(err.message));
+    let isMounted = true;
+
+    if (!name) return;
+
+    const fetchData = async () => {
+      try {
+        const [movieRes, listRes] = await Promise.all([
+          MoviesServices.getMovieBySlug(name),
+          MoviesServices.getListMovie({ page: 0 }),
+        ]);
+
+        if (isMounted) {
+          setState((prevState) => ({
+            ...prevState,
+            movieId: movieRes.data._id,
+            status: movieRes.status,
+            data: movieRes.data,
+            suggestMovies: listRes,
+          }));
+        }
+      } catch (err) {
+        showAlert(err.message);
       }
+    };
 
-      MoviesServices.getListMovie({ page: 2 })
-        .then((res) => {
-          setSuggetMovie(res);
-        })
-        .catch((err) => showAlert(err.message));
-    }, 3000);
+    const timeout = setTimeout(fetchData, 3000);
 
-    return () => clearTimeout(timeout); // Dọn dẹp timeout nếu component unmount
-  }, []);
+    return () => {
+      isMounted = false;
+      clearTimeout(timeout);
+    };
+  }, [name]);
 
-  if (!data) {
+  useEffect(() => {
+    if (!state.movieId) return;
+
+    MoviesServices.getSingleEpisode({
+      movieId: state.movieId,
+      indexEpisode: currentEpisode,
+    })
+      .then((res) => {
+        setState((prevState) => ({
+          ...prevState,
+          episode: res.data,
+        }));
+      })
+      .catch((err) => showAlert(err.message));
+  }, [currentEpisode, state.movieId]);
+
+  if (!state.data) {
     return (
       <div className="flex animate-pulse flex-col">
         <div className="h-[550px] w-full  place-items-center rounded-lg bg-gray-300 flex items-center justify-center">
@@ -66,39 +98,39 @@ function WatchMovie() {
     );
   }
 
-  return status ? (
+  return state.status ? (
     <div>
       <div className="flex items-center justify-start gap-2 p-2">
         <IconButton onClick={() => navigate(-1)}>
           <ArrowLeftIcon className="w-6 text-white"></ArrowLeftIcon>
         </IconButton>
         <Typography className="text-white font-bold uppercase">
-          {data?.name +
-            ' - Tập ' +
-            episodes[0]?.server_data[currentEpisode]?.name}
+          {state.data?.name + ' - Tập ' + state.episode?.name}
         </Typography>
       </div>
       <div className="relative">
         <iframe
-          src={episodes[0]?.server_data[currentEpisode].link_embed}
+          src={state.episode?.link_embed}
           width="100%"
           height="600"
           frameborder="0"
           allow="autoplay; fullscreen"
           title="Movie"
         ></iframe>
-        <Typography className="absolute top-0 right-2" color="white" as={'h2'}>
-          Helô
-        </Typography>
       </div>
-      <InformationMovie data={data}></InformationMovie>
+      <InformationMovie data={state.data}></InformationMovie>
+
       <EpisodesMovie
-        data={data}
+        data={state.data}
         currentEpisode={currentEpisode}
         setCurrentEpisode={setCurrentEpisode}
       ></EpisodesMovie>
+
       <CommentMovie></CommentMovie>
-      <SliderStatic title="Phim đề xuất" data={suggetMovie}></SliderStatic>
+      <SliderStatic
+        title="Phim đề xuất"
+        data={state.suggestMovies}
+      ></SliderStatic>
     </div>
   ) : (
     <div className="flex items-center justify-center flex-col gap-3 h-96 w-full">
