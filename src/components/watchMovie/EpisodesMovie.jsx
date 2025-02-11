@@ -52,6 +52,7 @@ function EpisodesMovie({ data, currentEpisode, setCurrentEpisode }) {
       </div>
     );
   };
+
   return (
     <div className="mt-4 p-3 text-white">
       <Accordion open={showEpisodes}>

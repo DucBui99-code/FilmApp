@@ -12,12 +12,13 @@ import {
 } from '@material-tailwind/react';
 import EmojiPicker from 'emoji-picker-react';
 import React, { useState } from 'react';
+import { FaceSmileIcon } from '@heroicons/react/16/solid';
 import BlockComment from './BlockComment';
 import dataComments from './test.json';
-import { FaceSmileIcon } from '@heroicons/react/16/solid';
 
 function CommentMovie() {
   const limitCharacters = 100;
+
   const [text, setText] = useState('');
   const [isShowAction, setIsShowAction] = useState(false);
 
