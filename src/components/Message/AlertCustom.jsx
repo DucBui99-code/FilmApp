@@ -61,7 +61,7 @@ const AlertCustom = () => {
   }, [visibleAlerts]);
 
   return (
-    <div className="absolute top-5 right-5 z-[99999]">
+    <div className="fixed top-5 right-5 z-[99999]">
       {visibleAlerts.map((alert) => {
         return (
           <Alert
