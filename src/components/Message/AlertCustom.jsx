@@ -1,6 +1,7 @@
 // AlertCustom.js
 import React, { useEffect, useState } from 'react';
 import { Alert } from '@material-tailwind/react';
+import '../Message/alertCustom.css';
 import { useAlert } from './AlertContext'; // Import useAlert hook
 import {
   CheckCircleIcon,
@@ -44,7 +45,7 @@ const AlertCustom = () => {
     ),
   };
 
-  const { alerts } = useAlert();
+  const { alerts, clearAlert } = useAlert();
   const [visibleAlerts, setVisibleAlerts] = useState(alerts);
 
   useEffect(() => {
@@ -59,7 +60,9 @@ const AlertCustom = () => {
       return () => clearTimeout(timeout);
     }
   }, [visibleAlerts]);
-
+  const onCloseAlert = (alert) => {
+    clearAlert(alert.id);
+  };
   return (
     <div className="fixed top-5 right-5 z-[99999]">
       {visibleAlerts.map((alert) => {
@@ -70,8 +73,9 @@ const AlertCustom = () => {
               mount: { y: 0 },
               unmount: { y: 100 },
             }}
+            onClose={() => onCloseAlert(alert)}
             icon={iconStyles[alert.type] || iconStyles['info']}
-            className={`rounded-none font-medium mb-[4px] ${
+            className={`rounded-none font-medium mb-[4px] alert-custom ${
               alertStyles[alert.type] || alertStyles['info']
             } border-l-4`}
           >
