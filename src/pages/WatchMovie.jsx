@@ -48,10 +48,25 @@ function WatchMovie() {
         }
       } catch (err) {
         showAlert(err.message);
+    const timeout = setTimeout(() => {
+      if (name) {
+        MoviesServices.getMovieBySlug(name)
+          .then((res) => {
+            setStatus(res.status);
+            setData(res.movie);
+            setEpisodes(res.episodes);
+          })
+          .catch((err) => showAlert(err.message,'error'));
       }
     };
 
     const timeout = setTimeout(fetchData, 3000);
+      MoviesServices.getListMovie({ page: 2 })
+        .then((res) => {
+          setSuggetMovie(res);
+        })
+        .catch((err) => showAlert(err.message,'error'));
+    }, 3000);
 
     return () => {
       isMounted = false;

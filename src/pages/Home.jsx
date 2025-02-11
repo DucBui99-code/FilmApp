@@ -3,10 +3,11 @@ import Slider from '../components/body/Slider';
 import SliderStatic from '../components/body/SliderStatic';
 import MoviesServices from '../services/movieServices';
 import SliderHover from '../components/body/SliderHover';
+import { useAlert } from '../components/Message/AlertContext';
 
 function Home() {
   const [moviesData, setMoviesData] = useState({}); // Lưu trữ kết quả theo từng trang
-
+  const { showAlert } = useAlert();
   const fetchMovies = async (page) => {
     try {
       const res = await MoviesServices.getListMovie({ page });
@@ -18,7 +19,7 @@ function Home() {
         },
       }));
     } catch (error) {
-      console.error(`Error fetching page ${page}:`, error);
+      showAlert(error.message, 'error');
     }
   };
 
