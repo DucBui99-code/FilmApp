@@ -1,5 +1,3 @@
-
-import React, { useState } from 'react';
 import { Radio } from '@material-tailwind/react';
 import { CreditCardIcon, ShoppingCartIcon } from '@heroicons/react/16/solid';
 import React, { useEffect, useState } from 'react';

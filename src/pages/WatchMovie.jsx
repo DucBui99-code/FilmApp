@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router';
-import { Button, IconButton, Typography } from '@material-tailwind/react';
-import { ArrowLeftIcon } from '@heroicons/react/16/solid';
-import SliderStatic from '../components/body/SliderStatic';
 import MoviesServices from '../services/movieServices';
 import Error404 from '../assets/error-404.png';
 import InformationMovie from '../components/watchMovie/InformationMovie';
 import EpisodesMovie from '../components/watchMovie/EpisodesMovie';
 import CommentMovie from '../components/watchMovie/CommentMovie';
 import { useAlert } from '../components/Message/AlertContext';
+import { IconButton, Typography } from '@material-tailwind/react';
+import { ArrowLeftIcon } from '@heroicons/react/16/solid';
+import SliderStatic from '../components/body/SliderStatic';
 
 function WatchMovie() {
   const { name } = useParams();
@@ -24,9 +24,9 @@ function WatchMovie() {
 
   const [currentEpisode, setCurrentEpisode] = useState(0);
   const { showAlert } = useAlert();
-
   useEffect(() => {
     let isMounted = true;
+    let timeout;
 
     if (!name) return;
 
@@ -48,29 +48,30 @@ function WatchMovie() {
         }
       } catch (err) {
         showAlert(err.message);
-    const timeout = setTimeout(() => {
-      if (name) {
-        MoviesServices.getMovieBySlug(name)
-          .then((res) => {
-            setStatus(res.status);
-            setData(res.movie);
-            setEpisodes(res.episodes);
-          })
-          .catch((err) => showAlert(err.message,'error'));
+        timeout = setTimeout(() => {
+          if (name) {
+            MoviesServices.getMovieBySlug(name)
+              .then((res) => {
+                if (isMounted) {
+                  setState((prevState) => ({
+                    ...prevState,
+                    status: res.status,
+                    data: res.movie,
+                    episodes: res.episodes,
+                  }));
+                }
+              })
+              .catch((err) => showAlert(err.message, 'error'));
+          }
+        }, 3000); // Thêm thời gian chờ (3 giây) để tránh spam request
       }
     };
 
-    const timeout = setTimeout(fetchData, 3000);
-      MoviesServices.getListMovie({ page: 2 })
-        .then((res) => {
-          setSuggetMovie(res);
-        })
-        .catch((err) => showAlert(err.message,'error'));
-    }, 3000);
+    fetchData();
 
     return () => {
       isMounted = false;
-      clearTimeout(timeout);
+      if (timeout) clearTimeout(timeout);
     };
   }, [name]);
 
