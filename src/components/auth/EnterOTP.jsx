@@ -51,6 +51,16 @@ function EnterOTP({ open, handleOpen }) {
     }
   };
 
+  const handlePaste = (e) => {
+    e.preventDefault();
+    const pasteData = e.clipboardData.getData('text').trim();
+    if (/^\d{6}$/.test(pasteData)) {
+      setOtp(pasteData.split(''));
+
+      document.getElementById('otp-5').focus();
+    }
+  };
+
   const handleKeyDown = (e, index) => {
     if (e.key === 'Backspace' && !otp[index] && index > 0) {
       document.getElementById(`otp-${index - 1}`).focus();
@@ -147,6 +157,7 @@ function EnterOTP({ open, handleOpen }) {
                 autoComplete="off"
                 value={digit}
                 onChange={(e) => handleChange(e, index)}
+                onPaste={handlePaste}
                 onKeyDown={(e) => handleKeyDown(e, index)}
                 maxLength={1}
                 className={`w-10 h-10 text-center border ${

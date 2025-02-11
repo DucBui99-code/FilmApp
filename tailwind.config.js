@@ -7,6 +7,8 @@ module.exports = withMT({
   theme: {
     extend: {
       colors: {
+        customDark: '#232323',
+        whiteText: '#FFFFFFB3',
         primary: '#8ABF40', // Xanh dương đậm
         secondary: '#27A6E1', // Xanh nhạt
         accent: '#F59E0B',

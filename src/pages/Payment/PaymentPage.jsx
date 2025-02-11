@@ -133,7 +133,10 @@ const PaymentInformation = ({
         content={formatCurrency(discountPrice)}
       />
       <LinePayMentInfo label="Ngày có hiệu lực" content={effectiveTime} />
-      <LinePayMentInfo label="Giá tiền" content={nextPaymentPeriod} />
+      <LinePayMentInfo
+        label="Kỳ thanh toán tiếp theo"
+        content={nextPaymentPeriod}
+      />
 
       <div>
         <h2 className="text-lg font-semibold mb-4">Nhập mã giảm giá</h2>
