@@ -1,12 +1,10 @@
 import React from 'react';
-import FilmPackage from '../pages/FilmPackage';
-import Television from '../pages/Television';
-import PaymentPage from '../pages/Payment/PaymentPage';
 const HomePage = React.lazy(() => import('../pages/Home'));
 const WatchMoviePage = React.lazy(() => import('../pages/WatchMovie'));
 const FilmPackage = React.lazy(() => import('../pages/FilmPackage'));
 const Television = React.lazy(() => import('../pages/Television'));
 const Profile = React.lazy(() => import('../pages/Profile'));
+const PaymentPage = React.lazy(() => import('../pages/Payment/PaymentPage'));
 
 const routesConfig = {
   public: [
