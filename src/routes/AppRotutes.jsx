@@ -10,7 +10,11 @@ const AppRouter = () => (
       {/* Public Routes */}
       <Route path="/" element={<PublicRoutes />}>
         {routesConfig.public.map((route, index) => (
-          <Route key={index} path={route.path} element={<route.element />} />
+          <Route
+            key={index}
+            path={route.path}
+            element={<route.element {...route.props} />}
+          />
         ))}
       </Route>
 

@@ -24,17 +24,19 @@ import 'swiper/css/scrollbar';
 import { Button, Typography } from '@material-tailwind/react';
 import { Link } from 'react-router';
 
-const Slider = ({ data }) => {
+const Slider = ({ data, type }) => {
   const topSwiperRef = useRef(null);
   const bottomSwiperRef = useRef(null);
   const prevRef = useRef(null);
   const nextRef = useRef(null);
 
   const [currentSlide, setCurrentSlide] = useState(0);
-
+  const handleClickSlider = () => {
+    console.log('data', data);
+  };
   if (!data) {
     return (
-      <div className="flex animate-pulse flex-col">
+      <div className="flex animate-pulse flex-col" onClick={handleClickSlider}>
         <div className="h-[550px] w-full  place-items-center rounded-lg bg-gray-300 flex items-center justify-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -118,8 +120,15 @@ const Slider = ({ data }) => {
                 <div className="text-white py-1 text-sm font-bold mt-3">
                   <span>⭐ {e.tmdb.vote_average.toFixed(1)}</span> |{' '}
                   <span>{e.tmdb.vote_count} votes</span>
+                  {console.log()}
                 </div>
-                <Link to={`/watch/${e.slug}`}>
+                <Link
+                  to={
+                    type === 'movieRent'
+                      ? `/phim/${e.slug}`
+                      : `/watch/${e.slug}`
+                  }
+                >
                   <Button className="flex items-center gap-3 bg-primary mt-6 text-lg">
                     <PlayCircleIcon className="w-6"></PlayCircleIcon>
                     Xem Ngay

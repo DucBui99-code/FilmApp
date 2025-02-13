@@ -33,6 +33,15 @@ const movieServices = {
       throw error;
     }
   },
+  getMoviePackage: async (data) => {
+    try {
+      const response = await apiClient.get(`/payment/packagePrice?movieId=${data}`);
+      return response.data;
+    } catch (error) {
+      console.error('API error:', error);
+      throw error;
+    }
+  }
 };
 
 export default movieServices;
