@@ -80,7 +80,7 @@ function SliderStatic({ title = 'Test', data }) {
                       alt={`Thumbnail ${index}`}
                       className={`w-full h-[550px] transition-all object-cover cursor-pointer rounded-sm group-hover:bg-black`}
                     />
-                    <div className="absolute top-48 left-28 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
                       <PlayCircleIcon className="text-primary w-20"></PlayCircleIcon>
                     </div>
                   </div>

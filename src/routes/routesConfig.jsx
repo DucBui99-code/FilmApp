@@ -5,6 +5,7 @@ const FilmPackage = React.lazy(() => import('../pages/FilmPackage'));
 const Television = React.lazy(() => import('../pages/Television'));
 const Profile = React.lazy(() => import('../pages/Profile'));
 const PaymentPage = React.lazy(() => import('../pages/Payment/PaymentPage'));
+const ResetPassowordPage = React.lazy(() => import('../pages/ResetPassoword'));
 
 const routesConfig = {
   public: [
@@ -14,6 +15,7 @@ const routesConfig = {
     { path: '/phim-goi', element: FilmPackage },
     { path: '/truyen-hinh', element: Television },
     { path: '/thanh-toan', element: PaymentPage },
+    { path: '/auth/newPassword/:code', element: ResetPassowordPage },
   ],
   private: [{ path: 'auth/profile', element: Profile }],
 };

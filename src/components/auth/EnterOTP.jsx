@@ -4,7 +4,6 @@ import {
   Card,
   CardBody,
   Dialog,
-  Spinner,
   Typography,
 } from '@material-tailwind/react';
 import React, { useEffect, useRef, useState } from 'react';
@@ -166,8 +165,9 @@ function EnterOTP({ open, handleOpen }) {
               fullWidth
               disabled={!isCompleted || timeLeft === 0 || loading}
               onClick={handelSend}
+              loading={loading}
             >
-              {loading ? <Spinner className="text-white"></Spinner> : 'Gửi'}
+              Gửi
             </Button>
           </div>
           <div className="flex flex-col items-center justify-center mt-3">

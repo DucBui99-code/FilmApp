@@ -7,7 +7,6 @@ import {
   CardFooter,
   Dialog,
   Input,
-  Spinner,
   Typography,
 } from '@material-tailwind/react';
 import { useForm } from 'react-hook-form';
@@ -191,10 +190,10 @@ function Register({ handleOpen, open, handelSwitchModal }) {
               onClick={handleSubmit(onSubmit)}
               fullWidth
               type="submit"
-              disabled={loading}
+              loading={loading}
               className="flex items-center justify-center"
             >
-              {loading ? <Spinner color="white"></Spinner> : 'Đăng ký'}
+              Đăng ký
             </Button>
             <Typography variant="small" className="mt-4 flex justify-center">
               Bạn đã có tài khoản?

@@ -1,4 +1,5 @@
 import apiClient from './apiClient';
+import apiGoogle from './apiGoogle';
 
 const AuthServices = {
   registerAccount: async (data) => {
@@ -17,6 +18,14 @@ const AuthServices = {
       throw error;
     }
   },
+  loginByGoole: async (data) => {
+    try {
+      const response = await apiClient.post('/auth/loginByGoogle', data);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
   sendOTP: async (userId) => {
     try {
       const response = await apiClient.post('/auth/sendOTP', userId);
@@ -28,6 +37,32 @@ const AuthServices = {
   verifyOTP: async (data) => {
     try {
       const response = await apiClient.post(`/auth/verifyOTP`, data);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  forgotPassword: async (data) => {
+    try {
+      const response = await apiClient.post(`/auth/forgotPassword`, data);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  resetPassword: async (data) => {
+    try {
+      const response = await apiClient.post(`/auth/resetPassword`, data);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  connectGoogleClooud: async (token) => {
+    try {
+      const response = await apiGoogle.get(`/userinfo`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       return response.data;
     } catch (error) {
       throw error;
