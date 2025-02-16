@@ -67,7 +67,7 @@ const ContentMovie = ({ data }) => {
   };
 
   return (
-    <div className="xl:grid grid-cols-4 xl:mx-[80px] mx-[20px] mt-[40px]">
+    <div className="xl:grid grid-cols-4 gap-4 xl:mx-[80px] mx-[20px] mt-[40px]">
       <div className="col-span-3 grid grid-cols-4 gap-6">
         <div className="col-span-1 xl:block hidden">
           <img src={data?.thumb_url} alt="Poster" />
@@ -105,7 +105,7 @@ const ContentMovie = ({ data }) => {
           <p className="text-base mb-4 line-clamp-4">{data?.content}</p>
           <button
             className="bg-primary flex justify-center items-center px-[40px] py-[8px] text-[16px] rounded-md hover:opacity-80"
-            onClick={() => handleRentMovie(data?.movieId)}
+            onClick={() => handleRentMovie(data?._id)}
           >
             <CurrencyDollarIcon className="w-[20px] mr-[6px]" />
             Thuê phim
