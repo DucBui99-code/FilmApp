@@ -24,7 +24,7 @@ import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 import { Link } from 'react-router';
 
-function SliderHover({ title = 'Test', data }) {
+function SliderHover({ title = 'Test', data, type }) {
   const prevRef = useRef(null);
   const nextRef = useRef(null);
 
@@ -141,7 +141,13 @@ function SliderHover({ title = 'Test', data }) {
                           </div>
                         </CardBody>
                         <CardFooter className="flex items-center justify-between bg-black">
-                          <Link to={`/watch/${e.slug}`}>
+                          <Link
+                            to={
+                              type === 'movieRent'
+                                ? `/phim/${e.slug}`
+                                : `/watch/${e.slug}`
+                            }
+                          >
                             <Button
                               className="flex items-center gap-3 mt-6 text-base"
                               variant="outlined"

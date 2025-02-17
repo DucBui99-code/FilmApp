@@ -8,6 +8,8 @@ import { formatCurrency } from '../../utils/utils';
 import visaCredit from '../../assets/creditcard.png';
 import atmCard from '../../assets/AtmCard.png';
 import momo from '../../assets/momo.png';
+import { useParams, useSearchParams } from 'react-router';
+import movieServices from '../../services/movieServices';
 
 const TimeLine = () => {
   return (
@@ -46,7 +48,7 @@ const ImageDescription = ({ img }) => {
 const CustomLabel = ({ name, description }) => {
   return (
     <div className="flex justify-between items-center text-white text-[14px] custom-label pr-[10px] font-bold py-[12px]">
-      <p className="">{name}</p>
+      <p className="capitalize">{name}</p>
       <div>{description}</div>
     </div>
   );
@@ -68,7 +70,7 @@ const PackageFilm = ({
           <div
             key={`${item.name}-${index}`}
             className={`rounded-[4px] mb-[10px] color-radio-ct ${
-              selectedValue === item.name ? 'bg-primary' : 'bg-[#333]'
+              selectedValue === item._id ? 'bg-primary' : 'bg-[#333]'
             }`}
           >
             <Radio
@@ -79,16 +81,16 @@ const PackageFilm = ({
                 <CustomLabel
                   name={item.name}
                   description={
-                    typeDescription === 'money' ? (
-                      <p>{formatCurrency(item.price)}</p>
+                    typeDescription === 'money' && item.price ? (
+                      <p>{formatCurrency(item?.price)}</p>
                     ) : (
                       item.price
                     )
                   }
                 />
               }
-              onChange={() => setSelectedValue(item.name)}
-              checked={selectedValue === item.name}
+              onChange={() => setSelectedValue(item._id)}
+              checked={selectedValue === item._id}
             />
           </div>
         ))}
@@ -115,6 +117,8 @@ const PaymentInformation = ({
   voucher,
   setVoucher,
   totalPrice,
+  typeService,
+  paymentPackage,
 }) => {
   const onChange = ({ target }) => setVoucher(target.value);
   return (
@@ -125,7 +129,7 @@ const PaymentInformation = ({
       <p className="text-[12px] text-[#FFFFFFB3] font-bold my-[16px]">
         Tài khoản DANET
       </p>
-      <LinePayMentInfo label="Dịch vụ" content="Phim gói" />
+      <LinePayMentInfo label="Dịch vụ" content={typeService} />
       <LinePayMentInfo label="" content="Không tự động gia hạn" />
       <LinePayMentInfo label="Giá tiền" content={formatCurrency(price)} />
       <LinePayMentInfo
@@ -135,7 +139,7 @@ const PaymentInformation = ({
       <LinePayMentInfo label="Ngày có hiệu lực" content={effectiveTime} />
       <LinePayMentInfo
         label="Kỳ thanh toán tiếp theo"
-        content={nextPaymentPeriod}
+        content={nextPaymentPeriod !== 'Invalid Date' ? nextPaymentPeriod : ''}
       />
 
       <div>
@@ -165,7 +169,10 @@ const PaymentInformation = ({
         </p>
       </div>
 
-      <button className="bg-primary text-white hover:bg-[#80652c] duration-200 w-full rounded py-[6px] font-bold">
+      <button
+        className="bg-primary text-white hover:bg-[#80652c] duration-200 w-full rounded py-[6px] font-bold"
+        onClick={paymentPackage}
+      >
         Thanh toán
       </button>
       <p className="font-bold text-[#FFFFFFB3] text-[14px] mt-[10px]">
@@ -180,48 +187,90 @@ const PaymentInformation = ({
 };
 
 const PaymentPage = () => {
-  const listPackage = [
-    {
-      name: '1 Tháng',
-      price: 50000,
-    },
-    {
-      name: '3 Tháng',
-      price: 150000,
-    },
-    {
-      name: '6 Tháng',
-      price: 300000,
-    },
-    {
-      name: '12 Tháng',
-      price: 600000,
-    },
-  ];
+  // const listPackage = [
+  //   {
+  //     name: '1 Tháng',
+  //     price: 50000,
+  //   },
+  //   {
+  //     name: '3 Tháng',
+  //     price: 150000,
+  //   },
+  //   {
+  //     name: '6 Tháng',
+  //     price: 300000,
+  //   },
+  //   {
+  //     name: '12 Tháng',
+  //     price: 600000,
+  //   },
+  // ];
   const listPackageCard = [
     {
+      _id: 'creadit_card',
       name: 'Credit Card',
       price: <ImageDescription img={visaCredit} />,
     },
     {
+      _id: 'atm_card',
       name: 'ATM Card',
       price: <ImageDescription img={atmCard} />,
     },
     {
+      _id: 'momo',
       name: 'Ví MoMo',
       price: <ImageDescription img={momo} />,
     },
   ];
+
+  const [searchParams] = useSearchParams();
+
+  const [typeService, setTypeService] = useState('Phim gói');
+  const [listPackage, setListPackage] = useState([]);
   const [selectedValue, setSelectedValue] = useState('1 Tháng');
   const [pricePackage, setPricePackage] = useState('0');
   const [voucher, setVoucher] = useState('');
+  const [listPackageFilm, setListPackageFilm] = useState([]);
   const [selectedPaymentMethod, setSelectedPaymentMethod] =
     useState('Credit Card');
   const [discountPrice, setDiscountPrice] = useState(0);
+
+  const paymentPackage = () => {
+    const form = {
+      idPackage: selectedValue,
+      paymentMethod: selectedPaymentMethod,
+      voucher,
+    };
+    console.log('form payment: ', form);
+  };
+
   useEffect(() => {
-    const packageFilm = listPackage.find((item) => item.name === selectedValue);
-    setPricePackage(packageFilm.price);
+    if (listPackage.length > 0) {
+      const packageFilm =
+        listPackage.find((item) => item._id === selectedValue) ||
+        [listPackageFilm].find((item) => item._id === selectedValue);
+      const typeService = listPackage.find((item) => item._id === selectedValue)
+        ? 'Phim gói'
+        : 'Phim lẻ';
+      setTypeService(typeService);
+      setPricePackage(packageFilm.price);
+    }
   }, [selectedValue]);
+
+  useEffect(() => {
+    let movieId = searchParams.get('id');
+    if (!movieId) {
+      movieId = '67ab813801362b36ac3dca6d';
+    }
+    const fetchData = async () => {
+      const res = await movieServices.getMoviePackage(movieId);
+      setListPackage(res.data.packageMonth);
+      setListPackageFilm(res.data.packageSingle);
+      setSelectedValue(res.data.packageMonth[0]._id);
+    };
+
+    fetchData();
+  }, []);
   return (
     <div className="mt-[20px] w-full max-w-[960px] mx-auto text-white font-lato px-4">
       <TimeLine />
@@ -236,6 +285,18 @@ const PaymentPage = () => {
             classNameTitle="p-[16px] text-[18px] font-bold"
             typeDescription="money"
           />
+          {listPackageFilm && listPackageFilm.name ? (
+            <PackageFilm
+              selectedValue={selectedValue}
+              setSelectedValue={setSelectedValue}
+              listPackage={[{ ...listPackageFilm }]}
+              typeDescription="money"
+              title="Phim lẻ:"
+              classNameTitle="text-[18px] font-bold p-[16px]"
+            />
+          ) : (
+            ''
+          )}
           <PackageFilm
             selectedValue={selectedPaymentMethod}
             setSelectedValue={setSelectedPaymentMethod}
@@ -248,11 +309,16 @@ const PaymentPage = () => {
         {/* Cột bên phải (Thông tin thanh toán) */}
         <div className="md:col-span-1 bg-[#333333] pb-[200px]">
           <PaymentInformation
+            typeService={typeService}
             price={pricePackage}
+            paymentPackage={paymentPackage}
             discountPrice={discountPrice}
             effectiveTime={dayjs().format('D/M/YYYY')}
             nextPaymentPeriod={dayjs()
-              .add(selectedValue.split(' ')[0], 'month')
+              .add(
+                listPackage.find((item) => item._id == selectedValue)?.duration,
+                'month'
+              )
               .format('D/M/YYYY')}
             voucher={voucher}
             setVoucher={setVoucher}

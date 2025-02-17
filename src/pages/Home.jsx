@@ -4,13 +4,16 @@ import SliderStatic from '../components/body/SliderStatic';
 import MoviesServices from '../services/movieServices';
 import SliderHover from '../components/body/SliderHover';
 import { useAlert } from '../components/Message/AlertContext';
+import { useDispatch, useSelector } from 'react-redux';
+import { setLoading, setLoadingAsync } from '../store/appStore';
 
-function Home() {
+function Home({ type }) {
   const [moviesData, setMoviesData] = useState({}); // Lưu trữ kết quả theo từng trang
+  const dispatch = useDispatch();
   const { showAlert } = useAlert();
   const fetchMovies = async (page) => {
     try {
-      const res = await MoviesServices.getListMovie({ page });
+      const res = await MoviesServices.getListMovie({ page, type });
       setMoviesData((prev) => ({
         ...prev,
         [page]: {
@@ -24,25 +27,40 @@ function Home() {
   };
 
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      fetchMovies(1);
-      fetchMovies(2);
-      fetchMovies(3);
-    }, 3000);
+    let isMounted = true; // Cờ kiểm tra component còn mounted
+
+    const fetchAllMovies = async () => {
+      dispatch(setLoading(true));
+
+      try {
+        await Promise.all([fetchMovies(1), fetchMovies(2), fetchMovies(3)]);
+      } catch (error) {
+        console.error('Lỗi khi tải phim:', error);
+      } finally {
+        if (isMounted) dispatch(setLoading(false)); // Chỉ update state nếu component chưa unmount
+      }
+    };
+
+    fetchAllMovies(); // Gọi hàm async
 
     return () => {
-      clearTimeout(timeout);
+      isMounted = false; // Cleanup tránh lỗi khi unmount
     };
-  }, []);
+  }, [type]);
 
   return (
     <div>
-      <Slider data={moviesData[1]}></Slider>
+      <Slider data={moviesData[1]} type={type}></Slider>
       <SliderStatic
         title={'Phim hay mỗi ngày'}
         data={moviesData[2]}
+        type={type}
       ></SliderStatic>
-      <SliderHover title="TOP 10 TRONG NGÀY" data={moviesData[3]}></SliderHover>
+      <SliderHover
+        title="TOP 10 TRONG NGÀY"
+        data={moviesData[3]}
+        type={type}
+      ></SliderHover>
     </div>
   );
 }

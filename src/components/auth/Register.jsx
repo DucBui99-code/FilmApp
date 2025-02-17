@@ -63,7 +63,7 @@ function Register({ handleOpen, open, handelSwitchModal }) {
         );
       }
     } catch (registerError) {
-      showAlert('Đăng ký thất bại:' + registerError.message,'error')
+      showAlert('Đăng ký thất bại: ' + registerError.message,'error')
       if (registerError.response?.status === 409) {
         setError('email', {
           type: 'manual',
