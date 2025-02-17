@@ -15,28 +15,39 @@ import {
   UserCircleIcon,
 } from '@heroicons/react/24/solid';
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router';
 
 // profile menu component
 const profileMenuItems = [
   {
-    label: 'My Profile',
+    label: 'Tài khoản',
     icon: UserCircleIcon,
+    action: 'account',
   },
   {
-    label: 'Edit Profile',
-    icon: Cog6ToothIcon,
-  },
-  {
-    label: 'Sign Out',
+    label: 'Đăng xuất',
     icon: PowerIcon,
+    action: 'logout',
   },
 ];
 
 function AvatarCustom({ src, email }) {
   const firstLetter = email ? email.charAt(0).toUpperCase() : '?';
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  const closeMenu = () => setIsMenuOpen(false);
+  const navigate = useNavigate();
+  const closeMenu = (action) => {
+    switch (action) {
+      case 'account':
+        navigate('tai-khoan');
+        break;
+      case 'logout':
+        console.log('logouttt');
+        break;
+      default:
+        break;
+    }
+    setIsMenuOpen(false);
+  };
 
   return (
     <Menu open={isMenuOpen} handler={setIsMenuOpen} placement="bottom-end">
@@ -60,34 +71,32 @@ function AvatarCustom({ src, email }) {
           )}
         </Button>
       </MenuHandler>
-      <MenuList className="p-1 bg-blue-gray-800">
-        {profileMenuItems.map(({ label, icon }, key) => {
+      <MenuList className="p-0 bg-[#222222] border-opacity-30 min-w-[120px] px-[10px]">
+        {profileMenuItems.map(({ label, icon, action }, key) => {
           const isLastItem = key === profileMenuItems.length - 1;
           return (
-            <MenuItem
-              key={label}
-              onClick={closeMenu}
-              className={`flex items-center gap-2 rounded ${
-                isLastItem
-                  ? 'hover:bg-red-500/10 focus:bg-red-500/10 active:bg-red-500/10'
-                  : 'hover:bg-blue-gray-600D'
-              } `}
-            >
-              {React.createElement(icon, {
-                className: `h-4 w-4 ${
-                  isLastItem ? 'text-red-500' : 'text-white'
-                } `,
-                strokeWidth: 2,
-              })}
-              <Typography
-                as="span"
-                variant="small"
-                className="font-normal"
-                color={isLastItem ? 'red' : 'white'}
+            <div key={key}>
+              {isLastItem && (
+                <div className="h-[1px] w-full bg-primary opacity-20"></div>
+              )}
+              <MenuItem
+                key={key}
+                onClick={() => closeMenu(action)}
+                className={`flex items-center justify-center gap-2 bg-transparent rounded font-bold !text-white hover:bg-[#333] active:bg-[#222] focus:bg-[#222] my-[4px] p-0 py-[6px] px-[10px] ${
+                  isLastItem
+                    ? 'border-t-2 hover:bg-primary active:bg-primary focus:bg-primary border-primary border text-primary hover:text-white focus:text-white active:text-white duration-200'
+                    : ''
+                } `}
               >
-                {label}
-              </Typography>
-            </MenuItem>
+                {React.createElement(icon, {
+                  className: `h-4 w-4`,
+                  strokeWidth: 2,
+                })}
+                <Typography as="span" variant="small" className="font-bold">
+                  {label}
+                </Typography>
+              </MenuItem>
+            </div>
           );
         })}
       </MenuList>

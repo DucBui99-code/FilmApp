@@ -15,7 +15,7 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 
-function SliderStatic({ title = 'Test', data }) {
+function SliderStatic({ title = 'Test', data, type }) {
   const prevRef = useRef(null);
   const nextRef = useRef(null);
 
@@ -73,7 +73,13 @@ function SliderStatic({ title = 'Test', data }) {
           >
             {data.items.map((e, index) => (
               <SwiperSlide key={index}>
-                <Link to={`/watch/${e.slug}`}>
+                <Link
+                  to={
+                    type === 'movieRent'
+                      ? `/phim/${e.slug}`
+                      : `/watch/${e.slug}`
+                  }
+                >
                   <div className="relative group">
                     <img
                       src={data.pathImage + e.thumb_url}

@@ -138,6 +138,7 @@ function Login({ handleOpen, open, handelSwitchModal, handelOpenForgotPass }) {
               color="light-green"
               className="text-white"
               autoComplete="off"
+              onKeyDown={(e) => e.key === 'Enter' && handleSubmit(onSubmit)()}
               type={showPass ? 'text' : 'password'}
               icon={
                 showPass ? (

@@ -6,26 +6,41 @@ import {
   Navbar,
   Typography,
 } from '@material-tailwind/react';
-import { useDispatch } from 'react-redux';
-import { Link, useLocation } from 'react-router';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useLocation, useNavigate } from 'react-router';
 
 import Logo from '../../assets/logo-danet.png';
 import ActionBarMobile from './ActionBarMobile';
 import NotificationPopup from './NotificationPopup';
 import { setLoadingAsync } from '../../store/appStore';
 import ActionBarPC from './ActionBarPC';
+import EventEmitter from 'eventemitter3';
+import eventBus from '../../utils/eventBus';
+import emitter from '../../utils/eventBus';
+import { useAlert } from '../Message/AlertContext';
 
 function Header() {
   const ListMenu = [
     { name: 'Miễn phí', router: '/mien-phi' },
     { name: 'Phim Gói', router: '/phim-goi' },
     { name: 'Truyền Hình', router: '/truyen-hinh' },
-    { name: 'Thanh Toán', router: '/thanh-toan' },
   ];
 
   const [openNav, setOpenNav] = useState(false);
   const dispatch = useDispatch();
   const location = useLocation();
+  const navigate = useNavigate();
+  const { showAlert } = useAlert();
+  const userData = useSelector((s) => s.auth);
+  const handleSubscribePackage = () => {
+    console.log(userData);
+    if (userData.userInfo) {
+      navigate('/thanh-toan');
+    } else {
+      showAlert('Vui lòng đăng nhập để đăng ký gói', 'error');
+      emitter.emit('openLogin', 'aaa');
+    }
+  };
 
   useEffect(() => {
     window.addEventListener(
@@ -70,7 +85,9 @@ function Header() {
           <div className="flex items-center gap-4">
             <div className="flex items-center justify-center gap-4">
               <NotificationPopup></NotificationPopup>
-              <Button className="bg-primary">Đăng ký gói</Button>
+              <Button className="bg-primary" onClick={handleSubscribePackage}>
+                Đăng ký gói
+              </Button>
             </div>
             <IconButton
               variant="text"

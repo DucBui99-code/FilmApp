@@ -1,0 +1,101 @@
+li.tab-header-custom.text-blue-gray-900 p,
+li.tab-header-custom.text-blue-gray-900 svg {
+  color: #b8b8b8;
+}
+
+li.tab-header-custom {
+  width: fit-content;
+  margin-right: 20px;
+}
+.custom-information input,
+.custom-information label {
+  color: white !important;
+  font-weight: bold;
+}
+
+.custom-information input:active {
+  border-color: #8abf40 !important;
+}
+.custom-information input:focus {
+  border-color: #8abf40 !important;
+  border-top: none;
+  border-width: 2px;
+}
+
+.peer:focus ~ .peer-focus\:before\:\!border-gray-900::before {
+  border-color: #8abf40 !important;
+}
+
+.peer:focus ~ .peer-focus\:before\:\!border-gray-900::after {
+  border-color: #8abf40 !important;
+}
+.peer:focus ~ .peer-focus\:before\:\!border-gray-900 {
+  color: #8abf40 !important;
+}
+
+.custom-information .peer {
+  border-width: 1px;
+  color: white;
+  font-weight: bold;
+}
+
+.date-picker-css input.MuiInputBase-input {
+  padding: 8.5px 12px;
+}
+
+.date-picker-css label.MuiFormLabel-root:not(.MuiInputLabel-shrink) {
+  top: -3px;
+  font-size: 13px;
+}
+
+.date-picker-css .MuiInputBase-root {
+  border: none;
+  border-radius: 7px;
+  border-top: transparent;
+}
+
+.date-picker-css .MuiSvgIcon-root.MuiSvgIcon-fontSizeMedium {
+  color: #b0bec5;
+}
+
+.date-picker-css .MuiOutlinedInput-notchedOutline {
+  border: 1px solid #b0bec5 !important;
+}
+
+.Mui-focused,
+.date-picker-css .MuiInputBase-root.Mui-focused {
+  border: #8abf40 !important;
+  outline: #8abf40 !important;
+  box-shadow: #8abf40 !important;
+}
+
+.custom-table thead .MuiTableCell-root {
+  color: #919eab !important;
+  font-weight: bold;
+  font-size: 14px !important;
+}
+
+.custom-table .MuiTableCell-root {
+  font-size: 16px !important;
+  border: none;
+  color: white;
+}
+
+.MuiPaper-root {
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.MuiTablePagination-displayedRows {
+  color: white;
+  font-weight: bold !important;
+}
+
+.MuiTablePagination-actions {
+  color:white
+}
+
+.MuiButtonBase-root.Mui-disabled.MuiIconButton-root {
+  color: #919eab
+}

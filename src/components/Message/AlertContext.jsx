@@ -5,6 +5,7 @@ const AlertContext = createContext();
 export function useAlert() {
   return useContext(AlertContext);
 }
+type AlertType = "success" | "error" | "warning" | "info"; // Các type có sẵn
 
 export const AlertProvider = ({ children }) => {
   const [alerts, setAlerts] = useState([]); // Lưu trữ mảng các thông báo
