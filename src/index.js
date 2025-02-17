@@ -1,5 +1,6 @@
 import { ThemeProvider } from '@material-tailwind/react';
 import React from 'react';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 import ReactDOM from 'react-dom/client';
 import './styles/index.css';
 import App from './App';
@@ -11,7 +12,11 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <Provider store={store}>
     <ThemeProvider>
-        <App />
+      <React.StrictMode>
+        <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
+          <App />
+        </GoogleOAuthProvider>
+      </React.StrictMode>
     </ThemeProvider>
   </Provider>
 );

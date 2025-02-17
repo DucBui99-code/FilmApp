@@ -85,7 +85,7 @@ function SliderHover({ title = 'Test', data, type }) {
             {data.items.map((e, index) => (
               <SwiperSlide key={index}>
                 <div
-                  className="relative"
+                  className="relative z-0"
                   onMouseEnter={() => setHoveredIndex(index)}
                   onMouseLeave={() => setHoveredIndex(null)}
                 >
@@ -101,7 +101,7 @@ function SliderHover({ title = 'Test', data, type }) {
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.9 }}
                       transition={{ duration: 0.3 }}
-                      className={`absolute top-0 left-4 w-96 h-full flex items-center justify-center z-10 shadow-lg`}
+                      className={`absolute top-0 ${index === 0 ? 'left-2' : 'right-2'} w-96 h-full flex items-center justify-center shadow-lg`}
                     >
                       <Card className="max-w-[24rem] overflow-hidden">
                         <CardHeader

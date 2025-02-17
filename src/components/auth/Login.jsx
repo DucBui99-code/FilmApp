@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import { EyeIcon, EyeSlashIcon, XMarkIcon } from '@heroicons/react/16/solid';
 import {
   Button,
@@ -8,19 +9,19 @@ import {
   Dialog,
   IconButton,
   Input,
-  Spinner,
   Typography,
 } from '@material-tailwind/react';
-import React, { useState } from 'react';
-import IconGG from '../../assets/IconGG.png';
-import IconQR from '../../assets/IconQR.png';
 import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
+import { useGoogleLogin, googleLogout } from '@react-oauth/google';
+
+import IconGG from '../../assets/IconGG.png';
+import IconQR from '../../assets/IconQR.png';
 import AuthServices from '../../services/authServices';
 import { useAlert } from '../Message/AlertContext';
 import { loginSuccess } from '../../store/authSlice';
 
-function Login({ handleOpen, open, handelSwitchModal }) {
+function Login({ handleOpen, open, handelSwitchModal, handelOpenForgotPass }) {
   const regex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
 
   const {
@@ -41,17 +42,24 @@ function Login({ handleOpen, open, handelSwitchModal }) {
     handleOpen(!open);
   };
 
+  const handelLoginSuccess = (data) => {
+    dispatch(
+      loginSuccess({
+        userId: data.data.userId,
+        token: data.data.token,
+        loginType: data.data.loginType,
+      })
+    );
+
+    showAlert(data.message, 'success');
+    handelClose();
+  };
+
   const onSubmit = async (data) => {
     setLoading(true);
     try {
       const res = await AuthServices.loginAccount(data);
-
-      dispatch(
-        loginSuccess({ userId: res.data.userId, token: res.data.token })
-      );
-
-      showAlert(res.message, 'success');
-      handelClose();
+      handelLoginSuccess(res);
     } catch (error) {
       showAlert(
         error.response?.data?.message?.[0] || 'Failed to Login',
@@ -61,6 +69,34 @@ function Login({ handleOpen, open, handelSwitchModal }) {
       setLoading(false);
     }
   };
+
+  const onLoginGoogle = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      try {
+        const resGoogle = await AuthServices.connectGoogleClooud(
+          tokenResponse.access_token
+        );
+
+        try {
+          const resLoginServer = await AuthServices.loginByGoole({
+            email: resGoogle.email,
+            googleId: resGoogle.sub,
+            username: resGoogle.given_name,
+            firstLastName: resGoogle.family_name,
+            avatar: resGoogle.picture,
+          });
+
+          handelLoginSuccess(resLoginServer);
+        } catch (error) {
+          showAlert(error.message || 'Failed to Login', 'error');
+        }
+      } catch (error) {
+        showAlert(error.message || 'Failed to Login', 'error');
+      }
+    },
+    onError: () => console.log('Login Failed'),
+  });
+
   return (
     <>
       <Dialog size="xs" open={open} className="bg-transparent shadow-none">
@@ -133,6 +169,7 @@ function Login({ handleOpen, open, handelSwitchModal }) {
               <Typography
                 className="cursor-pointer hover:text-primary transition-colors"
                 variant="small"
+                onClick={handelOpenForgotPass}
               >
                 Quên mật khẩu?
               </Typography>
@@ -145,13 +182,9 @@ function Login({ handleOpen, open, handelSwitchModal }) {
               onClick={handleSubmit(onSubmit)}
               fullWidth
               className="flex items-center justify-center"
-              disabled={loading}
+              loading={loading}
             >
-              {loading ? (
-                <Spinner className="text-white"></Spinner>
-              ) : (
-                'Đăng nhập'
-              )}
+              Đăng nhập
             </Button>
             <Typography variant="small" className="mt-4 flex justify-center">
               Chưa có tài khoản?
@@ -174,7 +207,7 @@ function Login({ handleOpen, open, handelSwitchModal }) {
             </div>
 
             <div className="flex items-center justify-center gap-4 mt-3">
-              <IconButton>
+              <IconButton onClick={onLoginGoogle}>
                 <img src={IconGG} alt="GG Icon" className="w-6"></img>
               </IconButton>
               <IconButton>
