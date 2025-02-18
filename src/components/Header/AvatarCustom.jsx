@@ -7,15 +7,11 @@ import {
   MenuList,
   Typography,
 } from '@material-tailwind/react';
-import {
-  Cog6ToothIcon,
-  InboxArrowDownIcon,
-  LifebuoyIcon,
-  PowerIcon,
-  UserCircleIcon,
-} from '@heroicons/react/24/solid';
+import { PowerIcon, UserCircleIcon } from '@heroicons/react/24/solid';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
+import { useDispatch } from 'react-redux';
+import { logout } from '../../store/authSlice';
 
 // profile menu component
 const profileMenuItems = [
@@ -32,16 +28,20 @@ const profileMenuItems = [
 ];
 
 function AvatarCustom({ src, email }) {
+  const dispatch = useDispatch();
+
+  const navigate = useNavigate();
+
   const firstLetter = email ? email.charAt(0).toUpperCase() : '?';
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const navigate = useNavigate();
+
   const closeMenu = (action) => {
     switch (action) {
       case 'account':
         navigate('tai-khoan');
         break;
       case 'logout':
-        console.log('logouttt');
+        dispatch(logout());
         break;
       default:
         break;
@@ -62,7 +62,7 @@ function AvatarCustom({ src, email }) {
               size="sm"
               alt="avatar"
               src={src}
-              className="border border-green-500 shadow-xl shadow-green-900/20 ring-4 ring-green-500/30"
+              className="shadow-xl shadow-green-900/20 ring-4 ring-green-500/30"
             />
           ) : (
             <div className="w-10 h-10 flex items-center justify-center rounded-full bg-green-500 text-white text-lg font-bold border border-green-700">

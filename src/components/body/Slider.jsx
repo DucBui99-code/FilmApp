@@ -120,7 +120,6 @@ const Slider = ({ data, type }) => {
                 <div className="text-white py-1 text-sm font-bold mt-3">
                   <span>⭐ {e.tmdb.vote_average.toFixed(1)}</span> |{' '}
                   <span>{e.tmdb.vote_count} votes</span>
-                  {console.log()}
                 </div>
                 <Link
                   to={

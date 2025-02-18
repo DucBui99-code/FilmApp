@@ -41,10 +41,7 @@ function ForgotPassword({ handelOpen, open }) {
 
       handelClose();
     } catch (error) {
-      showAlert(
-        error.response?.data?.message?.[0] || 'Failed to Login',
-        'error'
-      );
+      showAlert(error.response?.data?.message, 'error');
     } finally {
       setLoading(false);
     }

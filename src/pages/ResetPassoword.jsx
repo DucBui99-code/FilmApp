@@ -43,10 +43,7 @@ function ResetPassoword() {
       showAlert(res.message, 'success');
       setIsComplete(true);
     } catch (error) {
-      showAlert(
-        error.response?.data?.message?.[0] || 'Something wrong in server',
-        'error'
-      );
+      showAlert(error.response?.data?.message, 'error');
     } finally {
       setLoading(false);
     }

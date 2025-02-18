@@ -22,7 +22,7 @@ function Home({ type }) {
         },
       }));
     } catch (error) {
-      showAlert(error.message, 'error');
+      showAlert(error.response?.data?.message, 'error');
     }
   };
 

@@ -23,7 +23,9 @@ function WatchMovie() {
   });
 
   const [currentEpisode, setCurrentEpisode] = useState(0);
+
   const { showAlert } = useAlert();
+
   useEffect(() => {
     let isMounted = true;
     let timeout;
@@ -61,7 +63,9 @@ function WatchMovie() {
                   }));
                 }
               })
-              .catch((err) => showAlert(err.message, 'error'));
+              .catch((error) =>
+                showAlert(error.response?.data?.message, 'error')
+              );
           }
         }, 3000); // Thêm thời gian chờ (3 giây) để tránh spam request
       }

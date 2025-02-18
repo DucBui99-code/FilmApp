@@ -61,10 +61,7 @@ function Login({ handleOpen, open, handelSwitchModal, handelOpenForgotPass }) {
       const res = await AuthServices.loginAccount(data);
       handelLoginSuccess(res);
     } catch (error) {
-      showAlert(
-        error.response?.data?.message?.[0] || 'Failed to Login',
-        'error'
-      );
+      showAlert(error.response?.data?.message, 'error');
     } finally {
       setLoading(false);
     }
@@ -81,17 +78,18 @@ function Login({ handleOpen, open, handelSwitchModal, handelOpenForgotPass }) {
           const resLoginServer = await AuthServices.loginByGoole({
             email: resGoogle.email,
             googleId: resGoogle.sub,
-            username: resGoogle.given_name,
-            firstLastName: resGoogle.family_name,
+            lastName: resGoogle.given_name,
+            firstName: resGoogle.family_name,
             avatar: resGoogle.picture,
+            loginType: resGoogle.loginType,
           });
 
           handelLoginSuccess(resLoginServer);
         } catch (error) {
-          showAlert(error.message || 'Failed to Login', 'error');
+          showAlert(error.response?.data?.message, 'error');
         }
       } catch (error) {
-        showAlert(error.message || 'Failed to Login', 'error');
+        showAlert(error.response?.data?.message, 'error');
       }
     },
     onError: () => console.log('Login Failed'),

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import '../account/account.css';
 import {
   Tabs,
@@ -21,76 +21,100 @@ import PackageTab from './tabAccount/PackageTab';
 import FavoriteTab from './tabAccount/FavoriteTab';
 import RentFilmTab from './tabAccount/RentFilmTab';
 import ManagementDeviceTab from './tabAccount/ManagementDeviceTab';
+import UserServices from '../../services/userServices';
+import { useAlert } from '../../components/Message/AlertContext';
 
 export default function Account() {
-  const [activeTab, setActiveTab] = React.useState('account');
-  const data = [
+  const [activeTab, setActiveTab] = useState(0);
+  const [profileData, setProfileData] = useState({}); // Lưu dữ liệu từng tab
+  const { showAlert } = useAlert();
+
+  const tabConfigs = [
     {
       label: 'Tài khoản',
-      value: 'account',
+      component: AccountTab,
       icon: <UserCircleIcon className="w-5 h-5 mr-1" />,
-      content: <AccountTab />,
+      defaultData: {},
     },
     {
       label: 'Thanh toán',
-      value: 'payment',
+      component: PaymentTab,
       icon: <CreditCardIcon className="w-5 h-5 mr-1" />,
-      content: <PaymentTab />,
+      defaultData: [],
     },
     {
       label: 'Gói đã mua',
-      value: 'packageBuy',
+      component: PackageTab,
       icon: <FilmIcon className="w-5 h-5 mr-1" />,
-      content: <PackageTab />,
+      defaultData: [],
     },
     {
       label: 'Phim yêu thích',
-      value: 'like',
+      component: FavoriteTab,
       icon: <HeartIcon className="w-5 h-5 mr-1" />,
-      content: <FavoriteTab />,
+      defaultData: [],
     },
     {
       label: 'Phim đang thuê',
-      value: 'filmRent',
+      component: RentFilmTab,
       icon: <VideoCameraIcon className="w-5 h-5 mr-1" />,
-      content: <RentFilmTab />,
+      defaultData: [],
     },
     {
       label: 'Quản lý thiết bị',
-      value: 'managementDevice',
+      component: ManagementDeviceTab,
       icon: <DeviceTabletIcon className="w-5 h-5 mr-1" />,
-      content: <ManagementDeviceTab />,
+      defaultData: [],
     },
   ];
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const resData = await UserServices.getProfile(activeTab);
+
+        setProfileData((prev) => ({
+          ...prev,
+          [activeTab]: resData.data, // Lưu dữ liệu riêng cho từng tab
+        }));
+      } catch (error) {
+        showAlert(error.response?.data?.message, 'error');
+      }
+    };
+
+    fetchProfile();
+  }, [activeTab]);
+
   return (
-    <div className="mx-auto w-full max-w-7xl px-8">
-      <Tabs value={activeTab}>
+    <div className="mx-auto w-full max-w-7xl px-2">
+      <Tabs value={activeTab} className="relative z-10">
         <TabsHeader
-          className="rounded-none bg-transparent p-0 py-4 mt-[20px]"
+          className="rounded-none bg-transparent p-0 py-4 ml-5 mt-[20px]"
           indicatorProps={{
             className:
               'bg-transparent border-b-2 border-primary shadow-none rounded-none',
           }}
         >
-          {data.map(({ label, value, icon, content }) => (
+          {tabConfigs.map(({ label, icon }, index) => (
             <Tab
-              key={value}
-              value={value}
+              key={index}
+              value={index}
               activeClassName="text-white duration-100"
-              onClick={() => setActiveTab(value)}
+              onClick={() => setActiveTab(index)}
               className="w-full font-bold tab-header-custom"
             >
               <div className="flex w-full justify-center items-center pb-[10px]">
                 {icon}
-                <p className="">{label}</p>
+                <p className="hidden md:block">{label}</p>
               </div>
             </Tab>
           ))}
         </TabsHeader>
+
         <TabsBody>
-          {data.map(({ value, content }) => (
-            <TabPanel key={value} value={value}>
-              {content}
+          {tabConfigs.map(({ component: Component, defaultData }, index) => (
+            <TabPanel key={index} value={index}>
+              <Component data={profileData[index] || defaultData} />
             </TabPanel>
           ))}
         </TabsBody>

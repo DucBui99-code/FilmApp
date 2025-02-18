@@ -1,6 +1,6 @@
 import React from 'react';
 
-const FavoriteTab = () => {
+const FavoriteTab = ({ data }) => {
   return <div>FavoriteTab</div>;
 };
 

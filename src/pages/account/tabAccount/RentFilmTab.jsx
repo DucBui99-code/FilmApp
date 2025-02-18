@@ -1,6 +1,6 @@
 import React from 'react';
 
-const RentFilmTab = () => {
+const RentFilmTab = ({ data }) => {
   return <div>RentFilmTab</div>;
 };
 

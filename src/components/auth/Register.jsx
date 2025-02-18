@@ -55,20 +55,21 @@ function Register({ handleOpen, open, handelSwitchModal }) {
           timeExpriedMinutes: otpResponse.timeExpired,
           userId: registerResponse.userId,
         });
-      } catch (otpError) {
-        showAlert(
-          otpError.response?.data?.message?.[0] || 'Failed to send OTP',
-          'error'
-        );
+      } catch (error) {
+        showAlert(error.response?.data?.message, 'error');
       }
-    } catch (registerError) {
-      showAlert('Đăng ký thất bại: ' + registerError.message,'error')
-      if (registerError.response?.status === 409) {
+    } catch (error) {
+      showAlert(error.response?.data?.message, 'error');
+      if (error.response?.status === 409) {
         setError('email', {
           type: 'manual',
-          message:
-            registerError.response?.data?.message?.[0] ||
-            'Email already exists',
+          message: error.response?.data?.message,
+        });
+      }
+      if (error.response?.status === 410) {
+        setError('username', {
+          type: 'manual',
+          message: error.response?.data?.message,
         });
       }
     } finally {

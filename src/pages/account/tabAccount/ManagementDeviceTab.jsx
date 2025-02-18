@@ -1,6 +1,6 @@
 import React from 'react';
 
-const ManagementDeviceTab = () => {
+const ManagementDeviceTab = ({ data }) => {
   return <div>ManagementDeviceTab</div>;
 };
 

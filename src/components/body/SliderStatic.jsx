@@ -76,8 +76,8 @@ function SliderStatic({ title = 'Test', data, type }) {
                 <Link
                   to={
                     type === 'movieRent'
-                      ? `/phim/${e.slug}`
-                      : `/watch/${e.slug}`
+                      ? `/xem-phim-goi/${e.slug}`
+                      : `/xem-phim-mien-phi/${e.slug}`
                   }
                 >
                   <div className="relative group">

@@ -14,8 +14,6 @@ import ActionBarMobile from './ActionBarMobile';
 import NotificationPopup from './NotificationPopup';
 import { setLoadingAsync } from '../../store/appStore';
 import ActionBarPC from './ActionBarPC';
-import EventEmitter from 'eventemitter3';
-import eventBus from '../../utils/eventBus';
 import emitter from '../../utils/eventBus';
 import { useAlert } from '../Message/AlertContext';
 
@@ -33,7 +31,6 @@ function Header() {
   const { showAlert } = useAlert();
   const userData = useSelector((s) => s.auth);
   const handleSubscribePackage = () => {
-    console.log(userData);
     if (userData.userInfo) {
       navigate('/thanh-toan');
     } else {

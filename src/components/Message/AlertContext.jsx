@@ -5,7 +5,7 @@ const AlertContext = createContext();
 export function useAlert() {
   return useContext(AlertContext);
 }
-type AlertType = "success" | "error" | "warning" | "info"; // Các type có sẵn
+const ALERT_TYPES = ['success', 'error', 'warning', 'info'];
 
 export const AlertProvider = ({ children }) => {
   const [alerts, setAlerts] = useState([]); // Lưu trữ mảng các thông báo
@@ -15,6 +15,10 @@ export const AlertProvider = ({ children }) => {
   };
 
   const showAlert = (message, type) => {
+    if (!ALERT_TYPES.includes(type)) {
+      console.error(`AlertType không hợp lệ: ${type}`);
+      return;
+    }
     const newAlert = { id: Date.now(), message, type }; // Tạo thông báo mới với id duy nhất
     setAlerts((prevAlerts) => [...prevAlerts, newAlert]);
 

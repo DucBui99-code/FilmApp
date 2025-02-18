@@ -77,8 +77,7 @@ function EnterOTP({ open, handleOpen }) {
       handleOpen({ isOpen: false, email: '', timeExpriedMinutes: 0 });
       showAlert('Verify OTP successfully', 'success');
     } catch (error) {
-      const errorMessage =
-        error.response?.data?.message?.[0] || 'An error occurred';
+      const errorMessage = error.response?.data?.message;
       if (error.response?.status === 400) {
         setError(errorMessage);
       } else {
@@ -109,10 +108,7 @@ function EnterOTP({ open, handleOpen }) {
         });
       }, 1000);
     } catch (error) {
-      showAlert(
-        error.response?.data?.message?.[0] || 'An error occurred',
-        'error'
-      );
+      showAlert(error.response?.data?.message, 'error');
     }
   };
 

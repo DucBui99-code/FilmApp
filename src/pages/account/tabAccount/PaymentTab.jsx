@@ -1,6 +1,4 @@
 import React from 'react';
-
-import { Card, Typography } from '@material-tailwind/react';
 import {
   Paper,
   Table,
@@ -15,12 +13,13 @@ import dayjs from 'dayjs';
 import { formatCurrency } from '../../../utils/utils';
 import {
   CheckCircleIcon,
-  ExclamationCircleIcon,
   ExclamationTriangleIcon,
 } from '@heroicons/react/24/solid';
+
 function createData(id, dateBuy, price, des, status) {
   return { id, dateBuy, price, des, status };
 }
+
 const TableHistory = () => {
   const handleChangePage = () => {};
 
@@ -79,7 +78,10 @@ const TableHistory = () => {
                     </p>
                   ) : row.status === 'success' ? (
                     <p className="border rounded-full border-primary flex justify-center w-[110px] py-[4px] text-[12px] items-center">
-                      <CheckCircleIcon className="text-green-500 mr-[4px]" width={20} />{' '}
+                      <CheckCircleIcon
+                        className="text-green-500 mr-[4px]"
+                        width={20}
+                      />{' '}
                       Thành công
                     </p>
                   ) : null}
@@ -101,7 +103,7 @@ const TableHistory = () => {
     </>
   );
 };
-const PaymentTab = () => {
+const PaymentTab = ({ data }) => {
   return (
     <div className="grid grid-cols-2 gap-4">
       <div className="bg-customDark text-whiteText uppercase font-bold ps-[24px] pt-[20px] pb-[24px]">

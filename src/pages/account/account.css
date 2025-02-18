@@ -10,7 +10,7 @@ li.tab-header-custom {
 .custom-information input,
 .custom-information label {
   color: white !important;
-  font-weight: bold;
+  font-weight: 400;
 }
 
 .custom-information input:active {
@@ -93,9 +93,9 @@ li.tab-header-custom {
 }
 
 .MuiTablePagination-actions {
-  color:white
+  color: white;
 }
 
 .MuiButtonBase-root.Mui-disabled.MuiIconButton-root {
-  color: #919eab
+  color: #919eab;
 }

@@ -9,7 +9,7 @@ export const fetchUserProfile = createAsyncThunk(
       const token = getState().auth.token; // Lấy token từ Redux state
       if (!token) return rejectWithValue('No token found');
 
-      const response = await UserServices.getProfile(token);
+      const response = await UserServices.getProfile();
 
       return response.data;
     } catch (error) {
@@ -25,6 +25,7 @@ const authSlice = createSlice({
     userId: localStorage.getItem('userId') || null, // Lấy từ LocalStorage
     token: Cookies.get('token') || '',
     isLogin: !!Cookies.get('token'),
+    loginType: localStorage.getItem('loginType') || null,
     userInfo: null,
   },
 
@@ -33,16 +34,20 @@ const authSlice = createSlice({
       state.userId = action.payload.userId;
       state.token = action.payload.token;
       state.isLogin = true;
+      state.loginType = action.payload.loginType;
       Cookies.set('token', action.payload.token, { expires: 7 }); // Token lưu trong 7 ngày
       localStorage.setItem('userId', action.payload.userId);
+      localStorage.setItem('loginType', action.payload.loginType);
     },
     logout: (state) => {
       state.userId = null;
       state.token = '';
       state.userInfo = null;
       state.isLogin = false;
+      state.loginType = '';
       Cookies.remove('token');
       localStorage.removeItem('userId');
+      localStorage.removeItem('loginType');
     },
   },
   extraReducers: (builder) => {

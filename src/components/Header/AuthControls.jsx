@@ -24,7 +24,7 @@ function AuthControls({ isMobile }) {
       className={`flex ${isMobile ? 'flex-col gap-5 mt-6 border-t-2 p-4 border-gray-700' : 'items-center gap-4'}`}
     >
       {userInfo ? (
-        <AvatarCustom src={userInfo?.avatar} email={userInfo?.email} />
+        <AvatarCustom src={userInfo.avatar.url} email={userInfo?.email} />
       ) : isMobile ? (
         <div className="flex justify-center items-center gap-2">
           <Button
