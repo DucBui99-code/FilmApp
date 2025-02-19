@@ -131,7 +131,7 @@ const AccountTab = ({ data }) => {
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-4 lg:gap-4">
+    <div className="grid grid-cols-1 lg:grid-cols-4 lg:gap-4 min-h-[300px]">
       <div className="col-span-1 mb-4">
         <Card className="bg-[#232323] h-[380px] flex justify-center items-center">
           <div

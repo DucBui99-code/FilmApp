@@ -39,6 +39,32 @@ const UserServices = {
       throw error;
     }
   },
+  toggleFavoriteMovie: async (data) => {
+    try {
+      const response = await apiClient.post(`/user/toggleFavoriteMovie`, data, {
+        headers: {
+          Authorization: `Bearer ${getAuthToken()}`,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  removeDevice: async (data) => {
+    // Xóa thiết bị
+    try {
+      const response = await apiClient.post(`/user/removeDevice`, data, {
+        headers: {
+          // Gửi token qua header
+          Authorization: `Bearer ${getAuthToken()}`,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
 };
 
 export default UserServices;

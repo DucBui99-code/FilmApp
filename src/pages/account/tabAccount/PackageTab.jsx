@@ -1,12 +1,12 @@
 import React from 'react';
 import {
+  Chip,
   Paper,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
-  TablePagination,
   TableRow,
 } from '@mui/material';
 
@@ -15,10 +15,8 @@ import { Button } from '@material-tailwind/react';
 import { Link } from 'react-router';
 
 const PackageTab = ({ data }) => {
-  const handleChangePage = () => {};
-
-  const header = ['Tên gói', 'Ngày bắt đầu', 'Ngày kết thúc'];
-  return data.length < 0 ? (
+  const header = ['Tên gói', 'Ngày bắt đầu', 'Ngày kết thúc', 'Trạng thái'];
+  return data.length > 0 ? (
     <>
       <TableContainer component={Paper}>
         <Table aria-label="simple table" className="bg-[#1e1e1e] custom-table">
@@ -27,8 +25,8 @@ const PackageTab = ({ data }) => {
               {header.map((item, index) => {
                 return (
                   <TableCell
-                    key={`${item}${new Date().getTime()}${index}`}
-                    className="text-white"
+                    key={`${index}`}
+                    className="text-white !text-center"
                   >
                     {item}
                   </TableCell>
@@ -47,34 +45,35 @@ const PackageTab = ({ data }) => {
                 <TableCell
                   component="th"
                   scope="row"
-                  className="!text-primary !font-bold "
+                  className="!text-primary !font-bold !text-center"
                 >
                   {row.name}
                 </TableCell>
-                <TableCell className="!font-bold ">
+                <TableCell className="!font-bold !text-center">
                   {row.purchaseDate}
                 </TableCell>
-                <TableCell className="!font-bold ">
+                <TableCell className="!font-bold !text-center">
                   {row.exprationDate}
+                </TableCell>
+                <TableCell className="!font-bold !text-center">
+                  <Chip
+                    label={
+                      <div className="text-white">
+                        {!row.isExpired ? 'Còn hạn' : 'Hết hạn'}
+                      </div>
+                    }
+                    color={`${!row.isExpired ? 'success' : 'error'}`}
+                  />
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
-      <TablePagination
-        component="div"
-        labelRowsPerPage=""
-        rowsPerPageOptions={[0]}
-        count={data.length}
-        rowsPerPage={3}
-        page={0}
-        onPageChange={handleChangePage}
-      />
     </>
   ) : (
     <div className="flex flex-col items-center justify-center w-full h-full">
-      <img src={Empty} alt="empty" className="w-24" />
+      <img src={Empty} alt="empty" className="w-32 object-cover" />
       <div className="text-white font-medium mt-4">
         Bạn chưa mua gói phim trên DANET?
       </div>
