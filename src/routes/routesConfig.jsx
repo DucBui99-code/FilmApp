@@ -4,9 +4,9 @@ const HomePage = React.lazy(() => import('../pages/Home'));
 const WatchMoviePage = React.lazy(() => import('../pages/WatchMovie'));
 const FilmPackage = React.lazy(() => import('../pages/DetailMovie'));
 const TelevisionPage = React.lazy(() => import('../pages/TeleVisionPage'));
-const PaymentPage = React.lazy(() => import('../pages/Payment/PaymentPage'));
+const PaymentPage = React.lazy(() => import('../pages/PaymentPage'));
 const ResetPassowordPage = React.lazy(() => import('../pages/ResetPassoword'));
-const AccountPage = React.lazy(() => import('../pages/account/Account'));
+const AccountPage = React.lazy(() => import('../pages/AccountPage'));
 
 const routesConfig = {
   public: [

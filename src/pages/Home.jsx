@@ -4,8 +4,8 @@ import SliderStatic from '../components/body/SliderStatic';
 import MoviesServices from '../services/movieServices';
 import SliderHover from '../components/body/SliderHover';
 import { useAlert } from '../components/Message/AlertContext';
-import { useDispatch, useSelector } from 'react-redux';
-import { setLoading, setLoadingAsync } from '../store/appStore';
+import { useDispatch } from 'react-redux';
+import { setLoading } from '../store/appStore';
 
 function Home({ type }) {
   const [moviesData, setMoviesData] = useState({}); // Lưu trữ kết quả theo từng trang

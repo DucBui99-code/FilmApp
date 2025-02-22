@@ -15,9 +15,9 @@ import { useSelector } from 'react-redux';
 import { Controller, useForm } from 'react-hook-form';
 import dayjs from 'dayjs';
 
-import UserServices from '../../../services/userServices';
-import { TYPE_LOGIN } from '../../../config/constant';
-import { useAlert } from '../../../components/Message/AlertContext';
+import UserServices from '../../services/userServices';
+import { TYPE_LOGIN } from '../../config/constant';
+import { useAlert } from '../Message/AlertContext';
 
 const AccountTab = ({ data }) => {
   const { loginType } = useSelector((state) => state.auth);

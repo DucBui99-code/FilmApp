@@ -1,3 +1,4 @@
+import getAuthToken from '../utils/getAuthToken';
 import apiClient from './apiClient';
 
 const movieServices = {
@@ -35,13 +36,64 @@ const movieServices = {
   },
   getMoviePackage: async (data) => {
     try {
-      const response = await apiClient.get(`/payment/packagePrice?movieId=${data}`);
+      const response = await apiClient.get(
+        `/payment/packagePrice?movieId=${data}`,
+        {
+          headers: {
+            Authorization: `Bearer ${getAuthToken()}`,
+          },
+        }
+      );
       return response.data;
     } catch (error) {
       console.error('API error:', error);
       throw error;
     }
-  }
+  },
+  buyPackageMonth: async (data) => {
+    try {
+      const response = await apiClient.post('/bill/createBillPackMonth', data, {
+        headers: { Authorization: `Bearer ${getAuthToken()}` },
+      });
+      return response.data;
+    } catch (error) {
+      console.error('API error:', error);
+      throw error;
+    }
+  },
+  buyPackageSingle: async (data) => {
+    try {
+      const response = await apiClient.post('/bill/createBillPackRent', data, {
+        headers: { Authorization: `Bearer ${getAuthToken()}` },
+      });
+      return response.data;
+    } catch (error) {
+      console.error('API error:', error);
+      throw error;
+    }
+  },
+  checkBill: async (data) => {
+    try {
+      const response = await apiClient.post('/bill/checkBill', data, {
+        headers: { Authorization: `Bearer ${getAuthToken()}` },
+      });
+      return response.data;
+    } catch (error) {
+      console.error('API error:', error);
+      throw error;
+    }
+  },
+  cancelledBill: async (data) => {
+    try {
+      const response = await apiClient.post('/bill/cancelBill', data, {
+        headers: { Authorization: `Bearer ${getAuthToken()}` },
+      });
+      return response.data;
+    } catch (error) {
+      console.error('API error:', error);
+      throw error;
+    }
+  },
 };
 
 export default movieServices;

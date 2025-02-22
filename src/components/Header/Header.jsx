@@ -6,7 +6,7 @@ import {
   Navbar,
   Typography,
 } from '@material-tailwind/react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Link, useLocation, useNavigate } from 'react-router';
 
 import Logo from '../../assets/logo-danet.png';
@@ -14,8 +14,6 @@ import ActionBarMobile from './ActionBarMobile';
 import NotificationPopup from './NotificationPopup';
 import { setLoadingAsync } from '../../store/appStore';
 import ActionBarPC from './ActionBarPC';
-import emitter from '../../utils/eventBus';
-import { useAlert } from '../Message/AlertContext';
 
 function Header() {
   const ListMenu = [
@@ -28,15 +26,9 @@ function Header() {
   const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
-  const { showAlert } = useAlert();
-  const userData = useSelector((s) => s.auth);
+
   const handleSubscribePackage = () => {
-    if (userData.userInfo) {
-      navigate('/thanh-toan');
-    } else {
-      showAlert('Vui lòng đăng nhập để đăng ký gói', 'error');
-      emitter.emit('openLogin', 'aaa');
-    }
+    navigate('/thanh-toan');
   };
 
   useEffect(() => {

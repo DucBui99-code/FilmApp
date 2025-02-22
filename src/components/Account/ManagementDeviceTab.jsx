@@ -10,10 +10,10 @@ import {
   TableRow,
 } from '@mui/material';
 
-import Empty from '../../../assets/man.png';
+import Empty from '../../assets/man.png';
 import { TrashIcon } from '@heroicons/react/16/solid';
-import { useAlert } from '../../../components/Message/AlertContext';
-import UserServices from '../../../services/userServices';
+import { useAlert } from '../Message/AlertContext';
+import UserServices from '../../services/userServices';
 
 const ManagementDeviceTab = ({ data }) => {
   const header = [

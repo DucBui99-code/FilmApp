@@ -12,15 +12,67 @@ import {
 import {
   CheckCircleIcon,
   ExclamationTriangleIcon,
+  ClockIcon,
 } from '@heroicons/react/24/solid';
 import { Link } from 'react-router';
 
-import { formatCurrency } from '../../../utils/utils';
-import Empty from '../../../assets/man.png';
+import { formatCurrency } from '../../utils/utils';
+import Empty from '../../assets/man.png';
 import { Button } from '@material-tailwind/react';
 
 const PaymentTab = ({ data }) => {
-  const header = ['Ngày mua', 'Mô tả', 'Số tiền', 'Trạng thái'];
+  const header = ['Ngày mua', 'Loại', 'Mô tả', 'Số tiền', 'Trạng thái'];
+
+  const StatusText = ({ status }) => {
+    const textColor = () => {
+      switch (status) {
+        case 'completed':
+          return 'green-500';
+        case 'pending':
+          return 'yellow-500';
+        case 'failed':
+          return 'red-500';
+      }
+    };
+    const Icon = () => {
+      switch (status) {
+        case 'completed':
+          return (
+            <CheckCircleIcon
+              className={`mr-[4px] text-${textColor()}`}
+              width={20}
+            />
+          );
+        case 'pending':
+          return (
+            <ClockIcon className={`mr-[4px] text-${textColor()}`} width={20} />
+          );
+        case 'failed':
+          return (
+            <ExclamationTriangleIcon
+              className={`mr-[4px] text-${textColor()}`}
+              width={20}
+            />
+          );
+      }
+    };
+
+    return (
+      <p
+        className={`border rounded-full border-${textColor()} flex justify-center w-[115px] py-[4px] text-[12px] items-center uppercase`}
+      >
+        <Icon></Icon> {status}
+      </p>
+    );
+  };
+  const TypeText = (text) => {
+    switch (text) {
+      case 'packageRent':
+        return 'Thuê Phim';
+      case 'packageMonth':
+        return 'Gói Tháng';
+    }
+  };
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
@@ -31,7 +83,7 @@ const PaymentTab = ({ data }) => {
         <div className="bg-customDark text-whiteText uppercase font-bold ps-[24px] pt-[20px] pb-[24px]">
           Lịch sử giao dịch
         </div>
-        {data.length === 0 ? (
+        {data.length > 0 ? (
           <>
             <TableContainer component={Paper}>
               <Table
@@ -66,7 +118,9 @@ const PaymentTab = ({ data }) => {
                       >
                         {row.purchaseDate}
                       </TableCell>
-
+                      <TableCell className="!font-bold !text-center">
+                        {TypeText(row.packageType)}
+                      </TableCell>
                       <TableCell className="!text-primary !font-bold !text-center">
                         {row.name}
                       </TableCell>
@@ -74,23 +128,7 @@ const PaymentTab = ({ data }) => {
                         {formatCurrency(row.price)}
                       </TableCell>
                       <TableCell className="!font-bold !text-center">
-                        {row?.status === 'fail' ? (
-                          <p className="border rounded-full border-red-500 flex justify-center items-center w-[110px] py-[4px] text-[12px]">
-                            <ExclamationTriangleIcon
-                              className="text-red-500 mr-[4px]"
-                              width={20}
-                            />
-                            Thất bại
-                          </p>
-                        ) : row?.status === 'success' ? (
-                          <p className="border rounded-full border-primary flex justify-center w-[110px] py-[4px] text-[12px] items-center">
-                            <CheckCircleIcon
-                              className="text-green-500 mr-[4px]"
-                              width={20}
-                            />{' '}
-                            Thành công
-                          </p>
-                        ) : null}
+                        <StatusText status={row?.status}></StatusText>
                       </TableCell>
                     </TableRow>
                   ))}

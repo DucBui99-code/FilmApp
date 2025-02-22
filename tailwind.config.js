@@ -32,9 +32,15 @@ module.exports = withMT({
           '50%': { transform: 'translateX(5px)' },
           '75%': { transform: 'translateX(-5px)' },
         },
+        pingPong: {
+          '0%': { left: '0%', width: '0%' },
+          '50%': { left: '0%', width: '100%' },
+          '100%': { left: '100%', width: '0%' },
+        },
       },
       animation: {
         shake: 'shake 0.5s ease-in-out',
+        pingPong: 'pingPong 2s infinite ease-in-out',
       },
     },
     fontFamily: {

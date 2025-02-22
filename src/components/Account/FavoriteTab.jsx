@@ -4,9 +4,9 @@ import { TrashIcon } from '@heroicons/react/16/solid';
 import { Button, Typography } from '@material-tailwind/react';
 import { Link } from 'react-router';
 
-import UserServices from '../../../services/userServices';
-import { useAlert } from '../../../components/Message/AlertContext';
-import Empty from '../../../assets/man.png';
+import UserServices from '../../services/userServices';
+import { useAlert } from '../Message/AlertContext';
+import Empty from '../../assets/man.png';
 
 const FavoriteTab = ({ data }) => {
   const { showAlert } = useAlert();

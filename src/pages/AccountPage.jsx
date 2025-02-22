@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import '../account/account.css';
+import '../components/Account/account.css';
 import {
   Tabs,
   TabsHeader,
@@ -15,14 +15,14 @@ import {
   HeartIcon,
   VideoCameraIcon,
 } from '@heroicons/react/24/solid';
-import AccountTab from './tabAccount/AccountTab';
-import PaymentTab from './tabAccount/PaymentTab';
-import PackageTab from './tabAccount/PackageTab';
-import FavoriteTab from './tabAccount/FavoriteTab';
-import RentFilmTab from './tabAccount/RentFilmTab';
-import ManagementDeviceTab from './tabAccount/ManagementDeviceTab';
-import UserServices from '../../services/userServices';
-import { useAlert } from '../../components/Message/AlertContext';
+import AccountTab from '../components/Account/AccountTab';
+import PaymentTab from '../components/Account//PaymentTab';
+import PackageTab from '../components/Account//PackageTab';
+import FavoriteTab from '../components/Account//FavoriteTab';
+import RentFilmTab from '../components/Account//RentFilmTab';
+import ManagementDeviceTab from '../components/Account//ManagementDeviceTab';
+import UserServices from '../services/userServices';
+import { useAlert } from '../components/Message/AlertContext';
 
 export default function Account() {
   const [activeTab, setActiveTab] = useState(0);

@@ -10,7 +10,7 @@ import {
   TableRow,
 } from '@mui/material';
 
-import Empty from '../../../assets/man.png';
+import Empty from '../../assets/man.png';
 import { Button } from '@material-tailwind/react';
 import { Link } from 'react-router';
 

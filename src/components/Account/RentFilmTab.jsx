@@ -12,8 +12,8 @@ import {
   TableRow,
 } from '@mui/material';
 
-import Empty from '../../../assets/man.png';
-import { formatCurrency } from '../../../utils/utils';
+import Empty from '../../assets/man.png';
+import { formatCurrency } from '../../utils/utils';
 
 const RentFilmTab = ({ data }) => {
   const header = [
