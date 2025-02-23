@@ -124,8 +124,8 @@ const Slider = ({ data, type }) => {
                 <Link
                   to={
                     type === 'movieRent'
-                      ? `/phim/${e.slug}`
-                      : `/watch/${e.slug}`
+                      ? `/xem-phim-goi/${e.slug}`
+                      : `/xem-phim-mien-phi/${e.slug}`
                   }
                 >
                   <Button className="flex items-center gap-3 bg-primary mt-6 text-lg">

@@ -12,13 +12,26 @@ export const setLoadingAsync = createAsyncThunk(
 
 const appStore = createSlice({
   name: 'app',
-  initialState: { loading: false },
+  initialState: {
+    loading: false,
+    billInfor: {
+      isShow: false,
+      packageName: '',
+      status: '',
+    },
+  },
   reducers: {
     setLoading: (state, action) => {
       state.loading = action.payload;
     },
+    setPopup: (state, action) => {
+      const { isShow, packageName, status } = action.payload;
+      state.billInfor.isShow = isShow;
+      state.billInfor.packageName = packageName;
+      state.billInfor.status = status;
+    },
   },
 });
 
-export const { setLoading } = appStore.actions;
+export const { setLoading, setPopup } = appStore.actions;
 export default appStore.reducer;

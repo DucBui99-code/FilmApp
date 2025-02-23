@@ -21,30 +21,34 @@ function AuthControls({ isMobile }) {
 
   return (
     <div
-      className={`flex ${isMobile ? 'flex-col gap-5 mt-6 border-t-2 p-4 border-gray-700' : 'items-center gap-4'}`}
+      className={`flex items-center  ${isMobile ? 'flex-col gap-5 mt-6 border-t-2 p-4 border-gray-700' : 'gap-4'}`}
     >
       {userInfo ? (
-        <AvatarCustom src={userInfo.avatar.url} email={userInfo?.email} />
-      ) : isMobile ? (
-        <div className="flex justify-center items-center gap-2">
-          <Button
-            className="bg-primary hover:opacity-60 transition-opacity w-1/2"
-            onClick={() => setOpenLogin(true)}
-          >
-            Đăng nhập
-          </Button>
-          <Button
-            className="bg-orange-300 hover:opacity-60 transition-opacity w-1/2"
-            onClick={() => setOpenRegister(true)}
-          >
-            Đăng ký
-          </Button>
-        </div>
+        <AvatarCustom src={userInfo?.avatar?.url} email={userInfo?.email} />
       ) : (
-        <UserCircleIcon
-          className="text-white w-8 hover:text-primary transition-all cursor-pointer"
-          onClick={() => setOpenLogin(true)}
-        />
+        <div className="flex justify-center items-center gap-2">
+          {isMobile ? (
+            <>
+              <Button
+                className="bg-primary hover:opacity-60 transition-opacity w-1/2"
+                onClick={() => setOpenLogin(true)}
+              >
+                Đăng nhập
+              </Button>
+              <Button
+                className="bg-orange-300 hover:opacity-60 transition-opacity w-1/2"
+                onClick={() => setOpenRegister(true)}
+              >
+                Đăng ký
+              </Button>
+            </>
+          ) : (
+            <UserCircleIcon
+              className="text-white w-8 hover:text-primary transition-all cursor-pointer"
+              onClick={() => setOpenLogin(true)}
+            />
+          )}
+        </div>
       )}
 
       {/* Modals */}

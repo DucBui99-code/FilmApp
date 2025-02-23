@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import { Button, Radio } from '@material-tailwind/react';
 import { useSearchParams } from 'react-router';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import './paymentPage.css';
 import zalo from '../../assets/zalo.png';
@@ -12,6 +12,7 @@ import momo from '../../assets/momo.png';
 import { useAlert } from '../../components/Message/AlertContext';
 import { formatCurrency } from '../../utils/utils';
 import movieServices from '../../services/movieServices';
+import { addBill } from '../../store/authSlice';
 
 const ImageDescription = ({ img }) => {
   return (
@@ -177,7 +178,7 @@ const PaymentInformation = ({
   );
 };
 
-const PaymentOrder = ({ setStep, setUrl }) => {
+const PaymentOrder = ({ setStep, setInforTransaction }) => {
   const listPackageCard = [
     {
       _id: 'ZaloPay',
@@ -200,6 +201,7 @@ const PaymentOrder = ({ setStep, setUrl }) => {
   const { showAlert } = useAlert();
 
   const [searchParams] = useSearchParams();
+  const dispatch = useDispatch();
 
   const [typeService, setTypeService] = useState('Phim gói');
   const [listPackage, setListPackage] = useState([]);
@@ -258,9 +260,13 @@ const PaymentOrder = ({ setStep, setUrl }) => {
       } else if (typeService == 'Phim lẻ') {
         res = await movieServices.buyPackageSingle(form);
       }
+      dispatch(addBill({ billId: res.data.transactionId }));
+      setInforTransaction({
+        url: res.data.billData.order_url,
+        transactionId: res.data.transactionId,
+      });
+      showAlert(res.data.billData.return_message, 'success');
       setStep(2);
-      setUrl(res.data.order_url);
-      showAlert(res.data.return_message, 'success');
     } catch (error) {
       showAlert('Có lỗi xảy ra, vui lòng thử lại sau', 'error');
     } finally {

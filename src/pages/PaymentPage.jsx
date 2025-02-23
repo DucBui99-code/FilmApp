@@ -39,13 +39,26 @@ const TimeLine = ({ step }) => {
 
 const PaymentPage = () => {
   const [step, setStep] = useState(1);
-  const [url, setUrl] = useState('');
+  const [inforTransaction, setInforTransaction] = useState({
+    url: '',
+    transactionId: '',
+  });
   const renderStepContent = () => {
     switch (step) {
       case 1:
-        return <PaymentOrder setStep={setStep} setUrl={setUrl} />;
+        return (
+          <PaymentOrder
+            setStep={setStep}
+            setInforTransaction={setInforTransaction}
+          />
+        );
       case 2:
-        return <PaymentConfirm setStep={setStep} url={url} />;
+        return (
+          <PaymentConfirm
+            setStep={setStep}
+            inforTransaction={inforTransaction}
+          />
+        );
       default:
         return <div>Không có step nào phù hợp</div>;
     }

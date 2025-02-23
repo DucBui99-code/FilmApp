@@ -4,10 +4,15 @@ import AlertCustom from './components/Message/AlertCustom';
 import AppRouter from './routes/AppRotutes';
 import { fetchUserProfile } from './store/authSlice';
 import { useEffect } from 'react';
+import useBillChecker from './hooks/useBillChecker';
+import NotificationPopup from './components/Notification/NotificationPopup';
 
 function App() {
   const dispatch = useDispatch();
   const { isLogin } = useSelector((state) => state.auth);
+
+  // Call check bill interval
+  useBillChecker();
 
   useEffect(() => {
     if (isLogin) {
@@ -19,6 +24,7 @@ function App() {
     <div className="bg-black">
       <AlertProvider>
         <AlertCustom />
+        <NotificationPopup></NotificationPopup>
         <AppRouter></AppRouter>
       </AlertProvider>
     </div>
