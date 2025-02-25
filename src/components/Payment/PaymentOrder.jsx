@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import { Button, Radio } from '@material-tailwind/react';
-import { useSearchParams } from 'react-router';
+import { useParams, useSearchParams } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 
 import './paymentPage.css';
@@ -13,6 +13,7 @@ import { useAlert } from '../../components/Message/AlertContext';
 import { formatCurrency } from '../../utils/utils';
 import movieServices from '../../services/movieServices';
 import { addBill } from '../../store/authSlice';
+import getErrorMessage from '../../utils/handelMessageError';
 
 const ImageDescription = ({ img }) => {
   return (
@@ -200,7 +201,7 @@ const PaymentOrder = ({ setStep, setInforTransaction }) => {
   const { isLogin, userInfo } = useSelector((s) => s.auth);
   const { showAlert } = useAlert();
 
-  const [searchParams] = useSearchParams();
+  const { movieId } = useParams();
   const dispatch = useDispatch();
 
   const [typeService, setTypeService] = useState('Phim gói');
@@ -231,8 +232,6 @@ const PaymentOrder = ({ setStep, setInforTransaction }) => {
   }, [selectedValue]);
 
   useEffect(() => {
-    let movieId = searchParams.get('id');
-
     const fetchData = async () => {
       const res = await movieServices.getMoviePackage(movieId || '');
       setListPackage(res.data.packageMonth);
@@ -268,7 +267,7 @@ const PaymentOrder = ({ setStep, setInforTransaction }) => {
       showAlert(res.data.billData.return_message, 'success');
       setStep(2);
     } catch (error) {
-      showAlert('Có lỗi xảy ra, vui lòng thử lại sau', 'error');
+      showAlert(getErrorMessage(error), 'error');
     } finally {
       setLoading(false);
     }

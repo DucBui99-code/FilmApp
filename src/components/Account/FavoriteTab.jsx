@@ -7,6 +7,7 @@ import { Link } from 'react-router';
 import UserServices from '../../services/userServices';
 import { useAlert } from '../Message/AlertContext';
 import Empty from '../../assets/man.png';
+import getErrorMessage from '../../utils/handelMessageError';
 
 const FavoriteTab = ({ data }) => {
   const { showAlert } = useAlert();
@@ -29,7 +30,7 @@ const FavoriteTab = ({ data }) => {
       // 🔥 Cập nhật danh sách ngay lập tức sau khi xóa
       setFavoriteList((prev) => prev.filter((item) => item._id !== id));
     } catch (error) {
-      showAlert(error.response?.data?.message, 'error');
+      showAlert(getErrorMessage(error), 'error');
     }
   };
 

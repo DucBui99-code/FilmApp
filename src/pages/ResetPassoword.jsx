@@ -15,6 +15,7 @@ import { useParams } from 'react-router';
 
 import checkSuccess from '../assets/checkSucess.png';
 import AuthServices from '../services/authServices';
+import getErrorMessage from '../utils/handelMessageError';
 
 function ResetPassoword() {
   const minLength = 3;
@@ -43,7 +44,7 @@ function ResetPassoword() {
       showAlert(res.message, 'success');
       setIsComplete(true);
     } catch (error) {
-      showAlert(error.response?.data?.message, 'error');
+      showAlert(getErrorMessage(error), 'error');
     } finally {
       setLoading(false);
     }

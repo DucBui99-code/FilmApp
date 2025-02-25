@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { UserCircleIcon } from '@heroicons/react/16/solid';
 import { Button } from '@material-tailwind/react';
-import Register from '../auth/Register';
-import Login from '../auth/Login';
+import Register from '../Auth/Register';
+import Login from '../Auth/Login';
 import AvatarCustom from './AvatarCustom';
-import ForgotPassword from '../auth/ForgotPassword';
+import ForgotPassword from '../Auth/ForgotPassword';
 import { useSelector } from 'react-redux';
 
 function AuthControls({ isMobile }) {

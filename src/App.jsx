@@ -6,7 +6,6 @@ import { fetchUserProfile } from './store/authSlice';
 import { useEffect } from 'react';
 import useBillChecker from './hooks/useBillChecker';
 import NotificationPopup from './components/Notification/NotificationPopup';
-
 function App() {
   const dispatch = useDispatch();
   const { isLogin } = useSelector((state) => state.auth);

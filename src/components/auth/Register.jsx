@@ -13,6 +13,7 @@ import { useForm } from 'react-hook-form';
 import AuthServices from '../../services/authServices';
 import { useAlert } from '../Message/AlertContext';
 import EnterOTP from './EnterOTP';
+import getErrorMessage from '../../utils/handelMessageError';
 
 function Register({ handleOpen, open, handelSwitchModal }) {
   const regex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
@@ -56,10 +57,10 @@ function Register({ handleOpen, open, handelSwitchModal }) {
           userId: registerResponse.userId,
         });
       } catch (error) {
-        showAlert(error.response?.data?.message, 'error');
+        showAlert(getErrorMessage(error), 'error');
       }
     } catch (error) {
-      showAlert(error.response?.data?.message, 'error');
+      showAlert(getErrorMessage(error), 'error');
       if (error.response?.status === 409) {
         setError('email', {
           type: 'manual',

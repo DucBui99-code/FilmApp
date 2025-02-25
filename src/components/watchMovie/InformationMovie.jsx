@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import {
   ClipboardDocumentCheckIcon,
   ClockIcon,
@@ -5,6 +6,7 @@ import {
   HeartIcon,
   LanguageIcon,
   ShareIcon,
+  CurrencyDollarIcon,
 } from '@heroicons/react/16/solid';
 import {
   Button,
@@ -12,12 +14,14 @@ import {
   Tooltip,
   Typography,
 } from '@material-tailwind/react';
-import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useCopyToClipboard } from 'usehooks-ts';
 import DOMPurify from 'dompurify';
 
-function InformationMovie({ data }) {
+import { MOVIE_TYPE } from '../../config/constant';
+import { Link } from 'react-router';
+
+function InformationMovie({ data, type, isRent }) {
   const maxLengthContent = 300;
 
   const [value, copy] = useCopyToClipboard();
@@ -123,6 +127,14 @@ function InformationMovie({ data }) {
             >
               {isExpanded ? 'Thu gọn ▲' : 'Xem thêm ▼'}
             </Button>
+          )}
+          {type === MOVIE_TYPE.movieRent && !isRent && (
+            <Link to={`/thanh-toan/${data?._id}`}>
+              <Button className="flex items-center gap-3 bg-primary mt-3">
+                <CurrencyDollarIcon className="w-4"></CurrencyDollarIcon>
+                Thuê phim
+              </Button>
+            </Link>
           )}
         </div>
       </div>

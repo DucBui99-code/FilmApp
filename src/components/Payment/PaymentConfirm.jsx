@@ -4,6 +4,8 @@ import PayImage from '../../assets/mobile-payment.png';
 import { Link } from 'react-router';
 import movieServices from '../../services/movieServices';
 import { useAlert } from '../Message/AlertContext';
+import getErrorMessage from '../../utils/handelMessageError';
+
 const PaymentConfirm = ({ setStep, inforTransaction }) => {
   const { showAlert } = useAlert();
   const handelCancelTransaction = async () => {
@@ -14,7 +16,7 @@ const PaymentConfirm = ({ setStep, inforTransaction }) => {
       console.log(res);
       setStep(1);
     } catch (error) {
-      showAlert(error.message, 'error');
+      showAlert(getErrorMessage(error), 'error');
     }
   };
   return (

@@ -23,6 +23,7 @@ import RentFilmTab from '../components/Account//RentFilmTab';
 import ManagementDeviceTab from '../components/Account//ManagementDeviceTab';
 import UserServices from '../services/userServices';
 import { useAlert } from '../components/Message/AlertContext';
+import getErrorMessage from '../utils/handelMessageError';
 
 export default function Account() {
   const [activeTab, setActiveTab] = useState(0);
@@ -78,7 +79,7 @@ export default function Account() {
           [activeTab]: resData.data, // Lưu dữ liệu riêng cho từng tab
         }));
       } catch (error) {
-        showAlert(error.response?.data?.message, 'error');
+        showAlert(getErrorMessage(error), 'error');
       }
     };
 

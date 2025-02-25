@@ -9,6 +9,7 @@ import {
 import React, { useEffect, useRef, useState } from 'react';
 import AuthServices from '../../services/authServices';
 import { useAlert } from '../Message/AlertContext';
+import getErrorMessage from '../../utils/handelMessageError';
 
 function EnterOTP({ open, handleOpen }) {
   const timerRef = useRef(null);
@@ -81,7 +82,7 @@ function EnterOTP({ open, handleOpen }) {
       if (error.response?.status === 400) {
         setError(errorMessage);
       } else {
-        showAlert(errorMessage, 'error');
+        showAlert(getErrorMessage(error), 'error');
       }
     } finally {
       setTimeout(() => setError(''), 3000);

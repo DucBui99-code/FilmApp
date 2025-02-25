@@ -12,6 +12,7 @@ import { useForm } from 'react-hook-form';
 import { useAlert } from '../Message/AlertContext';
 import { XMarkIcon } from '@heroicons/react/16/solid';
 import AuthServices from '../../services/authServices';
+import getErrorMessage from '../../utils/handelMessageError';
 
 function ForgotPassword({ handelOpen, open }) {
   const regex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
@@ -41,7 +42,7 @@ function ForgotPassword({ handelOpen, open }) {
 
       handelClose();
     } catch (error) {
-      showAlert(error.response?.data?.message, 'error');
+      showAlert(getErrorMessage(error), 'error');
     } finally {
       setLoading(false);
     }

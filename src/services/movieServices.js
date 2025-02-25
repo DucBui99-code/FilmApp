@@ -27,7 +27,11 @@ const movieServices = {
   },
   getSingleEpisode: async (data) => {
     try {
-      const response = await apiClient.post('/movie/getMovieEpisode', data);
+      const response = await apiClient.post('/movie/getMovieEpisode', data, {
+        headers: {
+          Authorization: `Bearer ${getAuthToken()}`,
+        },
+      });
       return response.data;
     } catch (error) {
       console.error('API error:', error);

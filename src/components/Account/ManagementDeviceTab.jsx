@@ -14,6 +14,7 @@ import Empty from '../../assets/man.png';
 import { TrashIcon } from '@heroicons/react/16/solid';
 import { useAlert } from '../Message/AlertContext';
 import UserServices from '../../services/userServices';
+import getErrorMessage from '../../utils/handelMessageError';
 
 const ManagementDeviceTab = ({ data }) => {
   const header = [
@@ -40,7 +41,7 @@ const ManagementDeviceTab = ({ data }) => {
       showAlert(res.message, 'success');
       setDataManagement((prev) => prev.filter((item) => item.deviceId !== id));
     } catch (error) {
-      showAlert(error.response?.data?.message, 'error');
+      showAlert(getErrorMessage(error), 'error');
     }
   };
   return dataManagement.length > 0 ? (

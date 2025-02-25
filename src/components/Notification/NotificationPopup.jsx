@@ -7,6 +7,7 @@ import {
   DialogFooter,
   Typography,
 } from '@material-tailwind/react';
+import Confetti from 'react-confetti';
 import { useDispatch, useSelector } from 'react-redux';
 import { setPopup } from '../../store/appStore';
 
@@ -25,6 +26,7 @@ const NotificationPopup = () => {
   };
   return (
     <>
+      {billInfor.status === 1 && <Confetti></Confetti>}
       <Dialog open={billInfor.isShow} handler={handelClosePopup}>
         <DialogHeader>
           <Typography variant="h5" color="blue-gray">

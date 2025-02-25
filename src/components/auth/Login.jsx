@@ -20,6 +20,7 @@ import IconQR from '../../assets/IconQR.png';
 import AuthServices from '../../services/authServices';
 import { useAlert } from '../Message/AlertContext';
 import { loginSuccess } from '../../store/authSlice';
+import getErrorMessage from '../../utils/handelMessageError';
 
 function Login({ handleOpen, open, handelSwitchModal, handelOpenForgotPass }) {
   const regex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
@@ -61,7 +62,7 @@ function Login({ handleOpen, open, handelSwitchModal, handelOpenForgotPass }) {
       const res = await AuthServices.loginAccount(data);
       handelLoginSuccess(res);
     } catch (error) {
-      showAlert(error.response?.data?.message, 'error');
+      showAlert(getErrorMessage(error), 'error');
     } finally {
       setLoading(false);
     }
@@ -86,10 +87,10 @@ function Login({ handleOpen, open, handelSwitchModal, handelOpenForgotPass }) {
 
           handelLoginSuccess(resLoginServer);
         } catch (error) {
-          showAlert(error.response?.data?.message, 'error');
+          showAlert(getErrorMessage(error), 'error');
         }
       } catch (error) {
-        showAlert(error.response?.data?.message, 'error');
+        showAlert(getErrorMessage(error), 'error');
       }
     },
     onError: () => console.log('Login Failed'),

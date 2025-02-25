@@ -1,16 +1,18 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router';
-import MoviesServices from '../services/movieServices';
-import Error404 from '../assets/error-404.png';
-import InformationMovie from '../components/watchMovie/InformationMovie';
-import EpisodesMovie from '../components/watchMovie/EpisodesMovie';
-import CommentMovie from '../components/watchMovie/CommentMovie';
-import { useAlert } from '../components/Message/AlertContext';
 import { IconButton, Typography } from '@material-tailwind/react';
 import { ArrowLeftIcon } from '@heroicons/react/16/solid';
-import SliderStatic from '../components/body/SliderStatic';
 
-function WatchMovie() {
+import MoviesServices from '../services/movieServices';
+import InformationMovie from '../components/WatchMovie/InformationMovie';
+import EpisodesMovie from '../components/WatchMovie/EpisodesMovie';
+import CommentMovie from '../components/WatchMovie/CommentMovie';
+import { useAlert } from '../components/Message/AlertContext';
+import SliderStatic from '../components/Body/SliderStatic';
+import Error404 from '../assets/error-404.png';
+import getErrorMessage from '../utils/handelMessageError';
+
+function WatchMovie({ movieType }) {
   const { name } = useParams();
   const navigate = useNavigate();
 
@@ -20,10 +22,10 @@ function WatchMovie() {
     data: null,
     suggestMovies: [],
     episode: {},
+    isRent: false,
   });
 
   const [currentEpisode, setCurrentEpisode] = useState(0);
-
   const { showAlert } = useAlert();
 
   useEffect(() => {
@@ -48,8 +50,8 @@ function WatchMovie() {
             suggestMovies: listRes,
           }));
         }
-      } catch (err) {
-        showAlert(err.message);
+      } catch (error) {
+        showAlert(getErrorMessage(error), 'error');
         timeout = setTimeout(() => {
           if (name) {
             MoviesServices.getMovieBySlug(name)
@@ -63,9 +65,9 @@ function WatchMovie() {
                   }));
                 }
               })
-              .catch((error) =>
-                showAlert(error.response?.data?.message, 'error')
-              );
+              .catch((error) => {
+                showAlert(getErrorMessage(error), 'error');
+              });
           }
         }, 3000); // Thêm thời gian chờ (3 giây) để tránh spam request
       }
@@ -90,9 +92,16 @@ function WatchMovie() {
         setState((prevState) => ({
           ...prevState,
           episode: res.data,
+          isRent: true,
         }));
       })
-      .catch((err) => showAlert(err.message));
+      .catch((err) => {
+        showAlert(err.response.data.message, 'error');
+        setState((prevState) => ({
+          ...prevState,
+          isRent: false,
+        }));
+      });
   }, [currentEpisode, state.movieId]);
 
   if (!state.data) {
@@ -120,31 +129,41 @@ function WatchMovie() {
 
   return state.status ? (
     <div>
-      <div className="flex items-center justify-start gap-2 p-2">
-        <IconButton onClick={() => navigate(-1)}>
-          <ArrowLeftIcon className="w-6 text-white"></ArrowLeftIcon>
-        </IconButton>
-        <Typography className="text-white font-bold uppercase">
-          {state.data?.name + ' - Tập ' + state.episode?.name}
-        </Typography>
-      </div>
-      <div className="relative">
-        <iframe
-          src={state.episode?.link_embed}
-          width="100%"
-          height="600"
-          frameborder="0"
-          allow="autoplay; fullscreen"
-          title="Movie"
-        ></iframe>
-      </div>
-      <InformationMovie data={state.data}></InformationMovie>
-
-      <EpisodesMovie
+      {state.isRent && (
+        <>
+          <div className="flex items-center justify-start gap-2 p-2">
+            <IconButton onClick={() => navigate(-1)}>
+              <ArrowLeftIcon className="w-6 text-white"></ArrowLeftIcon>
+            </IconButton>
+            <Typography className="text-white font-bold uppercase">
+              {state.data?.name + ' - Tập ' + state.episode?.name}
+            </Typography>
+          </div>
+          <div className="relative">
+            <iframe
+              src={state.episode?.link_embed}
+              width="100%"
+              height="600"
+              frameborder="0"
+              allow="autoplay; fullscreen"
+              title="Movie"
+            ></iframe>
+          </div>
+        </>
+      )}
+      <InformationMovie
         data={state.data}
-        currentEpisode={currentEpisode}
-        setCurrentEpisode={setCurrentEpisode}
-      ></EpisodesMovie>
+        type={movieType}
+        isRent={state.isRent}
+      ></InformationMovie>
+
+      {state.isRent && (
+        <EpisodesMovie
+          data={state.data}
+          currentEpisode={currentEpisode}
+          setCurrentEpisode={setCurrentEpisode}
+        ></EpisodesMovie>
+      )}
 
       <CommentMovie></CommentMovie>
       <SliderStatic

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { UserIcon } from '@heroicons/react/24/solid';
 import {
   Button,
@@ -18,6 +18,7 @@ import dayjs from 'dayjs';
 import UserServices from '../../services/userServices';
 import { TYPE_LOGIN } from '../../config/constant';
 import { useAlert } from '../Message/AlertContext';
+import getErrorMessage from '../../utils/handelMessageError';
 
 const AccountTab = ({ data }) => {
   const { loginType } = useSelector((state) => state.auth);
@@ -79,7 +80,7 @@ const AccountTab = ({ data }) => {
       const res = await UserServices.uploadAvatar(formData);
       showAlert(res.message, 'success');
     } catch (error) {
-      showAlert(error.response?.data?.message.join(', '), 'error');
+      showAlert(getErrorMessage(error), 'error');
     } finally {
       setLoading(false);
     }
