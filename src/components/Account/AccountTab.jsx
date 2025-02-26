@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { UserIcon } from '@heroicons/react/24/solid';
 import {
   Button,
+  ButtonGroup,
   Card,
   Input,
   Option,
@@ -19,6 +20,7 @@ import UserServices from '../../services/userServices';
 import { TYPE_LOGIN } from '../../config/constant';
 import { useAlert } from '../Message/AlertContext';
 import getErrorMessage from '../../utils/handelMessageError';
+import ChangePassword from '../Auth/ChangePassword';
 
 const AccountTab = ({ data }) => {
   const { loginType } = useSelector((state) => state.auth);
@@ -35,7 +37,7 @@ const AccountTab = ({ data }) => {
   const [file, setFile] = useState(null); // Lưu file để cập nhật lại
   const [loading, setLoading] = useState(false);
   const [showChangeButton, setShowChangeButton] = useState(false);
-
+  const [openChangePass, setOpenChangePass] = useState(false);
   const { showAlert } = useAlert();
 
   useEffect(() => {
@@ -175,6 +177,17 @@ const AccountTab = ({ data }) => {
             </Button>
           )}
         </Card>
+        <ButtonGroup className="mt-3 w-full flex items-center justify-center">
+          <Button
+            className="text-primary"
+            onClick={() => setOpenChangePass(true)}
+          >
+            Thay đổi mật khẩu
+          </Button>
+          <Button className="text-red-400" variant="outlined">
+            Xóa tài khoản
+          </Button>
+        </ButtonGroup>
       </div>
       <div className="col-span-3 bg-black">
         <div className="text-white font-bold border-t px-[20px] pt-[10px]">
@@ -324,6 +337,10 @@ const AccountTab = ({ data }) => {
           </Button>
         </div>
       </div>
+      <ChangePassword
+        handelOpen={setOpenChangePass}
+        open={openChangePass}
+      ></ChangePassword>
     </div>
   );
 };

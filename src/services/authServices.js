@@ -1,3 +1,4 @@
+import getAuthToken from '../utils/getAuthToken';
 import apiClient from './apiClient';
 import apiGoogle from './apiGoogle';
 
@@ -65,6 +66,19 @@ const AuthServices = {
       });
       return response.data;
     } catch (error) {
+      throw error;
+    }
+  },
+  changePassword: async (data) => {
+    try {
+      const response = await apiClient.post('/auth/changePassword', data, {
+        headers: {
+          Authorization: `Bearer ${getAuthToken()}`,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error('API error:', error);
       throw error;
     }
   },

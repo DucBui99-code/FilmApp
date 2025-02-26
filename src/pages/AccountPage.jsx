@@ -112,10 +112,13 @@ export default function Account() {
           ))}
         </TabsHeader>
 
-        <TabsBody>
+        <TabsBody className="min-h-[400px]">
           {tabConfigs.map(({ component: Component, defaultData }, index) => (
             <TabPanel key={index} value={index}>
-              <Component data={profileData[index] || defaultData} />
+              <Component
+                data={profileData[index] || defaultData}
+                numberTab={index}
+              />
             </TabPanel>
           ))}
         </TabsBody>

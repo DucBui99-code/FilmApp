@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Paper,
   Table,
@@ -19,8 +19,11 @@ import { Link } from 'react-router';
 import { formatCurrency } from '../../utils/utils';
 import Empty from '../../assets/man.png';
 import { Button } from '@material-tailwind/react';
+import UserServices from '../../services/userServices';
+import { useAlert } from '../Message/AlertContext';
+import getErrorMessage from '../../utils/handelMessageError';
 
-const PaymentTab = ({ data }) => {
+const PaymentTab = ({ numberTab }) => {
   const header = ['Ngày mua', 'Loại', 'Mô tả', 'Số tiền', 'Trạng thái'];
 
   const StatusText = ({ status }) => {
@@ -73,6 +76,35 @@ const PaymentTab = ({ data }) => {
         return 'Gói Tháng';
     }
   };
+  const { showAlert } = useAlert();
+  const [dataPayment, setDataPayment] = useState({
+    data: [],
+  });
+
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const handleChangePage = (event, newPage) => {
+    setCurrentPage(newPage + 1);
+  };
+
+  useEffect(() => {
+    const fectchData = async () => {
+      try {
+        const resData = await UserServices.getProfile(numberTab, currentPage);
+
+        setDataPayment({
+          data: resData.data,
+          currentPage: resData.currentPage,
+          totalItems: resData.totalItems,
+        });
+      } catch (error) {
+        showAlert(getErrorMessage(error), 'error');
+      }
+    };
+    if (numberTab === 1) {
+      fectchData();
+    }
+  }, [currentPage, numberTab]);
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
@@ -83,7 +115,7 @@ const PaymentTab = ({ data }) => {
         <div className="bg-customDark text-whiteText uppercase font-bold ps-[24px] pt-[20px] pb-[24px]">
           Lịch sử giao dịch
         </div>
-        {data.length > 0 ? (
+        {dataPayment.data.length > 0 ? (
           <>
             <TableContainer component={Paper}>
               <Table
@@ -105,7 +137,7 @@ const PaymentTab = ({ data }) => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {data.map((row) => (
+                  {dataPayment.data.map((row) => (
                     <TableRow
                       key={row._id}
                       sx={{ border: 'none' }}
@@ -137,12 +169,13 @@ const PaymentTab = ({ data }) => {
             </TableContainer>
             <TablePagination
               component="div"
-              labelRowsPerPage=""
-              rowsPerPageOptions={[0]}
-              count={data?.length}
-              rowsPerPage={3}
-              page={0}
-              // onPageChange={handleChangePage}
+              className="!text-white"
+              labelRowsPerPage="Số dòng mỗi trang"
+              rowsPerPageOptions={[5, 10, 20]}
+              count={dataPayment?.totalItems || 0}
+              rowsPerPage={5}
+              page={currentPage - 1}
+              onPageChange={handleChangePage}
             />
           </>
         ) : (

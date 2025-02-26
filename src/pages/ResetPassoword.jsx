@@ -16,11 +16,9 @@ import { useParams } from 'react-router';
 import checkSuccess from '../assets/checkSucess.png';
 import AuthServices from '../services/authServices';
 import getErrorMessage from '../utils/handelMessageError';
+import { MAX_LENGTH_PASSWORD, MIN_LENGTH_PASSWORD } from '../config/constant';
 
 function ResetPassoword() {
-  const minLength = 3;
-  const maxLength = 15;
-
   const { code } = useParams();
 
   const {
@@ -102,12 +100,12 @@ function ResetPassoword() {
             {...register('password', {
               required: 'Password is required',
               minLength: {
-                value: minLength,
-                message: `Password must be greater than ${minLength} characters`,
+                value: MIN_LENGTH_PASSWORD,
+                message: `Password must be greater than ${MIN_LENGTH_PASSWORD} characters`,
               },
               maxLength: {
-                value: maxLength,
-                message: `Password must be less than ${maxLength} characters`,
+                value: MAX_LENGTH_PASSWORD,
+                message: `Password must be less than ${MAX_LENGTH_PASSWORD} characters`,
               },
             })}
           />

@@ -2,13 +2,16 @@ import getAuthToken from '../utils/getAuthToken';
 import apiClient from './apiClient';
 
 const UserServices = {
-  getProfile: async (type = 0) => {
+  getProfile: async (type = 0, page = 1, limit = 5) => {
     try {
-      const response = await apiClient.get(`/user/profile?type=${type}`, {
-        headers: {
-          Authorization: `Bearer ${getAuthToken()}`,
-        },
-      });
+      const response = await apiClient.get(
+        `/user/profile?type=${type}&limit=${limit}&page=${page}`,
+        {
+          headers: {
+            Authorization: `Bearer ${getAuthToken()}`,
+          },
+        }
+      );
       return response.data;
     } catch (error) {
       throw error;
