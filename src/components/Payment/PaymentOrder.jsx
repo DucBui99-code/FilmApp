@@ -1,27 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import { Button, Radio } from '@material-tailwind/react';
-import { useParams, useSearchParams } from 'react-router';
+import { useParams } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 
 import './paymentPage.css';
-import zalo from '../../assets/zalo.png';
-import atmCard from '../../assets/AtmCard.png';
-import momo from '../../assets/momo.png';
 
 import { useAlert } from '../../components/Message/AlertContext';
 import { formatCurrency } from '../../utils/utils';
 import movieServices from '../../services/movieServices';
 import { addBill } from '../../store/authSlice';
 import getErrorMessage from '../../utils/handelMessageError';
-
-const ImageDescription = ({ img }) => {
-  return (
-    <div>
-      <img src={img} alt="" className="w-[30px]" />
-    </div>
-  );
-};
+import { LIST_PAYMENT_METHOD } from '../../config/constant';
 
 const CustomLabel = ({ name, description }) => {
   return (
@@ -61,10 +51,10 @@ const PackageFilm = ({
                 <CustomLabel
                   name={item.name}
                   description={
-                    typeDescription === 'money' && item.price ? (
-                      <p>{formatCurrency(item?.price)}</p>
+                    typeDescription === 'money' && item.icon ? (
+                      <p>{item?.icon}</p>
                     ) : (
-                      item.price
+                      item.icon
                     )
                   }
                 />
@@ -180,24 +170,6 @@ const PaymentInformation = ({
 };
 
 const PaymentOrder = ({ setStep, setInforTransaction }) => {
-  const listPackageCard = [
-    {
-      _id: 'ZaloPay',
-      name: 'Zalo Pay',
-      price: <ImageDescription img={zalo} />,
-    },
-    {
-      _id: 'ATMCard',
-      name: 'ATM Card',
-      price: <ImageDescription img={atmCard} />,
-    },
-    {
-      _id: 'MoMo',
-      name: 'Ví MoMo',
-      price: <ImageDescription img={momo} />,
-    },
-  ];
-
   const { isLogin, userInfo } = useSelector((s) => s.auth);
   const { showAlert } = useAlert();
 
@@ -213,8 +185,8 @@ const PaymentOrder = ({ setStep, setInforTransaction }) => {
   const [voucher, setVoucher] = useState('');
   const [listPackageFilm, setListPackageFilm] = useState([]);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(
-    listPackageCard[0]?._id || ''
-  ); // Fix lỗi khi listPackageCard chưa có dữ liệu
+    LIST_PAYMENT_METHOD[0]?._id || ''
+  ); // Fix lỗi khi LIST_PAYMENT_METHOD chưa có dữ liệu
   const [discountPrice, setDiscountPrice] = useState(0);
   const [loading, setLoading] = useState(false);
 
@@ -300,7 +272,7 @@ const PaymentOrder = ({ setStep, setInforTransaction }) => {
         <PackageFilm
           selectedValue={selectedPaymentMethod}
           setSelectedValue={setSelectedPaymentMethod}
-          listPackage={listPackageCard}
+          listPackage={LIST_PAYMENT_METHOD}
           title="Chọn hình thức thanh toán"
           classNameTitle="text-[18px] font-bold p-[16px]"
         />

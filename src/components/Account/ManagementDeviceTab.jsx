@@ -25,6 +25,7 @@ const ManagementDeviceTab = ({ data }) => {
     'Hành động',
   ];
   const [dataManagement, setDataManagement] = useState(data);
+
   const { showAlert } = useAlert();
 
   useEffect(() => {

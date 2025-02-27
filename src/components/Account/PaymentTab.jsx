@@ -22,9 +22,17 @@ import { Button } from '@material-tailwind/react';
 import UserServices from '../../services/userServices';
 import { useAlert } from '../Message/AlertContext';
 import getErrorMessage from '../../utils/handelMessageError';
+import { LIST_PAYMENT_METHOD } from '../../config/constant';
 
 const PaymentTab = ({ numberTab }) => {
-  const header = ['Ngày mua', 'Loại', 'Mô tả', 'Số tiền', 'Trạng thái'];
+  const header = [
+    'Ngày mua',
+    'Loại',
+    'Phương thức',
+    'Mô tả',
+    'Số tiền',
+    'Trạng thái',
+  ];
 
   const StatusText = ({ status }) => {
     const textColor = () => {
@@ -68,6 +76,7 @@ const PaymentTab = ({ numberTab }) => {
       </p>
     );
   };
+
   const TypeText = (text) => {
     switch (text) {
       case 'packageRent':
@@ -76,6 +85,11 @@ const PaymentTab = ({ numberTab }) => {
         return 'Gói Tháng';
     }
   };
+
+  const ShowIconPaymentMethod = (id) => {
+    return LIST_PAYMENT_METHOD.find((e) => e._id === id)?.icon;
+  };
+
   const { showAlert } = useAlert();
   const [dataPayment, setDataPayment] = useState({
     data: [],
@@ -87,20 +101,21 @@ const PaymentTab = ({ numberTab }) => {
     setCurrentPage(newPage + 1);
   };
 
-  useEffect(() => {
-    const fectchData = async () => {
-      try {
-        const resData = await UserServices.getProfile(numberTab, currentPage);
+  const fectchData = async () => {
+    try {
+      const resData = await UserServices.getProfile(numberTab, currentPage);
 
-        setDataPayment({
-          data: resData.data,
-          currentPage: resData.currentPage,
-          totalItems: resData.totalItems,
-        });
-      } catch (error) {
-        showAlert(getErrorMessage(error), 'error');
-      }
-    };
+      setDataPayment({
+        data: resData.data,
+        currentPage: resData.currentPage,
+        totalItems: resData.totalItems,
+      });
+    } catch (error) {
+      showAlert(getErrorMessage(error), 'error');
+    }
+  };
+
+  useEffect(() => {
     if (numberTab === 1) {
       fectchData();
     }
@@ -152,6 +167,9 @@ const PaymentTab = ({ numberTab }) => {
                       </TableCell>
                       <TableCell className="!font-bold !text-center">
                         {TypeText(row.packageType)}
+                      </TableCell>
+                      <TableCell className="!font-bold !text-center">
+                        {ShowIconPaymentMethod(row.paymentMethod)}
                       </TableCell>
                       <TableCell className="!text-primary !font-bold !text-center">
                         {row.name}

@@ -1,0 +1,17 @@
+/* Tùy chỉnh thanh cuộn */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #979797;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #8abf40;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #8abf40b0;
+}

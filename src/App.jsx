@@ -6,6 +6,8 @@ import { fetchUserProfile } from './store/authSlice';
 import { useEffect } from 'react';
 import useBillChecker from './hooks/useBillChecker';
 import NotificationPopup from './components/Notification/NotificationPopup';
+import './styles/App.css';
+
 function App() {
   const dispatch = useDispatch();
   const { isLogin } = useSelector((state) => state.auth);
@@ -20,7 +22,7 @@ function App() {
   }, [isLogin]);
 
   return (
-    <div className="bg-black">
+    <div className="bg-black custom-scrollbar">
       <AlertProvider>
         <AlertCustom />
         <NotificationPopup></NotificationPopup>

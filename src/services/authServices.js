@@ -82,6 +82,22 @@ const AuthServices = {
       throw error;
     }
   },
+  deleteAccount: async () => {
+    try {
+      const response = await apiClient.post(
+        `/auth/removeMySelf`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${getAuthToken()}`,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
 };
 
 export default AuthServices;

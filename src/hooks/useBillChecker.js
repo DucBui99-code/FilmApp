@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { checkBillStatus } from '../store/authSlice';
+import { TIME_CALL_CHECK_BILL } from '../config/constant';
 
 const useBillChecker = () => {
   const dispatch = useDispatch();
@@ -13,7 +14,7 @@ const useBillChecker = () => {
     };
 
     if (pendingBills.length > 0) {
-      interval = setInterval(checkAllBills, 3000);
+      interval = setInterval(checkAllBills, TIME_CALL_CHECK_BILL);
     }
 
     return () => clearInterval(interval);
