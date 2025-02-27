@@ -165,7 +165,7 @@ function WatchMovie({ movieType }) {
         ></EpisodesMovie>
       )}
 
-      <CommentMovie></CommentMovie>
+      <CommentMovie data={state}></CommentMovie>
       <SliderStatic
         title="Phim đề xuất"
         data={state.suggestMovies}
