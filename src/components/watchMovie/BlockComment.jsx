@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Avatar,
   Button,
@@ -23,9 +23,12 @@ import {
 } from '@heroicons/react/16/solid';
 import { FaceSmileIcon } from '@heroicons/react/16/solid';
 import EmojiPicker from 'emoji-picker-react';
+import dayjs from 'dayjs';
+import iconUser from '../../assets/225-default-avatar.png';
+import movieServices from '../../services/movieServices';
 
 // Render menu items
-const RenderMenu = ({ isOwner, menuItemsSelf, menuItemsAnother }) => (
+const RenderMenu = ({ data, isOwner, menuItemsSelf, menuItemsAnother }) => (
   <div className="self-start">
     <Menu placement="top">
       <MenuHandler>
@@ -35,7 +38,11 @@ const RenderMenu = ({ isOwner, menuItemsSelf, menuItemsAnother }) => (
       </MenuHandler>
       <MenuList className="bg-blue-gray-900 p-1 border-gray-600">
         {(isOwner ? menuItemsSelf : menuItemsAnother).map((el) => (
-          <MenuItem key={el.id} className="flex items-center gap-2">
+          <MenuItem
+            key={el.id}
+            className="flex items-center gap-2"
+            onClick={() => el.action(data)}
+          >
             {el.icon}
             {el.content}
           </MenuItem>
@@ -69,15 +76,15 @@ const CommentActions = ({ likes, disLikes, onReply }) => (
 );
 
 // Reply component
-const Reply = ({ reply, menuItemsSelf, menuItemsAnother }) => (
+const Reply = ({ data, reply, menuItemsSelf, menuItemsAnother }) => (
   <div className="mt-2 flex justify-between items-center w-full">
     <div className="flex items-center gap-3 justify-between w-full">
       <div className="flex items-center gap-3">
         <Avatar
-          src={reply.avatar}
+          src={reply.avatar || iconUser}
           alt="avatar"
           size="sm"
-          className="self-start"
+          className="self-start bg-white"
         />
         <div className="flex flex-col">
           <div className="flex items-center justify-center gap-2 self-start">
@@ -89,15 +96,14 @@ const Reply = ({ reply, menuItemsSelf, menuItemsAnother }) => (
             </Typography>
           </div>
           <Typography className="text-white font-medium flex items-center gap-1">
-            <Typography className="text-primary font-semibold">
-              {reply.replyTo}
-            </Typography>
+            <span className="text-primary font-semibold">{reply.replyTo}</span>
             {reply.content}
           </Typography>
           <CommentActions likes={reply.likes} disLikes={reply.disLikes} />
         </div>
       </div>
       <RenderMenu
+        data={data}
         isOwner={reply.isOwner}
         menuItemsSelf={menuItemsSelf}
         menuItemsAnother={menuItemsAnother}
@@ -128,7 +134,12 @@ const ReplyInput = ({ data }) => {
 
   return (
     <div className="w-full flex gap-2 mb-2">
-      <Avatar src={data.avatar} alt="avatar" size="sm" className="mt-2" />
+      <Avatar
+        src={data.avatar || iconUser}
+        alt="avatar"
+        size="sm"
+        className="mt-2 bg-white"
+      />
       <div className="w-full self-start">
         <div className="relative">
           <Input
@@ -192,40 +203,117 @@ const ReplyInput = ({ data }) => {
   );
 };
 
-const BlockComment = ({ data }) => {
+const BlockComment = ({ data, userId, movieData }) => {
   const [open, setOpen] = useState(false);
   const [replyInput, setReplyInput] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
+  const limitCharacters = 100;
+  const [contentEdit, setContentEdit] = useState('');
+  const handelTextComment = (e) => {
+    setContentEdit(e);
+  };
 
   const MenuListCommentSelf = [
-    { id: 0, content: 'Chỉnh sửa', icon: <PencilIcon className="w-4" /> },
-    { id: 1, content: 'Xóa', icon: <TrashIcon className="w-4" /> },
+    {
+      id: 0,
+      content: 'Chỉnh sửa',
+      icon: <PencilIcon className="w-4" />,
+      action: () => {
+        console.log('Chỉnh sửa');
+        console.log('Chỉnh sửa', data);
+        setIsEdit(true);
+        setContentEdit(data.content);
+      },
+    },
+    {
+      id: 1,
+      content: 'Xóa',
+      icon: <TrashIcon className="w-4" />,
+      action: async () => {
+        const res = await movieServices.deleteComment({
+          movieId: movieData.data.movieId,
+          commentId: data._id,
+          type: 'comment',
+        });
+        console.log('Xóa', res);
+      },
+    },
   ];
 
   const MenuListCommentAnother = [
-    { id: 0, content: 'Báo cáo', icon: <FlagIcon className="w-4" /> },
+    {
+      id: 0,
+      content: 'Báo cáo',
+      icon: <FlagIcon className="w-4" />,
+      action: () => {
+        console.log('Báo cáo');
+      },
+    },
   ];
+
+  useEffect(() => {
+    console.log(data);
+    console.log(userId);
+  }, []);
 
   return (
     <div className="mt-2 flex justify-between items-center">
       <div className="flex items-center gap-3">
         <Avatar
-          src={data?.avatar}
+          src={data?.avatar || iconUser}
           alt="avatar"
           size="sm"
-          className="self-start"
+          className="self-start bg-white"
         />
         <div className="flex flex-col">
           <div className="flex items-center justify-center gap-2 self-start">
             <Typography className="text-white font-bold">
-              {data?.user}
+              {data?.userDetails.username}
             </Typography>
             <Typography className="text-gray-600 font-normal text-sm">
-              {data?.time}
+              {dayjs(data?.time).format('HH:mm - DD/MM/YYYY')}
             </Typography>
           </div>
-          <Typography className="text-white font-medium">
-            {data?.content}
-          </Typography>
+          {!isEdit ? (
+            <Typography className="text-white font-medium">
+              {data?.content}
+            </Typography>
+          ) : (
+            <>
+              <Input
+                placeholder="Your Comment..."
+                value={contentEdit}
+                variant="static"
+                className="text-white"
+                color="green"
+                onChange={(e) => handelTextComment(e.target.value)}
+              />
+              <div className="flex justify-end mt-1">
+                <Button
+                  size="sm"
+                  color="red"
+                  variant="text"
+                  className="rounded-md"
+                  onClick={() => {
+                    setIsEdit(false);
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  size="sm"
+                  className="rounded-md bg-primary"
+                  disabled={
+                    contentEdit.length <= 0 ||
+                    contentEdit.length > limitCharacters
+                  }
+                >
+                  Edit
+                </Button>
+              </div>
+            </>
+          )}
+
           <CommentActions
             likes={data?.likes}
             disLikes={data?.disLikes}
@@ -252,6 +340,7 @@ const BlockComment = ({ data }) => {
               <Collapse open={open}>
                 {data.replies.map((reply, i) => (
                   <Reply
+                    data={data}
                     key={i}
                     reply={reply}
                     menuItemsSelf={MenuListCommentSelf}
@@ -264,7 +353,8 @@ const BlockComment = ({ data }) => {
         </div>
       </div>
       <RenderMenu
-        isOwner={data?.isOwner}
+        data={data}
+        isOwner={data?.user === userId}
         menuItemsSelf={MenuListCommentSelf}
         menuItemsAnother={MenuListCommentAnother}
       />
