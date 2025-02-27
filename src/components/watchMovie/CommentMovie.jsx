@@ -11,16 +11,37 @@ import {
   Typography,
 } from '@material-tailwind/react';
 import EmojiPicker from 'emoji-picker-react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaceSmileIcon } from '@heroicons/react/16/solid';
 import BlockComment from './BlockComment';
 import dataComments from './test.json';
-
-function CommentMovie() {
+import UserServices from '../../services/userServices';
+import { useAlert } from '../Message/AlertContext';
+import movieServices from '../../services/movieServices';
+import emitter from '../../utils/eventBus';
+import getErrorMessage from '../../utils/handelMessageError';
+import { useSelector } from 'react-redux';
+import { UserCircleIcon } from '@heroicons/react/24/outline';
+import iconUser from '../../assets/225-default-avatar.png';
+function CommentMovie(props) {
+  const { isLogin, userId } = useSelector((state) => state.auth);
+  const { showAlert } = useAlert();
   const limitCharacters = 100;
-
+  const [userData, setUserData] = useState();
   const [text, setText] = useState('');
   const [isShowAction, setIsShowAction] = useState(false);
+  const [listComment, setListComment] = useState([]);
+  const getListComment = async () => {
+    try {
+      const res = await movieServices.getCommentByMovieId(props.data.data._id);
+      console.log('res: ', res);
+      if (res) {
+        setListComment(res);
+      } else {
+        showAlert(getErrorMessage(error), 'error');
+      }
+    } catch (error) {}
+  };
 
   const handelTextComment = (value) => {
     if (value.length > limitCharacters) {
@@ -37,6 +58,47 @@ function CommentMovie() {
     setText((prev) => prev + event.emoji);
   };
 
+  const commentMovie = async (type) => {
+    if (!isLogin) {
+      showAlert('Vui lòng đăng nhập để đóng góp ý kiến!', 'error');
+      return;
+    }
+    try {
+      const res = await movieServices.postComment({
+        movieId: props.data.data._id,
+        content: text,
+        type: 'comment',
+      });
+      console.log('res: ', res);
+      if (res.status) {
+        showAlert('Cảm ơn bạn đã đóng góp ý kiến cho bộ phim này!', 'success');
+        setText('');
+      } else {
+        showAlert(getErrorMessage(error), 'error');
+      }
+    } catch (error) {
+      showAlert(getErrorMessage(error), 'error');
+    }
+  };
+
+  useEffect(() => {
+    (async function () {
+      try {
+        getListComment();
+        if (isLogin) {
+          const res = await UserServices.getProfile();
+          if (res.status) {
+            setUserData(res.data);
+          } else {
+            showAlert(res.message, 'error');
+          }
+        }
+      } catch (error) {
+        showAlert(error.message, 'error');
+      }
+    })();
+  }, []);
+
   return (
     <div className="p-3 flex flex-col items-center justify-center">
       <Typography
@@ -48,22 +110,29 @@ function CommentMovie() {
       <div className="w-full flex items-center justify-between flex-col mt-3">
         <div className="flex items-baseline justify-between w-full">
           <Typography className="text-white font-semibold text-base">
-            Tổng 18 bình luận
+            Tổng {listComment?.length || 0} bình luận
           </Typography>
           <div className="w-60">
-            <Select color="white" label="Select mode" className="text-white">
+            <Select color="pink" label="Select mode" className="text-white">
               <Option>Mới nhất</Option>
               <Option>Cũ nhất</Option>
             </Select>
           </div>
         </div>
         <div className="flex items-center gap-3 w-full mt-4">
-          <Avatar
-            src="https://docs.material-tailwind.com/img/face-2.jpg"
+          {/* <Avatar
+            src={userData?.avatar.url}
             alt="avatar"
             size="md"
             className="self-start"
+          /> */}
+          <Avatar
+            src={userData?.avatar.url || iconUser}
+            alt="avatar"
+            size="md"
+            className="self-start bg-white"
           />
+
           <div className="w-full">
             <div className="relative">
               <Input
@@ -118,6 +187,7 @@ function CommentMovie() {
                     size="sm"
                     className="rounded-md bg-primary"
                     disabled={text.length <= 0 || text.length > limitCharacters}
+                    onClick={() => commentMovie('post')}
                   >
                     Post
                   </Button>
@@ -127,8 +197,13 @@ function CommentMovie() {
           </div>
         </div>
         <div className="p-2 w-full mt-8">
-          {dataComments.comments.map((comment, i) => (
-            <BlockComment data={comment} key={i}></BlockComment>
+          {listComment.map((comment, i) => (
+            <BlockComment
+              data={comment}
+              movieData={props}
+              userId={userId}
+              key={i}
+            ></BlockComment>
           ))}
         </div>
       </div>
