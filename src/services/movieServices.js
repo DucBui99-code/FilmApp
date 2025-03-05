@@ -25,6 +25,16 @@ const movieServices = {
       throw error;
     }
   },
+  getliveComments: async (movieId) => {
+    try {
+      const response = await apiClient.get(`/movie/getLiveComments/${movieId}`);
+      return response.data;
+    } catch (error) {
+      console.error('API error:', error);
+      throw error;
+    }
+  },
+
   getSingleEpisode: async (data) => {
     try {
       const response = await apiClient.post('/movie/getMovieEpisode', data, {

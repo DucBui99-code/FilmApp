@@ -151,7 +151,7 @@ function WatchMovie({ movieType }) {
               />
             </div>
             <div className="w-full lg:w-1/3 self-start">
-              <BlockLiveComment></BlockLiveComment>
+              <BlockLiveComment movieId={state.movieId}></BlockLiveComment>
             </div>
           </div>
         </>

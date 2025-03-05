@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Collapse,
   Button,
@@ -16,86 +16,22 @@ import {
   UserIcon,
 } from '@heroicons/react/16/solid';
 import { useSelector } from 'react-redux';
+import { format } from 'date-fns';
 
-const BlockLiveComment = () => {
-  const { isLogin } = useSelector((state) => state.auth);
+import movieServices from '../../services/movieServices';
+import socketClient from '../../services/socketClient';
+import getErrorMessage from '../../utils/handelMessageError';
+import { useAlert } from '../Message/AlertContext';
+
+const BlockLiveComment = ({ movieId }) => {
+  const { isLogin, userId } = useSelector((state) => state.auth);
+  const { showAlert } = useAlert();
+
   const [open, setOpen] = useState(true);
   const [message, setMessage] = useState('');
+  const [data, setData] = useState([]);
+  const [views, setViews] = useState(0);
   const toggleOpen = () => setOpen((cur) => !cur);
-
-  const LIST_USERS = [
-    {
-      id: 1,
-      name: 'Lê Thị Hồng',
-      avatar: 'https://randomuser.me/api/portraits/women/1.jpg',
-      time: '10:00 AM',
-      content: 'Hello everyone!',
-    },
-    {
-      id: 2,
-      name: 'Nguyễn Văn A',
-      avatar: 'https://randomuser.me/api/portraits/men/2.jpg',
-      time: '10:05 AM',
-      content: 'Good morning!',
-    },
-    {
-      id: 3,
-      name: 'Trần Thị B',
-      avatar: 'https://randomuser.me/api/portraits/women/3.jpg',
-      time: '10:10 AM',
-      content: 'How are you?',
-    },
-    {
-      id: 4,
-      name: 'Phạm Văn C',
-      avatar: 'https://randomuser.me/api/portraits/men/4.jpg',
-      time: '10:15 AM',
-      content: 'I am fine, thank you!',
-    },
-    {
-      id: 5,
-      name: 'Hoàng Thị D',
-      avatar: 'https://randomuser.me/api/portraits/women/5.jpg',
-      time: '10:20 AM',
-      content: 'What are you doing?',
-    },
-    {
-      id: 6,
-      name: 'Vũ Văn E',
-      avatar: 'https://randomuser.me/api/portraits/men/6.jpg',
-      time: '10:25 AM',
-      content: 'I am working.',
-    },
-    {
-      id: 7,
-      name: 'Đỗ Thị F',
-      avatar: 'https://randomuser.me/api/portraits/women/7.jpg',
-      time: '10:30 AM',
-      content: 'Nice to meet you!',
-    },
-    {
-      id: 8,
-      name: 'Lý Văn G',
-      avatar: 'https://randomuser.me/api/portraits/men/8.jpg',
-      time: '10:35 AM',
-      content: 'Nice to meet you too!',
-    },
-    {
-      id: 9,
-      name: 'Ngô Thị H',
-      avatar: 'https://randomuser.me/api/portraits/women/9.jpg',
-      time: '10:40 AM',
-      content:
-        'Have a great day!akwejfkjwekfjwekjfkwejfkjafjakwjfkwjekjewerwerwerwerewrewr',
-    },
-    {
-      id: 10,
-      name: 'Bùi Văn I',
-      avatar: 'https://randomuser.me/api/portraits/men/10.jpg',
-      time: '10:45 AM',
-      content: 'You too!',
-    },
-  ];
 
   const handleKeyDownEnter = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -103,10 +39,43 @@ const BlockLiveComment = () => {
       handelSubmit();
     }
   };
+  const formatDate = (isoString) => {
+    return format(new Date(isoString), 'hh:mm a');
+  };
+
+  useEffect(() => {
+    const fetchLiveComments = async () => {
+      try {
+        const res = await movieServices.getliveComments(movieId);
+        setData(res.data);
+      } catch (error) {
+        showAlert(getErrorMessage(error), 'error');
+      }
+    };
+    fetchLiveComments();
+    socketClient.emit('joinMovie', { movieId });
+    socketClient.on('receiveComment', (data) => {
+      setData((prev) => [...prev, data]);
+    });
+    socketClient.on('viewersCount', (data) => {
+      setViews(data.count);
+    });
+    socketClient.on('error', (message) => {
+      showAlert(message, 'error');
+    });
+
+    return () => {
+      socketClient.off('receiveComment');
+      socketClient.off('error');
+      socketClient.off('viewersCount');
+      socketClient.emit('leaveMovie', { movieId });
+    };
+  }, [movieId]);
 
   const handelSubmit = () => {
     if (message.trim() && isLogin) {
       // Logic to send the message
+      socketClient.emit('sendComment', { movieId, userId, content: message });
       console.log('Message sent:', message);
       setMessage('');
     }
@@ -124,7 +93,7 @@ const BlockLiveComment = () => {
               Trò chuyện trực tiếp
             </Typography>
             <span className="font-normal flex items-center text-primary">
-              <UserIcon className="w-6 "></UserIcon> 112
+              <UserIcon className="w-6 "></UserIcon> {views}
             </span>
           </div>
           <IconButton className="bg-inherit">
@@ -139,28 +108,36 @@ const BlockLiveComment = () => {
           {/* Danh sách tin nhắn có scroll */}
           <Collapse open={open} className="flex-1 overflow-hidden">
             <div className="max-h-[470px] overflow-y-scroll">
-              {LIST_USERS.map((user) => (
-                <div key={user.id} className="flex items-center gap-4 mt-4">
-                  <img
-                    src={user.avatar}
-                    alt="User Avatar"
-                    className="w-8 h-8 rounded-full self-start"
-                  />
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <Typography className="text-white font-semibold text-sm">
-                        {user.name}
-                      </Typography>
-                      <Typography className="text-gray-400 text-xs font-medium">
-                        {user.time}
+              {data.length === 0 ? (
+                <Typography className="text-gray-400 text-center mt-4">
+                  Không có bình luận nào.
+                </Typography>
+              ) : (
+                data.map((user) => (
+                  <div key={user.id} className="flex items-center gap-4 mt-4">
+                    <img
+                      src={user.avatar.url}
+                      srcSet={user.avatar.url}
+                      alt="User Avatar"
+                      className="w-8 h-8 rounded-full self-start"
+                      loading="lazy"
+                    />
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <Typography className="text-white font-semibold text-sm">
+                          {user.username}
+                        </Typography>
+                        <Typography className="text-gray-400 text-xs font-medium">
+                          {formatDate(user.createdAt)}
+                        </Typography>
+                      </div>
+                      <Typography className="text-gray-300 break-all font-normal">
+                        {user.content}
                       </Typography>
                     </div>
-                    <Typography className="text-gray-300 break-all font-normal">
-                      {user.content}
-                    </Typography>
                   </div>
-                </div>
-              ))}
+                ))
+              )}
               {/* Tạo khoảng trống để tránh bị che bởi input */}
               <div className="h-[30px]"></div>
             </div>
