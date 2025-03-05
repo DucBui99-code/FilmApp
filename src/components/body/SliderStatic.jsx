@@ -83,7 +83,9 @@ function SliderStatic({ title = 'Test', data, type }) {
                   <div className="relative group">
                     <img
                       src={data.pathImage + e.thumb_url}
+                      srcSet={data.pathImage + e.thumb_url}
                       alt={`Thumbnail ${index}`}
+                      loading="lazy"
                       className={`w-full h-[550px] transition-all object-cover cursor-pointer rounded-sm group-hover:bg-black`}
                     />
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity">

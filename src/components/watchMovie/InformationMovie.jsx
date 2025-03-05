@@ -70,6 +70,8 @@ function InformationMovie({ data, type, isRent }) {
       <div className="self-center w-full lg:self-start lg:w-1/4">
         <img
           src={data.poster_url}
+          srcSet={data.poster_url}
+          loading="lazy"
           className="w-full h-96 object-cover rounded-sm"
           alt="Poster"
         ></img>

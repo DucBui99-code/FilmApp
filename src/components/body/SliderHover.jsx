@@ -91,7 +91,9 @@ function SliderHover({ title = 'Test', data, type }) {
                 >
                   <img
                     src={data.pathImage + e.thumb_url}
+                    srcSet={data.pathImage + e.thumb_url}
                     alt={`Thumbnail`}
+                    loading="lazy"
                     className="w-full h-[550px] transition-all object-cover cursor-pointer rounded-sm"
                   />
 
@@ -112,8 +114,10 @@ function SliderHover({ title = 'Test', data, type }) {
                         >
                           <img
                             src={data.pathImage + e.poster_url}
+                            srcSet={data.pathImage + e.poster_url}
                             alt="Poster"
                             className="w-full"
+                            loading="lazy"
                           />
                         </CardHeader>
                         <CardBody className="bg-black">

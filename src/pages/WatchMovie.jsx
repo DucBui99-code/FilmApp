@@ -11,6 +11,8 @@ import { useAlert } from '../components/Message/AlertContext';
 import SliderStatic from '../components/Body/SliderStatic';
 import Error404 from '../assets/error-404.png';
 import getErrorMessage from '../utils/handelMessageError';
+import VideoPlayer from '../components/WatchMovie/VideoPlayer';
+import BlockLiveComment from '../components/WatchMovie/BlockLiveComment';
 
 function WatchMovie({ movieType }) {
   const { name } = useParams();
@@ -128,49 +130,54 @@ function WatchMovie({ movieType }) {
   }
 
   return state.status ? (
-    <div>
+    <>
+      {state.isRent && (
+        <div className="flex items-center justify-start gap-2 p-2">
+          <IconButton onClick={() => navigate(-1)}>
+            <ArrowLeftIcon className="w-6 text-white"></ArrowLeftIcon>
+          </IconButton>
+          <Typography className="text-white font-bold uppercase">
+            {state.data?.name + ' - Tập ' + state.episode?.name}
+          </Typography>
+        </div>
+      )}
       {state.isRent && (
         <>
-          <div className="flex items-center justify-start gap-2 p-2">
-            <IconButton onClick={() => navigate(-1)}>
-              <ArrowLeftIcon className="w-6 text-white"></ArrowLeftIcon>
-            </IconButton>
-            <Typography className="text-white font-bold uppercase">
-              {state.data?.name + ' - Tập ' + state.episode?.name}
-            </Typography>
-          </div>
-          <div className="relative">
-            <iframe
-              src={state.episode?.link_embed}
-              width="100%"
-              height="600"
-              frameborder="0"
-              allow="autoplay; fullscreen"
-              title="Movie"
-            ></iframe>
+          <div className="flex flex-col lg:flex-row items-center justify-center gap-5 p-4 lg:p-12">
+            <div className="flex-1 w-full lg:w-auto">
+              <VideoPlayer
+                linkEmbed={state.episode?.link_embed}
+                thumbnail={state.data?.poster_url}
+              />
+            </div>
+            <div className="w-full lg:w-1/3 self-start">
+              <BlockLiveComment></BlockLiveComment>
+            </div>
           </div>
         </>
       )}
-      <InformationMovie
-        data={state.data}
-        type={movieType}
-        isRent={state.isRent}
-      ></InformationMovie>
-
-      {state.isRent && (
-        <EpisodesMovie
+      <div className="p-4 md:p-12">
+        <InformationMovie
           data={state.data}
-          currentEpisode={currentEpisode}
-          setCurrentEpisode={setCurrentEpisode}
-        ></EpisodesMovie>
-      )}
+          type={movieType}
+          isRent={state.isRent}
+        ></InformationMovie>
 
-      <CommentMovie data={state}></CommentMovie>
-      <SliderStatic
-        title="Phim đề xuất"
-        data={state.suggestMovies}
-      ></SliderStatic>
-    </div>
+        {state.isRent && (
+          <EpisodesMovie
+            data={state.data}
+            currentEpisode={currentEpisode}
+            setCurrentEpisode={setCurrentEpisode}
+          ></EpisodesMovie>
+        )}
+
+        <CommentMovie data={state}></CommentMovie>
+        <SliderStatic
+          title="Phim đề xuất"
+          data={state.suggestMovies}
+        ></SliderStatic>
+      </div>
+    </>
   ) : (
     <div className="flex items-center justify-center flex-col gap-3 h-96 w-full">
       <img src={Error404} className="w-40 object-cover"></img>

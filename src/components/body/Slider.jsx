@@ -90,12 +90,14 @@ const Slider = ({ data, type }) => {
             <div className="relative">
               <img
                 src={data.pathImage + e.poster_url}
+                srcSet={data.pathImage + e.poster_url}
                 alt={`Slide ${index}`}
+                loading="lazy"
                 className="w-full h-[550px] object-cover cursor-grab"
               />
+
               {/* Lớp phủ gradient */}
               <div className="absolute inset-0 bg-gradient-to-r from-black via-transparent to-transparent"></div>
-
               <div className="absolute top-1/3 left-2">
                 <Typography
                   as={'h2'}

@@ -34,9 +34,8 @@ function CommentMovie(props) {
   const getListComment = async () => {
     try {
       const res = await movieServices.getCommentByMovieId(props.data.data._id);
-      console.log('res: ', res);
-      if (res) {
-        setListComment(res);
+      if (res.comments) {
+        setListComment(res.comments);
       } else {
         showAlert(getErrorMessage(error), 'error');
       }
@@ -69,7 +68,6 @@ function CommentMovie(props) {
         content: text,
         type: 'comment',
       });
-      console.log('res: ', res);
       if (res.status) {
         showAlert('Cảm ơn bạn đã đóng góp ý kiến cho bộ phim này!', 'success');
         setText('');

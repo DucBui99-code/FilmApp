@@ -30,13 +30,13 @@ function AuthControls({ isMobile }) {
           {isMobile ? (
             <>
               <Button
-                className="bg-primary hover:opacity-60 transition-opacity w-1/2"
+                className="bg-primary hover:opacity-60 transition-opacity w-fit"
                 onClick={() => setOpenLogin(true)}
               >
                 Đăng nhập
               </Button>
               <Button
-                className="bg-orange-300 hover:opacity-60 transition-opacity w-1/2"
+                className="bg-orange-300 hover:opacity-60 transition-opacity w-fit"
                 onClick={() => setOpenRegister(true)}
               >
                 Đăng ký
