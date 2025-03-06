@@ -38,6 +38,9 @@ const LIST_PAYMENT_METHOD = [
     icon: <ImageDescription img={momo} />,
   },
 ];
+const LINK_AVATAR_DEFAULT =
+  'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y';
+
 export {
   TYPE_LOGIN,
   MOVIE_TYPE,
@@ -45,4 +48,5 @@ export {
   MAX_LENGTH_PASSWORD,
   TIME_CALL_CHECK_BILL,
   LIST_PAYMENT_METHOD,
+  LINK_AVATAR_DEFAULT,
 };

@@ -12,6 +12,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useDispatch } from 'react-redux';
 import { logout } from '../../store/authSlice';
+import { LINK_AVATAR_DEFAULT } from '../../config/constant';
 
 // profile menu component
 const profileMenuItems = [
@@ -61,7 +62,11 @@ function AvatarCustom({ src, email }) {
             <Avatar
               size="sm"
               alt="avatar"
-              src={src}
+              src={src || LINK_AVATAR_DEFAULT}
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = LINK_AVATAR_DEFAULT;
+              }}
               className="shadow-xl shadow-green-900/20 ring-4 ring-green-500/30"
             />
           ) : (

@@ -204,6 +204,7 @@ const AccountTab = ({ data }) => {
         <ButtonGroup className="mt-3 w-full flex items-center justify-center">
           <Button
             className="text-primary"
+            disabled={loginType === TYPE_LOGIN.byGoogle}
             onClick={() => setOpenChangePass(true)}
           >
             Thay đổi mật khẩu
@@ -211,6 +212,7 @@ const AccountTab = ({ data }) => {
           <Button
             className="text-red-400"
             variant="outlined"
+            disabled={loginType === TYPE_LOGIN.byGoogle}
             onClick={() => {
               setPopupInfor({
                 isConfirm: false,

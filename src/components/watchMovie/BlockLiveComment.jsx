@@ -22,6 +22,7 @@ import movieServices from '../../services/movieServices';
 import socketClient from '../../services/socketClient';
 import getErrorMessage from '../../utils/handelMessageError';
 import { useAlert } from '../Message/AlertContext';
+import { LINK_AVATAR_DEFAULT } from '../../config/constant';
 
 const BlockLiveComment = ({ movieId }) => {
   const { isLogin, userId } = useSelector((state) => state.auth);
@@ -75,7 +76,7 @@ const BlockLiveComment = ({ movieId }) => {
   const handelSubmit = () => {
     if (message.trim() && isLogin) {
       // Logic to send the message
-      socketClient.emit('sendComment', { movieId, userId, content: message });
+      socketClient.emit('sendComment', { movieId, content: message });
       console.log('Message sent:', message);
       setMessage('');
     }
@@ -105,9 +106,8 @@ const BlockLiveComment = ({ movieId }) => {
           </IconButton>
         </CardHeader>
         <CardBody className="transition-all duration-300 p-3">
-          {/* Danh sách tin nhắn có scroll */}
           <Collapse open={open} className="flex-1 overflow-hidden">
-            <div className="max-h-[470px] overflow-y-scroll">
+            <div className="max-h-[470px] min-h-[470px] overflow-y-scroll">
               {data.length === 0 ? (
                 <Typography className="text-gray-400 text-center mt-4">
                   Không có bình luận nào.
@@ -116,8 +116,11 @@ const BlockLiveComment = ({ movieId }) => {
                 data.map((user) => (
                   <div key={user.id} className="flex items-center gap-4 mt-4">
                     <img
-                      src={user.avatar.url}
-                      srcSet={user.avatar.url}
+                      src={user?.avatar || LINK_AVATAR_DEFAULT}
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = LINK_AVATAR_DEFAULT;
+                      }}
                       alt="User Avatar"
                       className="w-8 h-8 rounded-full self-start"
                       loading="lazy"
