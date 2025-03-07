@@ -112,22 +112,18 @@ function Login({ handleOpen, open, handelSwitchModal, handelOpenForgotPass }) {
             </div>
 
             <Input
-              label="Email"
+              label="Email or Username"
               size="lg"
               color="light-green"
               className="text-white"
               autoComplete="off"
-              {...register('email', {
-                required: 'Email is required',
-                pattern: {
-                  value: regex,
-                  message: 'Invalid email address',
-                },
+              {...register('identifier', {
+                required: 'Email or Username is required',
               })}
             />
             {errors.email && (
               <Typography variant="small" color="red" className="-mt-3">
-                {errors.email.message}
+                {errors.identifier.message}
               </Typography>
             )}
 

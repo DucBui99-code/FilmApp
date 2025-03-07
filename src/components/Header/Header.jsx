@@ -9,7 +9,7 @@ import {
 import { useDispatch } from 'react-redux';
 import { Link, useLocation, useNavigate } from 'react-router';
 
-import Logo from '../../assets/logo-danet.png';
+import Logo from '../../assets/logo.png';
 import ActionBarMobile from './ActionBarMobile';
 import NotificationPopup from './NotificationPopup';
 import { setLoadingAsync } from '../../store/appStore';

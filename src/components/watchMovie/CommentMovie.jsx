@@ -14,14 +14,11 @@ import EmojiPicker from 'emoji-picker-react';
 import React, { useEffect, useState } from 'react';
 import { FaceSmileIcon } from '@heroicons/react/16/solid';
 import BlockComment from './BlockComment';
-import dataComments from './test.json';
 import UserServices from '../../services/userServices';
 import { useAlert } from '../Message/AlertContext';
 import movieServices from '../../services/movieServices';
-import emitter from '../../utils/eventBus';
 import getErrorMessage from '../../utils/handelMessageError';
 import { useSelector } from 'react-redux';
-import { UserCircleIcon } from '@heroicons/react/24/outline';
 import iconUser from '../../assets/225-default-avatar.png';
 function CommentMovie(props) {
   const { isLogin, userId } = useSelector((state) => state.auth);
@@ -111,7 +108,7 @@ function CommentMovie(props) {
             Tổng {listComment?.length || 0} bình luận
           </Typography>
           <div className="w-60">
-            <Select color="pink" label="Select mode" className="text-white">
+            <Select color="green" label="Sắp xếp theo" className="text-white ">
               <Option>Mới nhất</Option>
               <Option>Cũ nhất</Option>
             </Select>

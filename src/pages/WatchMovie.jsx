@@ -150,9 +150,11 @@ function WatchMovie({ movieType }) {
                 thumbnail={state.data?.poster_url}
               />
             </div>
-            <div className="w-full lg:w-1/3 self-start">
-              <BlockLiveComment movieId={state.movieId}></BlockLiveComment>
-            </div>
+            {state.data.isLiveComment && (
+              <div className="w-full lg:w-1/3 self-start">
+                <BlockLiveComment movieId={state.movieId}></BlockLiveComment>
+              </div>
+            )}
           </div>
         </>
       )}

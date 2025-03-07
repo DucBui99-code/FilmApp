@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
   Collapse,
-  Button,
   Card,
   Textarea,
   Typography,
@@ -25,7 +24,7 @@ import { useAlert } from '../Message/AlertContext';
 import { LINK_AVATAR_DEFAULT } from '../../config/constant';
 
 const BlockLiveComment = ({ movieId }) => {
-  const { isLogin, userId } = useSelector((state) => state.auth);
+  const { isLogin } = useSelector((state) => state.auth);
   const { showAlert } = useAlert();
 
   const [open, setOpen] = useState(true);
