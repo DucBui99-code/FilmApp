@@ -14,6 +14,7 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
   PlayCircleIcon,
+  SignalIcon,
 } from '@heroicons/react/16/solid';
 
 import 'swiper/css';
@@ -88,6 +89,12 @@ const Slider = ({ data, type }) => {
         {data?.items.map((e, index) => (
           <SwiperSlide key={index}>
             <div className="relative">
+              {e.isLiveComment && (
+                <div className="absolute top-1 right-1 pr-3 pl-3 text-white rounded-md bg-red-400 flex items-center gap-2 justify-center">
+                  Live
+                  <SignalIcon className="w-6 text-whites"></SignalIcon>
+                </div>
+              )}
               <img
                 src={data.pathImage + e.poster_url}
                 srcSet={data.pathImage + e.poster_url}
@@ -183,13 +190,21 @@ const Slider = ({ data, type }) => {
         >
           {data?.items.map((e, index) => (
             <SwiperSlide key={index}>
-              <img
-                src={data.pathImage + e.poster_url}
-                alt={`Thumbnail ${index}`}
-                className={`w-full h-32 transition-all object-cover cursor-pointer rounded-sm ${
-                  index === currentSlide && 'border-2 border-primary'
-                }`}
-              />
+              <div className="relative">
+                <img
+                  src={data.pathImage + e.poster_url}
+                  alt={`Thumbnail ${index}`}
+                  className={`w-full h-32 transition-all object-cover cursor-pointer rounded-sm ${
+                    index === currentSlide && 'border-2 border-primary'
+                  }`}
+                />
+                {e.isLiveComment && (
+                  <div className="absolute top-1 right-1 pr-3 pl-3 text-white rounded-md bg-red-400 flex items-center gap-2 justify-center">
+                    Live
+                    <SignalIcon className="w-6 text-whites"></SignalIcon>
+                  </div>
+                )}
+              </div>
             </SwiperSlide>
           ))}
           <button

@@ -3,6 +3,7 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
   PlayCircleIcon,
+  SignalIcon,
 } from '@heroicons/react/16/solid';
 import React, { useRef } from 'react';
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
@@ -81,6 +82,12 @@ function SliderStatic({ title = 'Test', data, type }) {
                   }
                 >
                   <div className="relative group">
+                    {e.isLiveComment && (
+                      <div className="absolute top-1 right-1 pr-3 pl-3 text-white rounded-md bg-red-400 flex items-center gap-2 justify-center">
+                        Live
+                        <SignalIcon className="w-6 text-whites"></SignalIcon>
+                      </div>
+                    )}
                     <img
                       src={data.pathImage + e.thumb_url}
                       srcSet={data.pathImage + e.thumb_url}
