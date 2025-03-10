@@ -8,7 +8,8 @@ import {
   Badge,
 } from '@material-tailwind/react';
 import { BellAlertIcon } from '@heroicons/react/16/solid';
-
+import { formatDistanceToNow } from 'date-fns';
+import vi from 'date-fns/locale/vi';
 import Empty from '../../assets/man.png';
 
 function NotificationPopup() {
@@ -21,10 +22,16 @@ function NotificationPopup() {
           </IconButton>
         </PopoverHandler>
       </Badge>
-      <PopoverContent className="w-96 min-h-72 bg-black border-black z-40">
+      <PopoverContent className="w-[600px] min-h-96 bg-gray-800 border-black z-40">
         <Typography variant="h4" color="white" className="mb-6">
           Thông báo
         </Typography>
+        <span>
+          {formatDistanceToNow(new Date('2025-02-26T08:48:53.362+00:00'), {
+            addSuffix: true,
+            locale: vi,
+          })}
+        </span>
         <div className="flex items-center justify-center">
           <img src={Empty} alt="Empty" className="w-40"></img>
         </div>

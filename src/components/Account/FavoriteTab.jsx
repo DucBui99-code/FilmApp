@@ -49,6 +49,8 @@ const FavoriteTab = ({ data }) => {
               >
                 <img
                   src={item.poster_url}
+                  srcSet={item.poster_url}
+                  loading="lazy"
                   className="rounded-md object-cover"
                   alt={item.name}
                 />

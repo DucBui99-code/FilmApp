@@ -71,7 +71,7 @@ function EpisodesMovie({ data, currentEpisode, setCurrentEpisode }) {
                 data.status === 'ongoing' ? 'text-yellow-500' : 'text-primary'
               } first-letter:uppercas`}
             >
-              {data.status}
+              {data.status === 'ongoing' ? 'Đang phát' : 'Hoàn thành'}
             </div>
           </div>
         </AccordionHeader>

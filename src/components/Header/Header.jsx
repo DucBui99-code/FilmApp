@@ -9,7 +9,7 @@ import {
 import { useDispatch } from 'react-redux';
 import { Link, useLocation, useNavigate } from 'react-router';
 
-import Logo from '../../assets/logo-danet.png';
+import Logo from '../../assets/logo.png';
 import ActionBarMobile from './ActionBarMobile';
 import NotificationPopup from './NotificationPopup';
 import { setLoadingAsync } from '../../store/appStore';
@@ -67,7 +67,13 @@ function Header() {
         <div className="flex items-center justify-between text-blue-gray-900">
           <div className="flex items-center justify-center gap-5">
             <Link to="/">
-              <img src={Logo} alt="Logo" className="w-24 -ml-3"></img>
+              <img
+                src={Logo}
+                srcSet={Logo}
+                alt="Logo"
+                className="w-24 -ml-3"
+                loading="lazy"
+              ></img>
             </Link>
             <div className="mr-4 hidden lg:block">{navList}</div>
           </div>

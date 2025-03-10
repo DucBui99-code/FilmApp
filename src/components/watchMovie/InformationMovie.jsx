@@ -20,10 +20,15 @@ import DOMPurify from 'dompurify';
 
 import { MOVIE_TYPE } from '../../config/constant';
 import { Link } from 'react-router';
+import { useSelector } from 'react-redux';
+import { useAlert } from '../Message/AlertContext';
+import getErrorMessage from '../../utils/handelMessageError';
+import UserServices from '../../services/userServices';
 
 function InformationMovie({ data, type, isRent }) {
   const maxLengthContent = 300;
-
+  const { isLogin } = useSelector((state) => state.auth);
+  const { showAlert } = useAlert();
   const [value, copy] = useCopyToClipboard();
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -45,11 +50,28 @@ function InformationMovie({ data, type, isRent }) {
     // Mở tab mới với URL chia sẻ của Facebook
     window.open(facebookShareUrl, '_blank', 'noopener,noreferrer');
   };
+  const handelLikeMovie = async () => {
+    if (!isLogin) {
+      return showAlert('Vui lòng đăng nhập', 'error');
+    }
+    try {
+      const requestData = {
+        movieId: data._id,
+        action: 'add',
+      };
+      const res = await UserServices.toggleFavoriteMovie(requestData);
+      showAlert(res.message, 'success');
+    } catch (error) {
+      showAlert(getErrorMessage(error), 'error');
+    }
+  };
   return (
     <div className="mt-4 p-3 flex flex-col items-center justify-between gap-5 lg:flex-row">
       <div className="self-center w-full lg:self-start lg:w-1/4">
         <img
           src={data.poster_url}
+          srcSet={data.poster_url}
+          loading="lazy"
           className="w-full h-96 object-cover rounded-sm"
           alt="Poster"
         ></img>
@@ -60,7 +82,7 @@ function InformationMovie({ data, type, isRent }) {
         </Typography>
         <div className="flex items-center gap-4 mt-2">
           <Tooltip content="Thêm vào yêu thích">
-            <IconButton>
+            <IconButton onClick={handelLikeMovie}>
               <HeartIcon className="w-6 text-primary"></HeartIcon>
             </IconButton>
           </Tooltip>

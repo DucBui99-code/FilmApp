@@ -1,19 +1,23 @@
-import { Button, Typography } from '@material-tailwind/react';
 import React from 'react';
+import { Button, Typography } from '@material-tailwind/react';
+
 import PayImage from '../../assets/mobile-payment.png';
 import { Link } from 'react-router';
 import movieServices from '../../services/movieServices';
 import { useAlert } from '../Message/AlertContext';
 import getErrorMessage from '../../utils/handelMessageError';
+import { removeBill } from '../../store/authSlice';
+import { useDispatch } from 'react-redux';
 
 const PaymentConfirm = ({ setStep, inforTransaction }) => {
+  const dispatch = useDispatch();
   const { showAlert } = useAlert();
   const handelCancelTransaction = async () => {
     try {
-      const res = await movieServices.cancelledBill({
+      await movieServices.cancelledBill({
         transactionId: inforTransaction.transactionId,
       });
-      console.log(res);
+      dispatch(removeBill({ billId: inforTransaction.transactionId }));
       setStep(1);
     } catch (error) {
       showAlert(getErrorMessage(error), 'error');

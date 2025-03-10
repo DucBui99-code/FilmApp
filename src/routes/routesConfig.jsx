@@ -7,7 +7,7 @@ const TelevisionPage = React.lazy(() => import('../pages/TeleVisionPage'));
 const PaymentPage = React.lazy(() => import('../pages/PaymentPage'));
 const ResetPassowordPage = React.lazy(() => import('../pages/ResetPassoword'));
 const AccountPage = React.lazy(() => import('../pages/AccountPage'));
-
+const SearchPage = React.lazy(() => import('../pages/SearchPage'));
 const routesConfig = {
   public: [
     { path: '/', element: HomePage, props: { type: '' } },
@@ -16,6 +16,10 @@ const routesConfig = {
       path: '/xem-phim-mien-phi/:name',
       element: WatchMoviePage,
       props: { movieType: MOVIE_TYPE.movieFree },
+    },
+    {
+      path: '/search',
+      element: SearchPage,
     },
     { path: '/phim-goi', element: HomePage, props: { type: 'movieRent' } },
     { path: '/truyen-hinh', element: TelevisionPage },

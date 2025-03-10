@@ -25,6 +25,16 @@ const movieServices = {
       throw error;
     }
   },
+  getliveComments: async (movieId) => {
+    try {
+      const response = await apiClient.get(`/movie/getLiveComments/${movieId}`);
+      return response.data;
+    } catch (error) {
+      console.error('API error:', error);
+      throw error;
+    }
+  },
+
   getSingleEpisode: async (data) => {
     try {
       const response = await apiClient.post('/movie/getMovieEpisode', data, {
@@ -47,6 +57,17 @@ const movieServices = {
             Authorization: `Bearer ${getAuthToken()}`,
           },
         }
+      );
+      return response.data;
+    } catch (error) {
+      console.error('API error:', error);
+      throw error;
+    }
+  },
+  searchMovie: async (query, page = 1) => {
+    try {
+      const response = await apiClient.get(
+        `/movie/searchMovie?q=${query}&page=${page}`
       );
       return response.data;
     } catch (error) {
@@ -106,12 +127,14 @@ const movieServices = {
       return response.data;
     } catch (error) {
       console.error('API error:', error);
-      return response.data
+      return response.data;
     }
   },
   getCommentByMovieId: async (movieId) => {
     try {
-      const response = await apiClient.get(`/movie/getMovieComments/${movieId}`);
+      const response = await apiClient.get(
+        `/movie/getMovieComments/${movieId}`
+      );
       return response.data;
     } catch (error) {
       console.error('API error:', error);
@@ -120,7 +143,9 @@ const movieServices = {
   },
   deleteComment: async (data) => {
     try {
-      const response = await apiClient.post('/user/deleteCommentMovie', data, { headers: { Authorization: `Bearer ${getAuthToken()}` } })
+      const response = await apiClient.post('/user/deleteCommentMovie', data, {
+        headers: { Authorization: `Bearer ${getAuthToken()}` },
+      });
       return response.data;
     } catch (error) {
       console.error('API error:', error);

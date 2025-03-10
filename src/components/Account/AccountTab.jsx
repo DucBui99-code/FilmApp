@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { UserIcon } from '@heroicons/react/24/solid';
 import {
   Button,
+  ButtonGroup,
   Card,
   Input,
   Option,
@@ -11,7 +12,7 @@ import {
 import SaveIcon from '@mui/icons-material/Save';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Controller, useForm } from 'react-hook-form';
 import dayjs from 'dayjs';
 
@@ -19,10 +20,15 @@ import UserServices from '../../services/userServices';
 import { TYPE_LOGIN } from '../../config/constant';
 import { useAlert } from '../Message/AlertContext';
 import getErrorMessage from '../../utils/handelMessageError';
+import ChangePassword from '../Auth/ChangePassword';
+import PopupConfirm from '../Notification/PopupConfirm';
+import AuthServices from '../../services/authServices';
+import { logout } from '../../store/authSlice';
 
 const AccountTab = ({ data }) => {
   const { loginType } = useSelector((state) => state.auth);
-
+  const { showAlert } = useAlert();
+  const dispatch = useDispatch();
   const {
     register,
     handleSubmit,
@@ -35,8 +41,11 @@ const AccountTab = ({ data }) => {
   const [file, setFile] = useState(null); // Lưu file để cập nhật lại
   const [loading, setLoading] = useState(false);
   const [showChangeButton, setShowChangeButton] = useState(false);
-
-  const { showAlert } = useAlert();
+  const [openChangePass, setOpenChangePass] = useState(false);
+  const [popupInfor, setPopupInfor] = useState({
+    isShow: false,
+    isConfirm: false,
+  });
 
   useEffect(() => {
     if (data) {
@@ -131,6 +140,23 @@ const AccountTab = ({ data }) => {
     }
   };
 
+  const removeMySelf = async () => {
+    try {
+      await AuthServices.deleteAccount();
+      dispatch(logout());
+    } catch (error) {
+      showAlert(getErrorMessage(error), 'error');
+    } finally {
+      setPopupInfor({ isShow: false, isConfirm: false }); // Reset popup sau khi xóa tài khoản
+    }
+  };
+
+  useEffect(() => {
+    if (popupInfor.isConfirm) {
+      removeMySelf();
+    }
+  }, [popupInfor.isConfirm]);
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-4 lg:gap-4 min-h-[300px]">
       <div className="col-span-1 mb-4">
@@ -175,6 +201,28 @@ const AccountTab = ({ data }) => {
             </Button>
           )}
         </Card>
+        <ButtonGroup className="mt-3 w-full flex items-center justify-center">
+          <Button
+            className="text-primary"
+            disabled={loginType === TYPE_LOGIN.byGoogle}
+            onClick={() => setOpenChangePass(true)}
+          >
+            Thay đổi mật khẩu
+          </Button>
+          <Button
+            className="text-red-400"
+            variant="outlined"
+            disabled={loginType === TYPE_LOGIN.byGoogle}
+            onClick={() => {
+              setPopupInfor({
+                isConfirm: false,
+                isShow: true,
+              });
+            }}
+          >
+            Xóa tài khoản
+          </Button>
+        </ButtonGroup>
       </div>
       <div className="col-span-3 bg-black">
         <div className="text-white font-bold border-t px-[20px] pt-[10px]">
@@ -324,6 +372,14 @@ const AccountTab = ({ data }) => {
           </Button>
         </div>
       </div>
+      <ChangePassword
+        handelOpen={setOpenChangePass}
+        open={openChangePass}
+      ></ChangePassword>
+      <PopupConfirm
+        popupInfor={popupInfor}
+        setPopupInfor={setPopupInfor}
+      ></PopupConfirm>
     </div>
   );
 };
