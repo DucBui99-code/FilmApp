@@ -152,6 +152,24 @@ const movieServices = {
       throw error;
     }
   },
+  editComment: async (data) => {
+    try {
+      const response = await apiClient.post('/user/editCommentMovie', data, { headers: { Authorization: `Bearer ${getAuthToken()}` } })
+      return response.data;
+    } catch (error) {
+      console.error('API error:', error);
+      throw error;
+    }
+  },
+  toggleReactionComment: async (data) => {
+    try {
+      const response = await apiClient.post('/user/actionCommentMovie', data, { headers: { Authorization: `Bearer ${getAuthToken()}` } })
+      return response.data;
+    } catch (error) {
+      console.error('API error:', error);
+      throw error;
+    }
+  }
 };
 
 export default movieServices;
