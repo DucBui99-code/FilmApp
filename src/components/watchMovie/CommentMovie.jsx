@@ -34,13 +34,48 @@ function CommentMovie(props) {
   const getListComment = async () => {
     try {
       const res = await movieServices.getCommentByMovieId(props.data.data._id);
-      console.log('res: ', res);
       if (res) {
-        setListComment(res);
+        setListComment(
+          res.comments.sort((a, b) => new Date(b.time) - new Date(a.time))
+        );
       } else {
         showAlert(getErrorMessage(error), 'error');
       }
     } catch (error) {}
+  };
+
+  const updateReplies = (commentId, newReply) => {
+    setListComment((prevComments) =>
+      prevComments.map((comment) =>
+        comment._id === commentId
+          ? { ...comment, replies: [...comment.replies, newReply] }
+          : comment
+      )
+    );
+  };
+
+  const updateReaction = (commentId, likes, disLikes) => {
+    setListComment((prevComments) =>
+      prevComments.map((comment) =>
+        comment._id === commentId ? { ...comment, likes, disLikes } : comment
+      )
+    );
+  };
+
+  const updateComment = (_id, newContent) => {
+    setListComment((prevComments) =>
+      prevComments.map((comment) =>
+        comment._id === _id
+          ? { ...comment, content: newContent, edited: true }
+          : comment
+      )
+    );
+  };
+
+  const deleteComment = (_id) => {
+    setListComment((prevComments) =>
+      prevComments.filter((comment) => comment._id !== _id)
+    );
   };
 
   const handelTextComment = (value) => {
@@ -73,6 +108,7 @@ function CommentMovie(props) {
       if (res.status) {
         showAlert('Cảm ơn bạn đã đóng góp ý kiến cho bộ phim này!', 'success');
         setText('');
+        setListComment((prev) => [res.data, ...prev]);
       } else {
         showAlert(getErrorMessage(error), 'error');
       }
@@ -84,7 +120,7 @@ function CommentMovie(props) {
   useEffect(() => {
     (async function () {
       try {
-        getListComment();
+        await getListComment();
         if (isLogin) {
           const res = await UserServices.getProfile();
           if (res.status) {
@@ -203,6 +239,10 @@ function CommentMovie(props) {
               movieData={props}
               userId={userId}
               key={i}
+              updateComment={updateComment}
+              deleteComment={deleteComment}
+              updateReplies={updateReplies}
+              updateReaction={updateReaction}
             ></BlockComment>
           ))}
         </div>
