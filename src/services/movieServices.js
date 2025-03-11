@@ -127,7 +127,7 @@ const movieServices = {
       return response.data;
     } catch (error) {
       console.error('API error:', error);
-      return response.data;
+      throw error;
     }
   },
   getCommentByMovieId: async (movieId) => {

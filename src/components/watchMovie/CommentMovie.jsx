@@ -31,6 +31,7 @@ function CommentMovie(props) {
   const getListComment = async () => {
     try {
       const res = await movieServices.getCommentByMovieId(props.data.data._id);
+      console.log('res: ', res);
       if (res) {
         setListComment(
           res.comments.sort((a, b) => new Date(b.time) - new Date(a.time))
@@ -213,7 +214,7 @@ function CommentMovie(props) {
                       setIsShowAction(false);
                     }}
                   >
-                    Cancel
+                    Hủy bỏ
                   </Button>
                   <Button
                     size="sm"
@@ -221,7 +222,7 @@ function CommentMovie(props) {
                     disabled={text.length <= 0 || text.length > limitCharacters}
                     onClick={() => commentMovie('post')}
                   >
-                    Post
+                    Bình luận
                   </Button>
                 </div>
               </div>

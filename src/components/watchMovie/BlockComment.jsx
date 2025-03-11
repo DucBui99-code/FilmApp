@@ -27,6 +27,7 @@ import dayjs from 'dayjs';
 import iconUser from '../../assets/225-default-avatar.png';
 import movieServices from '../../services/movieServices';
 import { useAlert } from '../Message/AlertContext';
+import { useSelector } from 'react-redux';
 
 // Render menu items
 const RenderMenu = ({ data, isOwner, menuItemsSelf, menuItemsAnother }) => (
@@ -82,7 +83,7 @@ const CommentActions = ({
       <Button
         variant="text"
         className="text-gray-600 font-medium"
-        onClick={onReply}
+        onClick={() => onReply()}
       >
         Phản hồi
       </Button>
@@ -98,9 +99,58 @@ const Reply = ({
   menuItemsAnother,
   handleLike,
   handleDisLike,
+  movieId,
+  updateReplies,
+  onReplyInput,
 }) => {
+  const { showAlert } = useAlert();
+  const { userInfo } = useSelector((state) => state.auth);
+  const spanRef = useRef(null);
+  const [showReply, setShowReply] = useState(false);
+  const [text, setText] = useState('');
+  const [paddingInput, setPaddingInput] = useState('0px');
+
+  const onEmojiClick = (event) => {
+    if (text.length + event.emoji.length > 100) {
+      return;
+    }
+    setText((prev) => prev + event.emoji);
+  };
+
+  const onReply = () => {
+    setShowReply(!showReply);
+  };
+
+  const replyComment = async () => {
+    const dataBody = {
+      movieId: movieId,
+      content: text,
+      type: 'reply',
+      commentId: data._id,
+      replyTo: reply._id,
+    };
+
+    try {
+      const res = await movieServices.postComment(dataBody);
+      updateReplies(data._id, res.data);
+      setShowReply(false);
+      setText('');
+      onReplyInput();
+    } catch (error) {
+      if (error?.status == '401') {
+        showAlert('Vui lòng đăng nhập để thực hiện thao tác này', 'error');
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (spanRef.current) {
+      setPaddingInput(spanRef.current.offsetWidth + 4 + 'px');
+    }
+  }, [showReply]);
+
   return (
-    <div className="mt-2 flex justify-between items-center w-full">
+    <div className="mt-2 flex justify-between items-center w-full flex-col">
       <div className="flex items-center gap-3 justify-between w-full">
         <div className="flex items-center gap-3 w-full">
           <Avatar
@@ -120,7 +170,7 @@ const Reply = ({
             </div>
             <Typography className="text-white font-medium flex items-center gap-1">
               <span className="text-primary font-semibold">
-                {reply.replyTo}
+                {reply.replyToUsername}
               </span>
               {reply.content}
             </Typography>
@@ -129,9 +179,11 @@ const Reply = ({
               disLikes={reply.disLikes}
               handleLike={handleLike}
               handleDisLike={handleDisLike}
+              onReply={onReply}
             />
           </div>
         </div>
+
         <RenderMenu
           data={data}
           isOwner={reply.isOwner}
@@ -139,18 +191,100 @@ const Reply = ({
           menuItemsAnother={menuItemsAnother}
         />
       </div>
+      {showReply && (
+        <div className="flex items-center gap-3 w-full">
+          <Avatar
+            src={userInfo?.avatar.url || iconUser}
+            alt="avatar"
+            size="sm"
+            className="self-start bg-white"
+          />
+          <div className="relative w-full">
+            <span
+              ref={spanRef}
+              className="absolute top-[36%] left-0 bg-gray-800 px-[4px] text-white rounded-md text-sm"
+            >
+              {reply?.userDetails.username}
+            </span>
+            <Input
+              placeholder="Your Comment..."
+              value={text}
+              variant="static"
+              className="text-white leading-none"
+              color="green"
+              style={{ paddingLeft: paddingInput }}
+              onChange={(e) => setText(e.target.value)}
+            />
+            <div
+              className={`absolute right-2 bottom-2 ${
+                text.length >= 100 ? 'text-red-500' : 'text-gray-500'
+              } text-sm font-medium flex items-center justify-center gap-1`}
+            >
+              <div>{text.length}</div>/<div>{100}</div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {text.length > 0 && (
+        <div className="flex w-full items-center justify-between py-1.5 mt-2">
+          <Menu placement="bottom-end">
+            <MenuHandler>
+              <IconButton>
+                <FaceSmileIcon className="w-4 text-white"></FaceSmileIcon>
+              </IconButton>
+            </MenuHandler>
+            <MenuList className="bg-black">
+              <EmojiPicker
+                theme="dark"
+                width={'500px'}
+                height={'400px'}
+                onEmojiClick={onEmojiClick}
+              ></EmojiPicker>
+            </MenuList>
+          </Menu>
+          <div className="flex gap-2">
+            <Button
+              size="sm"
+              color="red"
+              variant="text"
+              className="rounded-md"
+              onClick={() => {
+                setText('');
+                setShowReply(false);
+              }}
+            >
+              Hủy bỏ
+            </Button>
+            <Button
+              size="sm"
+              className="rounded-md bg-primary"
+              disabled={text.length <= 0 || text.length > 100}
+              onClick={() => replyComment()}
+            >
+              Bình luận
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
-const ReplyInput = ({ data, movieData, usernameTag, updateReplies }) => {
+const ReplyInput = ({
+  data,
+  movieData,
+  usernameTag,
+  updateReplies,
+  setReplyInput,
+}) => {
   const limitCharacters = 100;
+  const { userInfo } = useSelector((state) => state.auth);
   const [text, setText] = useState('');
   const [isShowAction, setIsShowAction] = useState(false);
   const [paddingInput, setPaddingInput] = useState('0px');
   const spanRef = useRef(null);
   const replyComment = async () => {
-    console.log('data: ', data);
     const bodyData = {
       movieId: movieData.data.movieId,
       content: text,
@@ -158,8 +292,10 @@ const ReplyInput = ({ data, movieData, usernameTag, updateReplies }) => {
       commentId: data._id, // Dùng để reply comment
     };
     const res = await movieServices.postComment(bodyData);
-    updateReplies();
-    console.log('res: ', res);
+    updateReplies(data._id, res.data);
+    setIsShowAction(false);
+    setReplyInput();
+    setText('');
   };
 
   const handelTextComment = (value) => {
@@ -178,13 +314,15 @@ const ReplyInput = ({ data, movieData, usernameTag, updateReplies }) => {
   };
 
   useEffect(() => {
-    setPaddingInput(spanRef.current.offsetWidth + 4 + 'px');
-  }, [spanRef]);
+    if (spanRef.current) {
+      setPaddingInput(spanRef.current.offsetWidth + 4 + 'px');
+    }
+  }, [isShowAction]);
 
   return (
     <div className="w-full flex gap-2 mb-2">
       <Avatar
-        src={data?.userDetails.avatar || iconUser}
+        src={userInfo?.avatar.url || iconUser}
         alt="avatar"
         size="sm"
         className="mt-2 bg-white"
@@ -214,6 +352,7 @@ const ReplyInput = ({ data, movieData, usernameTag, updateReplies }) => {
             <div>{text.length}</div>/<div>{limitCharacters}</div>
           </div>
         </div>
+
         {isShowAction && (
           <div className="flex w-full items-center justify-between py-1.5 mt-2">
             <Menu placement="bottom-end">
@@ -242,7 +381,7 @@ const ReplyInput = ({ data, movieData, usernameTag, updateReplies }) => {
                   setIsShowAction(false);
                 }}
               >
-                Cancel
+                Hủy bỏ
               </Button>
               <Button
                 size="sm"
@@ -250,7 +389,7 @@ const ReplyInput = ({ data, movieData, usernameTag, updateReplies }) => {
                 disabled={text.length <= 0 || text.length > limitCharacters}
                 onClick={() => replyComment()}
               >
-                Post
+                Bình luận
               </Button>
             </div>
           </div>
@@ -279,6 +418,12 @@ const BlockComment = ({
   const handelTextComment = (e) => {
     setContentEdit(e);
   };
+
+  const onReply = () => {
+    console.log('a');
+    setReplyInput(!replyInput);
+  };
+
   const handleLike = async (type, replyId = null) => {
     const bodyData = {
       movieId: movieData.data.movieId,
@@ -288,9 +433,7 @@ const BlockComment = ({
       replyId: replyId,
     };
     try {
-      console.log('bodyData: ', bodyData);
       const res = await movieServices.toggleReactionComment(bodyData);
-      console.log('res: ', res);
       if (res.status) {
         updateReaction(data._id, res.likes, res.disLikes);
       }
@@ -330,9 +473,7 @@ const BlockComment = ({
       type: 'comment',
     });
     if (res.status) {
-      console.log(data);
       updateComment(data._id, contentEdit);
-      console.log('res: ', res);
       setIsEdit(false);
       setContentEdit('');
       showAlert('Sửa bình luận thành công', 'success');
@@ -362,7 +503,6 @@ const BlockComment = ({
         if (res.status) {
           deleteComment(data._id);
         }
-        console.log('Xóa', res);
       },
     },
   ];
@@ -377,11 +517,6 @@ const BlockComment = ({
       },
     },
   ];
-
-  useEffect(() => {
-    console.log(data);
-    console.log(userId);
-  }, []);
 
   return (
     <div className="mt-2 flex justify-between items-center">
@@ -458,6 +593,7 @@ const BlockComment = ({
               movieData={movieData}
               updateReplies={updateReplies}
               usernameTag={data.userDetails.username}
+              setReplyInput={onReply}
             ></ReplyInput>
           )}
           {data?.replies?.length > 0 && (
@@ -480,10 +616,13 @@ const BlockComment = ({
                     data={data}
                     key={i}
                     reply={reply}
+                    movieId={movieData.data.movieId}
                     menuItemsSelf={MenuListCommentSelf}
                     menuItemsAnother={MenuListCommentAnother}
                     handleLike={handleLike}
                     handleDisLike={handleDisLike}
+                    onReplyInput={onReply}
+                    updateReplies={updateReplies}
                   />
                 ))}
               </Collapse>

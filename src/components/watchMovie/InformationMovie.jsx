@@ -127,7 +127,7 @@ function InformationMovie({ data, type, isRent }) {
           </div>
         </div>
         <div className="mt-4">
-          <Typography className="text-white font-bold">
+          <div className="text-white font-bold">
             <motion.div
               initial={{ height: 'auto' }}
               animate={true}
@@ -140,7 +140,7 @@ function InformationMovie({ data, type, isRent }) {
                     '...',
               }}
             />
-          </Typography>
+          </div>
           {data.content.length > maxLengthContent && (
             <Button
               variant="text"
