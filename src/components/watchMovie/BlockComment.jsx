@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Avatar,
   Button,
@@ -26,6 +26,7 @@ import EmojiPicker from 'emoji-picker-react';
 import dayjs from 'dayjs';
 import iconUser from '../../assets/225-default-avatar.png';
 import movieServices from '../../services/movieServices';
+import { useAlert } from '../Message/AlertContext';
 
 // Render menu items
 const RenderMenu = ({ data, isOwner, menuItemsSelf, menuItemsAnother }) => (
@@ -53,69 +54,113 @@ const RenderMenu = ({ data, isOwner, menuItemsSelf, menuItemsAnother }) => (
 );
 
 // Comment actions component
-const CommentActions = ({ likes, disLikes, onReply }) => (
-  <div className="flex items-center justify-center gap-2 self-start">
-    <div className="flex items-center justify-center gap-2">
-      <HandThumbUpIcon className="w-6 text-gray-500 cursor-pointer hover:opacity-70" />
-      <Typography className="text-gray-600 font-semibold">{likes}</Typography>
+const CommentActions = ({
+  likes,
+  disLikes,
+  handleLike,
+  handleDisLike,
+  onReply,
+}) => {
+  return (
+    <div className="flex items-center justify-center gap-2 self-start">
+      <div className="flex items-center justify-center gap-2 select-none">
+        <HandThumbUpIcon
+          className="w-6 text-gray-500 cursor-pointer hover:opacity-70"
+          onClick={() => handleLike('comment')}
+        />
+        <Typography className="text-gray-600 font-semibold">{likes}</Typography>
+      </div>
+      <div className="flex items-center justify-center gap-2 select-none">
+        <HandThumbDownIcon
+          className="w-6 text-gray-500 cursor-pointer hover:opacity-70"
+          onClick={() => handleDisLike('comment')}
+        />
+        <Typography className="text-gray-600 font-semibold">
+          {disLikes}
+        </Typography>
+      </div>
+      <Button
+        variant="text"
+        className="text-gray-600 font-medium"
+        onClick={onReply}
+      >
+        Phản hồi
+      </Button>
     </div>
-    <div className="flex items-center justify-center gap-2">
-      <HandThumbDownIcon className="w-6 text-gray-500 cursor-pointer hover:opacity-70" />
-      <Typography className="text-gray-600 font-semibold">
-        {disLikes}
-      </Typography>
-    </div>
-    <Button
-      variant="text"
-      className="text-gray-600 font-medium"
-      onClick={onReply}
-    >
-      Phản hồi
-    </Button>
-  </div>
-);
+  );
+};
 
 // Reply component
-const Reply = ({ data, reply, menuItemsSelf, menuItemsAnother }) => (
-  <div className="mt-2 flex justify-between items-center w-full">
-    <div className="flex items-center gap-3 justify-between w-full">
-      <div className="flex items-center gap-3">
-        <Avatar
-          src={reply.avatar || iconUser}
-          alt="avatar"
-          size="sm"
-          className="self-start bg-white"
-        />
-        <div className="flex flex-col">
-          <div className="flex items-center justify-center gap-2 self-start">
-            <Typography className="text-white font-bold">
-              {reply.user}
+const Reply = ({
+  data,
+  reply,
+  menuItemsSelf,
+  menuItemsAnother,
+  handleLike,
+  handleDisLike,
+}) => {
+  return (
+    <div className="mt-2 flex justify-between items-center w-full">
+      <div className="flex items-center gap-3 justify-between w-full">
+        <div className="flex items-center gap-3 w-full">
+          <Avatar
+            src={reply?.userDetails.avatar || iconUser}
+            alt="avatar"
+            size="sm"
+            className="self-start bg-white"
+          />
+          <div className="flex flex-col w-full">
+            <div className="flex items-center justify-center gap-2 self-start">
+              <Typography className="text-white font-bold">
+                {reply?.userDetails.username}
+              </Typography>
+              <Typography className="text-gray-600 font-normal text-sm">
+                {dayjs(reply?.time).format('HH:mm - DD/MM/YYYY')}
+              </Typography>
+            </div>
+            <Typography className="text-white font-medium flex items-center gap-1">
+              <span className="text-primary font-semibold">
+                {reply.replyTo}
+              </span>
+              {reply.content}
             </Typography>
-            <Typography className="text-gray-600 font-normal text-sm">
-              {reply.time}
-            </Typography>
+            <CommentActions
+              likes={reply.likes}
+              disLikes={reply.disLikes}
+              handleLike={handleLike}
+              handleDisLike={handleDisLike}
+            />
           </div>
-          <Typography className="text-white font-medium flex items-center gap-1">
-            <span className="text-primary font-semibold">{reply.replyTo}</span>
-            {reply.content}
-          </Typography>
-          <CommentActions likes={reply.likes} disLikes={reply.disLikes} />
         </div>
+        <RenderMenu
+          data={data}
+          isOwner={reply.isOwner}
+          menuItemsSelf={menuItemsSelf}
+          menuItemsAnother={menuItemsAnother}
+        />
       </div>
-      <RenderMenu
-        data={data}
-        isOwner={reply.isOwner}
-        menuItemsSelf={menuItemsSelf}
-        menuItemsAnother={menuItemsAnother}
-      />
     </div>
-  </div>
-);
+  );
+};
 
-const ReplyInput = ({ data }) => {
+const ReplyInput = ({ data, movieData, usernameTag, updateReplies }) => {
   const limitCharacters = 100;
   const [text, setText] = useState('');
   const [isShowAction, setIsShowAction] = useState(false);
+  const [paddingInput, setPaddingInput] = useState('0px');
+  const spanRef = useRef(null);
+  const replyComment = async () => {
+    console.log('data: ', data);
+    const bodyData = {
+      movieId: movieData.data.movieId,
+      content: text,
+      type: 'reply', //Type có 2 loai bao gồm: comment hoặc reply
+      commentId: data._id, // Dùng để reply comment
+    };
+    const res = await movieServices.postComment(bodyData);
+    updateReplies();
+    console.log('res: ', res);
+  };
 
   const handelTextComment = (value) => {
     if (value.length > limitCharacters) {
@@ -132,22 +177,33 @@ const ReplyInput = ({ data }) => {
     setText((prev) => prev + event.emoji);
   };
 
+  useEffect(() => {
+    setPaddingInput(spanRef.current.offsetWidth + 4 + 'px');
+  }, [spanRef]);
+
   return (
     <div className="w-full flex gap-2 mb-2">
       <Avatar
-        src={data.avatar || iconUser}
+        src={data?.userDetails.avatar || iconUser}
         alt="avatar"
         size="sm"
         className="mt-2 bg-white"
       />
       <div className="w-full self-start">
         <div className="relative">
+          <span
+            ref={spanRef}
+            className="absolute top-[36%] left-0 bg-gray-800 px-[4px] text-white rounded-md text-sm"
+          >
+            {usernameTag}
+          </span>
           <Input
             placeholder="Your Comment..."
             value={text}
             variant="static"
-            className="text-white"
+            className="text-white leading-none"
             color="green"
+            style={{ paddingLeft: paddingInput }}
             onChange={(e) => handelTextComment(e.target.value)}
           />
           <div
@@ -192,6 +248,7 @@ const ReplyInput = ({ data }) => {
                 size="sm"
                 className="rounded-md bg-primary"
                 disabled={text.length <= 0 || text.length > limitCharacters}
+                onClick={() => replyComment()}
               >
                 Post
               </Button>
@@ -203,7 +260,17 @@ const ReplyInput = ({ data }) => {
   );
 };
 
-const BlockComment = ({ data, userId, movieData }) => {
+const BlockComment = ({
+  data,
+  userId,
+  movieData,
+  updateComment,
+  deleteComment,
+  updateReplies,
+  updateReaction,
+}) => {
+  const { showAlert } = useAlert();
+
   const [open, setOpen] = useState(false);
   const [replyInput, setReplyInput] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
@@ -212,6 +279,65 @@ const BlockComment = ({ data, userId, movieData }) => {
   const handelTextComment = (e) => {
     setContentEdit(e);
   };
+  const handleLike = async (type, replyId = null) => {
+    const bodyData = {
+      movieId: movieData.data.movieId,
+      commentId: data._id,
+      typeAction: 'like',
+      type: type,
+      replyId: replyId,
+    };
+    try {
+      console.log('bodyData: ', bodyData);
+      const res = await movieServices.toggleReactionComment(bodyData);
+      console.log('res: ', res);
+      if (res.status) {
+        updateReaction(data._id, res.likes, res.disLikes);
+      }
+    } catch (error) {
+      if (error.status === 401) {
+        showAlert('Vui lòng đăng nhập để thực hiện thao tác này', 'error');
+        return;
+      }
+    }
+  };
+
+  const handleDisLike = async (type = 'comment', replyId = null) => {
+    const bodyData = {
+      movieId: movieData.data.movieId,
+      commentId: data._id,
+      typeAction: 'disLike',
+      type: type,
+      replyId: replyId,
+    };
+    try {
+      const res = await movieServices.toggleReactionComment(bodyData);
+      if (res.status) {
+        updateReaction(data._id, res.likes, res.disLikes);
+      }
+    } catch (error) {
+      if (error.status === 401) {
+        showAlert('Vui lòng đăng nhập để thực hiện thao tác này', 'error');
+        return;
+      }
+    }
+  };
+  const handleEditComment = async () => {
+    const res = await movieServices.editComment({
+      movieId: movieData.data.movieId,
+      commentId: data._id,
+      content: contentEdit,
+      type: 'comment',
+    });
+    if (res.status) {
+      console.log(data);
+      updateComment(data._id, contentEdit);
+      console.log('res: ', res);
+      setIsEdit(false);
+      setContentEdit('');
+      showAlert('Sửa bình luận thành công', 'success');
+    }
+  };
 
   const MenuListCommentSelf = [
     {
@@ -219,8 +345,6 @@ const BlockComment = ({ data, userId, movieData }) => {
       content: 'Chỉnh sửa',
       icon: <PencilIcon className="w-4" />,
       action: () => {
-        console.log('Chỉnh sửa');
-        console.log('Chỉnh sửa', data);
         setIsEdit(true);
         setContentEdit(data.content);
       },
@@ -235,6 +359,9 @@ const BlockComment = ({ data, userId, movieData }) => {
           commentId: data._id,
           type: 'comment',
         });
+        if (res.status) {
+          deleteComment(data._id);
+        }
         console.log('Xóa', res);
       },
     },
@@ -258,14 +385,14 @@ const BlockComment = ({ data, userId, movieData }) => {
 
   return (
     <div className="mt-2 flex justify-between items-center">
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3 w-full">
         <Avatar
-          src={data?.avatar || iconUser}
+          src={data?.userDetails.avatar || iconUser}
           alt="avatar"
           size="sm"
           className="self-start bg-white"
         />
-        <div className="flex flex-col">
+        <div className="flex flex-col w-full">
           <div className="flex items-center justify-center gap-2 self-start">
             <Typography className="text-white font-bold">
               {data?.userDetails.username}
@@ -307,6 +434,7 @@ const BlockComment = ({ data, userId, movieData }) => {
                     contentEdit.length <= 0 ||
                     contentEdit.length > limitCharacters
                   }
+                  onClick={() => handleEditComment()}
                 >
                   Edit
                 </Button>
@@ -320,9 +448,18 @@ const BlockComment = ({ data, userId, movieData }) => {
             onReply={() => {
               setReplyInput(!replyInput);
             }}
+            handleLike={handleLike}
+            handleDisLike={handleDisLike}
           />
 
-          {replyInput && <ReplyInput data={data}></ReplyInput>}
+          {replyInput && (
+            <ReplyInput
+              data={data}
+              movieData={movieData}
+              updateReplies={updateReplies}
+              usernameTag={data.userDetails.username}
+            ></ReplyInput>
+          )}
           {data?.replies?.length > 0 && (
             <div>
               <Button
@@ -345,6 +482,8 @@ const BlockComment = ({ data, userId, movieData }) => {
                     reply={reply}
                     menuItemsSelf={MenuListCommentSelf}
                     menuItemsAnother={MenuListCommentAnother}
+                    handleLike={handleLike}
+                    handleDisLike={handleDisLike}
                   />
                 ))}
               </Collapse>
