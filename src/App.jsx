@@ -7,6 +7,7 @@ import { useEffect } from 'react';
 import useBillChecker from './hooks/useBillChecker';
 import NotificationPopup from './components/Notification/NotificationPopup';
 import './styles/App.css';
+import socketClient from './services/socketClient';
 
 function App() {
   const dispatch = useDispatch();
@@ -19,6 +20,12 @@ function App() {
     if (isLogin) {
       dispatch(fetchUserProfile());
     }
+    socketClient.on('receiveNotification', (data) => {
+      console.log(data);
+    });
+    return () => {
+      socketClient.off('receiveNotification');
+    };
   }, [isLogin]);
 
   return (

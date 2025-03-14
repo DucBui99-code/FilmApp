@@ -24,10 +24,12 @@ import {
 import { FaceSmileIcon } from '@heroicons/react/16/solid';
 import EmojiPicker from 'emoji-picker-react';
 import dayjs from 'dayjs';
-import iconUser from '../../assets/225-default-avatar.png';
-import movieServices from '../../services/movieServices';
 import { useAlert } from '../Message/AlertContext';
 import { useSelector } from 'react-redux';
+
+import iconUser from '../../assets/225-default-avatar.png';
+import movieServices from '../../services/movieServices';
+import socketClient from '../../services/socketClient';
 
 // Render menu items
 const RenderMenu = ({ data, isOwner, menuItemsSelf, menuItemsAnother }) => (
@@ -133,9 +135,16 @@ const Reply = ({
     try {
       const res = await movieServices.postComment(dataBody);
       updateReplies(data._id, res.data);
+      console.log(res.data);
+
       setShowReply(false);
       setText('');
       onReplyInput();
+      socketClient.emit('newReply', {
+        movieId,
+        replyId: res.data._id,
+        commentId: data._id,
+      });
     } catch (error) {
       if (error?.status == '401') {
         showAlert('Vui lòng đăng nhập để thực hiện thao tác này', 'error');
@@ -147,6 +156,12 @@ const Reply = ({
     if (spanRef.current) {
       setPaddingInput(spanRef.current.offsetWidth + 4 + 'px');
     }
+    socketClient.on('error', (message) => {
+      showAlert(message, 'error');
+    });
+    return () => {
+      socketClient.off('error');
+    };
   }, [showReply]);
 
   return (

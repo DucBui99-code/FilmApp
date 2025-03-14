@@ -76,7 +76,6 @@ const BlockLiveComment = ({ movieId }) => {
     if (message.trim() && isLogin) {
       // Logic to send the message
       socketClient.emit('sendComment', { movieId, content: message });
-      console.log('Message sent:', message);
       setMessage('');
     }
   };
