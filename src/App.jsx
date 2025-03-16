@@ -2,7 +2,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AlertProvider } from './components/Message/AlertContext';
 import AlertCustom from './components/Message/AlertCustom';
 import AppRouter from './routes/AppRotutes';
-import { fetchUserProfile } from './store/authSlice';
+import {
+  fetchUserProfile,
+  fetchNotificationCount,
+  addCountNoti,
+} from './store/authSlice';
 import { useEffect } from 'react';
 import useBillChecker from './hooks/useBillChecker';
 import NotificationPopup from './components/Notification/NotificationPopup';
@@ -19,9 +23,10 @@ function App() {
   useEffect(() => {
     if (isLogin) {
       dispatch(fetchUserProfile());
+      dispatch(fetchNotificationCount());
     }
     socketClient.on('receiveNotification', (data) => {
-      console.log(data);
+      dispatch(addCountNoti());
     });
     return () => {
       socketClient.off('receiveNotification');

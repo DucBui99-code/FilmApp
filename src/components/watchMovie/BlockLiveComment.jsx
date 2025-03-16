@@ -54,6 +54,7 @@ const BlockLiveComment = ({ movieId }) => {
     };
     fetchLiveComments();
     socketClient.emit('joinMovie', { movieId });
+
     socketClient.on('receiveComment', (data) => {
       setData((prev) => [...prev, data]);
     });

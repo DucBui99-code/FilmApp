@@ -68,6 +68,61 @@ const UserServices = {
       throw error;
     }
   },
+  getMyNotification: async (page = 1) => {
+    try {
+      const response = await apiClient.get(
+        `/user/getMyNotification?page=${page}`,
+        {
+          headers: {
+            // Gửi token qua header
+            Authorization: `Bearer ${getAuthToken()}`,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  getCountNotification: async () => {
+    try {
+      const response = await apiClient.get(`/user/getCountNotification`, {
+        headers: {
+          // Gửi token qua header
+          Authorization: `Bearer ${getAuthToken()}`,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  readNotification: async (data) => {
+    try {
+      const response = await apiClient.post(`/user/readNotification`, data, {
+        headers: {
+          // Gửi token qua header
+          Authorization: `Bearer ${getAuthToken()}`,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  hidenNotification: async (data) => {
+    try {
+      const response = await apiClient.post(`/user/hidenNotification`, data, {
+        headers: {
+          // Gửi token qua header
+          Authorization: `Bearer ${getAuthToken()}`,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
 };
 
 export default UserServices;

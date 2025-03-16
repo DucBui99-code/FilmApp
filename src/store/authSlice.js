@@ -4,6 +4,24 @@ import UserServices from '../services/userServices';
 import movieServices from '../services/movieServices';
 import { setPopup } from './appStore';
 
+export const fetchNotificationCount = createAsyncThunk(
+  'auth/fetchNotificationCount',
+  async (_, { getState, rejectWithValue }) => {
+    try {
+      const token = getState().auth.token;
+      if (!token) return rejectWithValue('No token found');
+
+      const response = await UserServices.getCountNotification();
+
+      return response.total;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data || 'Failed to fetch notification count'
+      );
+    }
+  }
+);
+
 export const fetchUserProfile = createAsyncThunk(
   'auth/fetchUserProfile',
   async (_, { getState, rejectWithValue }) => {
@@ -63,6 +81,7 @@ const authSlice = createSlice({
     loginType: localStorage.getItem('loginType') || null,
     userInfo: null,
     pendingBills: [],
+    countNoti: 0,
   },
 
   reducers: {
@@ -96,6 +115,12 @@ const authSlice = createSlice({
       const { billId } = action.payload;
       state.pendingBills = state.pendingBills.filter((id) => id !== billId);
     },
+    addCountNoti: (state, action) => {
+      state.countNoti++;
+    },
+    removeCountNoti: (state, action) => {
+      state.countNoti--;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -115,9 +140,26 @@ const authSlice = createSlice({
           `Failed to check bill status for bill ${action.meta.arg}:`,
           action.payload
         );
+      })
+      .addCase(fetchNotificationCount.fulfilled, (state, action) => {
+        state.countNoti = action.payload;
+      })
+      .addCase(fetchNotificationCount.rejected, (state, action) => {
+        state.countNoti = 0;
+        console.error(
+          `Failed to get count notification ${action.meta.arg}:`,
+          action.payload
+        );
       });
   },
 });
 
-export const { loginSuccess, logout, addBill, removeBill } = authSlice.actions;
+export const {
+  loginSuccess,
+  logout,
+  addBill,
+  removeBill,
+  addCountNoti,
+  removeCountNoti,
+} = authSlice.actions;
 export default authSlice.reducer;

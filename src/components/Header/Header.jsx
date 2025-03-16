@@ -23,6 +23,7 @@ function Header() {
   ];
 
   const [openNav, setOpenNav] = useState(false);
+  const [openNoti, setOpenNoti] = useState(false);
   const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
@@ -79,7 +80,10 @@ function Header() {
           </div>
           <div className="flex items-center gap-4">
             <div className="flex items-center justify-center gap-4">
-              <NotificationPopup></NotificationPopup>
+              <NotificationPopup
+                openNoti={openNoti}
+                setOpenNoti={setOpenNoti}
+              ></NotificationPopup>
               <Button className="bg-primary" onClick={handleSubscribePackage}>
                 Đăng ký gói
               </Button>
