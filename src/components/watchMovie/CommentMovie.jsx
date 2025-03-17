@@ -13,7 +13,7 @@ import {
 import EmojiPicker from 'emoji-picker-react';
 import React, { useEffect, useState } from 'react';
 import { FaceSmileIcon } from '@heroicons/react/16/solid';
-import BlockComment from './BlockComment';
+import BlockComment from './Comment/BlockComment';
 import UserServices from '../../services/userServices';
 import { useAlert } from '../Message/AlertContext';
 import movieServices from '../../services/movieServices';
@@ -52,6 +52,25 @@ function CommentMovie(props) {
     );
   };
 
+  const updateReplyContent = (idComment, idReplies, newContent) => {
+    setListComment((prevComments) =>
+      prevComments.map((comment) => {
+        if (comment._id === idComment) {
+          return {
+            ...comment,
+            replies: comment.replies.map((reply) => {
+              if (reply._id === idReplies) {
+                return { ...reply, content: newContent };
+              }
+              return reply;
+            }),
+          };
+        }
+        return comment;
+      })
+    );
+  };
+
   const updateReaction = (commentId, likes, disLikes) => {
     setListComment((prevComments) =>
       prevComments.map((comment) =>
@@ -73,6 +92,20 @@ function CommentMovie(props) {
   const deleteComment = (_id) => {
     setListComment((prevComments) =>
       prevComments.filter((comment) => comment._id !== _id)
+    );
+  };
+
+  const deleteReply = (idComment, idReplies) => {
+    setListComment((prevComments) =>
+      prevComments.map((comment) => {
+        if (comment._id === idComment) {
+          return {
+            ...comment,
+            replies: comment.replies.filter((reply) => reply._id !== idReplies),
+          };
+        }
+        return comment;
+      })
     );
   };
 
@@ -240,6 +273,8 @@ function CommentMovie(props) {
               deleteComment={deleteComment}
               updateReplies={updateReplies}
               updateReaction={updateReaction}
+              updateReplyContent={updateReplyContent}
+              deleteReply={deleteReply}
             ></BlockComment>
           ))}
         </div>

@@ -4,6 +4,7 @@ import {
   Button,
   Collapse,
   IconButton,
+  input,
   Input,
   Menu,
   MenuHandler,
@@ -24,15 +25,23 @@ import {
 import { FaceSmileIcon } from '@heroicons/react/16/solid';
 import EmojiPicker from 'emoji-picker-react';
 import dayjs from 'dayjs';
-import { useAlert } from '../Message/AlertContext';
+import { useAlert } from '../../Message/AlertContext';
 import { useSelector } from 'react-redux';
 
 import iconUser from '../../assets/225-default-avatar.png';
 import movieServices from '../../services/movieServices';
 import socketClient from '../../services/socketClient';
+import useReactiveState from '../../hooks/useReactiveState';
 
 // Render menu items
-const RenderMenu = ({ data, isOwner, menuItemsSelf, menuItemsAnother }) => (
+const RenderMenu = ({
+  data,
+  isOwner,
+  menuItemsSelf,
+  menuItemsAnother,
+  type = 'default',
+  idReply = '',
+}) => (
   <div className="self-start">
     <Menu placement="top">
       <MenuHandler>
@@ -45,7 +54,7 @@ const RenderMenu = ({ data, isOwner, menuItemsSelf, menuItemsAnother }) => (
           <MenuItem
             key={el.id}
             className="flex items-center gap-2"
-            onClick={() => el.action(data)}
+            onClick={() => el.action(data, type, idReply)}
           >
             {el.icon}
             {el.content}
@@ -104,6 +113,8 @@ const Reply = ({
   movieId,
   updateReplies,
   onReplyInput,
+  idEditReply,
+  versionEditReply,
 }) => {
   const { showAlert } = useAlert();
   const { userInfo } = useSelector((state) => state.auth);
@@ -111,7 +122,9 @@ const Reply = ({
   const [showReply, setShowReply] = useState(false);
   const [text, setText] = useState('');
   const [paddingInput, setPaddingInput] = useState('0px');
-
+  const [contentEdit, setContentEdit] = useState('');
+  const limitCharacters = 100;
+  const [isEdit, setEdit] = useState(false);
   const onEmojiClick = (event) => {
     if (text.length + event.emoji.length > 100) {
       return;
@@ -122,6 +135,8 @@ const Reply = ({
   const onReply = () => {
     setShowReply(!showReply);
   };
+
+  const handleEditReply = () => {};
 
   const replyComment = async () => {
     const dataBody = {
@@ -151,6 +166,14 @@ const Reply = ({
       }
     }
   };
+
+  useEffect(() => {
+    if (reply._id === idEditReply) {
+      setEdit(true);
+      console.log(idEditReply);
+      setContentEdit(reply.content);
+    }
+  }, [idEditReply, versionEditReply]);
 
   useEffect(() => {
     if (spanRef.current) {
@@ -183,12 +206,49 @@ const Reply = ({
                 {dayjs(reply?.time).format('HH:mm - DD/MM/YYYY')}
               </Typography>
             </div>
-            <Typography className="text-white font-medium flex items-center gap-1">
-              <span className="text-primary font-semibold">
-                {reply.replyToUsername}
-              </span>
-              {reply.content}
-            </Typography>
+            {!isEdit ? (
+              <Typography className="text-white font-medium flex items-center gap-1">
+                <span className="text-primary font-semibold">
+                  {reply.replyToUsername}
+                </span>
+                {reply.content}
+              </Typography>
+            ) : (
+              <>
+                <Input
+                  placeholder="Your Comment..."
+                  value={contentEdit}
+                  variant="static"
+                  className="text-white"
+                  color="green"
+                  onChange={(e) => setContentEdit(e.target.value)}
+                />
+                <div className="flex justify-end mt-1">
+                  <Button
+                    size="sm"
+                    color="red"
+                    variant="text"
+                    className="rounded-md"
+                    onClick={() => {
+                      setEdit(false);
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    size="sm"
+                    className="rounded-md bg-primary"
+                    disabled={
+                      contentEdit.length <= 0 ||
+                      contentEdit.length > limitCharacters
+                    }
+                    onClick={() => handleEditReply()}
+                  >
+                    Edit
+                  </Button>
+                </div>
+              </>
+            )}
             <CommentActions
               likes={reply.likes}
               disLikes={reply.disLikes}
@@ -198,12 +258,13 @@ const Reply = ({
             />
           </div>
         </div>
-
         <RenderMenu
           data={data}
-          isOwner={reply.isOwner}
+          isOwner={reply.userDetails?.username == userInfo?.username}
+          idReply={reply._id}
           menuItemsSelf={menuItemsSelf}
           menuItemsAnother={menuItemsAnother}
+          type="reply"
         />
       </div>
       {showReply && (
@@ -428,6 +489,7 @@ const BlockComment = ({
   const [open, setOpen] = useState(false);
   const [replyInput, setReplyInput] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
+  const [idEditReply, setIdEditReply, version] = useReactiveState('');
   const limitCharacters = 100;
   const [contentEdit, setContentEdit] = useState('');
   const handelTextComment = (e) => {
@@ -500,9 +562,13 @@ const BlockComment = ({
       id: 0,
       content: 'Chỉnh sửa',
       icon: <PencilIcon className="w-4" />,
-      action: () => {
-        setIsEdit(true);
-        setContentEdit(data.content);
+      action: (data, type, id) => {
+        if (type === 'reply') {
+          setIdEditReply(id);
+        } else {
+          setIsEdit(true);
+          setContentEdit(data.content);
+        }
       },
     },
     {
@@ -638,6 +704,8 @@ const BlockComment = ({
                     handleDisLike={handleDisLike}
                     onReplyInput={onReply}
                     updateReplies={updateReplies}
+                    idEditReply={idEditReply}
+                    versionEditReply={version}
                   />
                 ))}
               </Collapse>
