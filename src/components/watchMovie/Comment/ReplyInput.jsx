@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
-import { Avatar, Button, Input } from '@material-tailwind/react';
+import React, { useEffect, useRef, useState } from 'react';
+import { Avatar, Button, IconButton, Input, Menu, MenuHandler, MenuList } from '@material-tailwind/react';
 
 import iconUser from '../../../assets/225-default-avatar.png';
 import movieServices from '../../../services/movieServices';
+import { useSelector } from 'react-redux';
+import { FaceSmileIcon } from '@heroicons/react/16/solid';
+import EmojiPicker from 'emoji-picker-react';
 
 const ReplyInput = ({
   data,
