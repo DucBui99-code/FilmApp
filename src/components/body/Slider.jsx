@@ -16,6 +16,7 @@ import {
   PlayCircleIcon,
   SignalIcon,
 } from '@heroicons/react/16/solid';
+import { AnimatePresence, motion } from 'framer-motion';
 
 import 'swiper/css';
 import 'swiper/css/autoplay';
@@ -24,6 +25,7 @@ import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 import { Button, Typography } from '@material-tailwind/react';
 import { Link } from 'react-router';
+import LazyImage from '../LazyImage';
 
 const Slider = ({ data, type }) => {
   const topSwiperRef = useRef(null);
@@ -95,41 +97,61 @@ const Slider = ({ data, type }) => {
                   <SignalIcon className="w-6 text-whites"></SignalIcon>
                 </div>
               )}
-              <img
+              <LazyImage
                 src={data.pathImage + e.poster_url}
-                srcSet={data.pathImage + e.poster_url}
                 alt={`Slide ${index}`}
-                loading="lazy"
                 className="w-full h-[550px] object-cover cursor-grab"
-              />
+              ></LazyImage>
 
               {/* Lớp phủ gradient */}
               <div className="absolute inset-0 bg-gradient-to-r from-black via-transparent to-transparent"></div>
               <div className="absolute top-1/3 left-2">
-                <Typography
-                  as={'h2'}
-                  className="text-white uppercase font-bold text-5xl"
-                >
-                  {e.origin_name}
-                </Typography>
-                <div className="flex items-center justify-start mt-2 gap-3 text-white">
-                  <div className="border-[1px] px-2 py-1 rounded-md text-white text-sm">
-                    HD
-                  </div>
-                  |
-                  <div className="border-[1px] px-2 py-1 rounded-md text-white text-sm uppercase">
-                    {e.tmdb.type}
-                  </div>
-                  |
-                  <div className="bg-gray-700 rounded-lg px-2 py-1 text-primary font-bold">
-                    T13
-                  </div>
-                  |<div className="font-bold text-white">{e.year}</div>
-                </div>
-                <div className="text-white py-1 text-sm font-bold mt-3">
-                  <span>⭐ {e.tmdb.vote_average.toFixed(1)}</span> |{' '}
-                  <span>{e.tmdb.vote_count} votes</span>
-                </div>
+                <AnimatePresence mode="wait">
+                  <motion.h2
+                    key={currentSlide}
+                    initial={{ x: -100, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    exit={{ x: 100, opacity: 0 }} // Thoát nhanh hơn
+                    transition={{ duration: 0.3, ease: 'easeIn' }} // Giảm duration & thêm easing nhanh hơn
+                    className="text-white uppercase font-bold text-5xl"
+                  >
+                    {e.origin_name}
+                  </motion.h2>
+                </AnimatePresence>
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={currentSlide}
+                    className="flex items-center justify-start mt-2 gap-3 text-white"
+                    initial={{ x: -100, opacity: 0 }} // Bắt đầu từ ngoài màn hình bên trái
+                    animate={{ x: 0, opacity: 1 }} // Di chuyển vào vị trí ban đầu
+                    transition={{ duration: 0.6, ease: 'easeIn' }} // Thời gian chuyển động
+                  >
+                    <div className="border-[1px] px-2 py-1 rounded-md text-white text-sm">
+                      HD
+                    </div>
+                    |
+                    <div className="border-[1px] px-2 py-1 rounded-md text-white text-sm uppercase">
+                      {e.tmdb.type}
+                    </div>
+                    |
+                    <div className="bg-gray-700 rounded-lg px-2 py-1 text-primary font-bold">
+                      T13
+                    </div>
+                    |<div className="font-bold text-white">{e.year}</div>
+                  </motion.div>
+                </AnimatePresence>
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={currentSlide}
+                    initial={{ x: -100, opacity: 0 }} // Bắt đầu từ ngoài màn hình bên trái
+                    animate={{ x: 0, opacity: 1 }} // Di chuyển vào vị trí ban đầu
+                    transition={{ duration: 0.6, ease: 'easeIn' }} // Thời gian chuyển động
+                    className="text-white py-1 text-sm font-bold mt-3"
+                  >
+                    <span>⭐ {e.tmdb.vote_average.toFixed(1)}</span> |{' '}
+                    <span>{e.tmdb.vote_count} votes</span>
+                  </motion.div>
+                </AnimatePresence>
                 <Link
                   to={
                     type === 'movieRent'
@@ -137,10 +159,19 @@ const Slider = ({ data, type }) => {
                       : `/xem-phim-mien-phi/${e.slug}`
                   }
                 >
-                  <Button className="flex items-center gap-3 bg-primary mt-6 text-lg">
-                    <PlayCircleIcon className="w-6"></PlayCircleIcon>
-                    Xem Ngay
-                  </Button>
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={currentSlide}
+                      initial={{ x: 0, opacity: 0 }} // Bắt đầu từ ngoài màn hình bên trái
+                      animate={{ x: 0, opacity: 1 }} // Di chuyển vào vị trí ban đầu
+                      transition={{ duration: 0.6, ease: 'easeIn' }} // Thời gian chuyển động
+                    >
+                      <Button className="flex items-center gap-3 bg-primary mt-6 text-lg hover:opacity-80">
+                        <PlayCircleIcon className="w-6"></PlayCircleIcon>
+                        Xem Ngay
+                      </Button>
+                    </motion.div>
+                  </AnimatePresence>
                 </Link>
               </div>
             </div>
@@ -191,13 +222,14 @@ const Slider = ({ data, type }) => {
           {data?.items.map((e, index) => (
             <SwiperSlide key={index}>
               <div className="relative">
-                <img
+                <LazyImage
                   src={data.pathImage + e.poster_url}
                   alt={`Thumbnail ${index}`}
                   className={`w-full h-32 transition-all object-cover cursor-pointer rounded-sm ${
                     index === currentSlide && 'border-2 border-primary'
                   }`}
-                />
+                ></LazyImage>
+
                 {e.isLiveComment && (
                   <div className="absolute top-1 right-1 pr-3 pl-3 text-white rounded-md bg-red-400 flex items-center gap-2 justify-center">
                     Live

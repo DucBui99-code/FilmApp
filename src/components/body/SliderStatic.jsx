@@ -15,6 +15,7 @@ import 'swiper/css/autoplay';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
+import LazyImage from '../LazyImage';
 
 function SliderStatic({ title = 'Test', data, type }) {
   const prevRef = useRef(null);
@@ -88,13 +89,11 @@ function SliderStatic({ title = 'Test', data, type }) {
                         <SignalIcon className="w-6 text-whites"></SignalIcon>
                       </div>
                     )}
-                    <img
+                    <LazyImage
                       src={data.pathImage + e.thumb_url}
-                      srcSet={data.pathImage + e.thumb_url}
                       alt={`Thumbnail ${index}`}
-                      loading="lazy"
                       className={`w-full h-[550px] transition-all object-cover cursor-pointer rounded-sm group-hover:bg-black`}
-                    />
+                    ></LazyImage>
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
                       <PlayCircleIcon className="text-primary w-20"></PlayCircleIcon>
                     </div>

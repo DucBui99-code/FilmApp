@@ -24,6 +24,7 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 import { Link } from 'react-router';
+import LazyImage from '../LazyImage';
 
 function SliderHover({ title = 'Test', data, type }) {
   const prevRef = useRef(null);
@@ -96,13 +97,11 @@ function SliderHover({ title = 'Test', data, type }) {
                       <SignalIcon className="w-6 text-whites"></SignalIcon>
                     </div>
                   )}
-                  <img
+                  <LazyImage
                     src={data.pathImage + e.thumb_url}
-                    srcSet={data.pathImage + e.thumb_url}
-                    alt={`Thumbnail`}
-                    loading="lazy"
+                    alt={`Thumbnail ${index}`}
                     className="w-full h-[550px] transition-all object-cover cursor-pointer rounded-sm"
-                  />
+                  ></LazyImage>
 
                   {hoveredIndex === index && (
                     <motion.div
@@ -119,13 +118,12 @@ function SliderHover({ title = 'Test', data, type }) {
                           color="transparent"
                           className="m-0 rounded-none"
                         >
-                          <img
+                          <LazyImage
                             src={data.pathImage + e.poster_url}
-                            srcSet={data.pathImage + e.poster_url}
-                            alt="Poster"
+                            alt={`Posster ${index}`}
                             className="w-full"
-                            loading="lazy"
-                          />
+                          ></LazyImage>
+                          <img />
                         </CardHeader>
                         <CardBody className="bg-black">
                           <Typography variant="h4" color="white">
