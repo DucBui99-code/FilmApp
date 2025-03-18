@@ -121,6 +121,9 @@ const authSlice = createSlice({
     removeCountNoti: (state, action) => {
       state.countNoti--;
     },
+    resetCountNoti: (state, action) => {
+      state.countNoti = 0;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -161,5 +164,6 @@ export const {
   removeBill,
   addCountNoti,
   removeCountNoti,
+  resetCountNoti,
 } = authSlice.actions;
 export default authSlice.reducer;

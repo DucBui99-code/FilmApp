@@ -11,6 +11,7 @@ import {
   MenuHandler,
   MenuList,
   MenuItem,
+  Button,
 } from '@material-tailwind/react';
 import {
   ArchiveBoxXMarkIcon,
@@ -21,12 +22,14 @@ import {
 import { formatDistanceToNow } from 'date-fns';
 import { useDispatch, useSelector } from 'react-redux';
 import vi from 'date-fns/locale/vi';
+import { Link } from 'react-router';
 
 import Empty from '../../assets/man.png';
 import UserServices from '../../services/userServices';
 import { useAlert } from '../Message/AlertContext';
 import getErrorMessage from '../../utils/handelMessageError';
-import { removeCountNoti } from '../../store/authSlice';
+import { removeCountNoti, resetCountNoti } from '../../store/authSlice';
+import SystemImage from '../../assets/system.png';
 
 function NotificationPopup({ setOpenNoti, openNoti }) {
   const { countNoti, isLogin } = useSelector((state) => state.auth);
@@ -50,18 +53,28 @@ function NotificationPopup({ setOpenNoti, openNoti }) {
   const [data, setData] = useState([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+  const fetchedPages = useRef(new Set()); // Track các page đã fetch
 
   useEffect(() => {
     if (!isLogin || !openNoti) return;
     setPage(1);
     setHasMore(true);
     setData([]);
-  }, [openNoti]);
+    fetchedPages.current.clear(); // Xóa history khi reset
+  }, [isLogin, openNoti]);
 
   useEffect(() => {
-    if (!isLogin || !hasMore || !openNoti) {
+    if (!isLogin) {
+      setData([]);
+      dispatch(resetCountNoti());
       return;
     }
+    if (!hasMore || !openNoti) {
+      return;
+    }
+
+    if (fetchedPages.current.has(page)) return;
+    fetchedPages.current.add(page);
 
     setIsLoading(true);
     const fetchData = async () => {
@@ -76,7 +89,7 @@ function NotificationPopup({ setOpenNoti, openNoti }) {
       }
     };
     fetchData();
-  }, [page, openNoti]);
+  }, [page, openNoti, isLogin]);
 
   const lastNotiRef = useCallback(
     (node) => {
@@ -99,13 +112,11 @@ function NotificationPopup({ setOpenNoti, openNoti }) {
       if (action === 'hiden') {
         await UserServices.hidenNotification({ notificationId });
         if (!isRead) dispatch(removeCountNoti());
-        showAlert('Ẩn thông báo thành công', 'success');
         setData((prevData) =>
           prevData.filter((item) => item._id !== notificationId)
         );
       } else if (action === 'read') {
         await UserServices.readNotification({ notificationId });
-        showAlert('Đọc thông báo thành công', 'success');
         dispatch(removeCountNoti());
         setData((prevData) =>
           prevData.map((item) =>
@@ -120,6 +131,45 @@ function NotificationPopup({ setOpenNoti, openNoti }) {
     }
   };
 
+  const handelReadAllNotification = async () => {
+    try {
+      await UserServices.readAllNotification();
+      setData((pre) => pre.map((item) => ({ ...item, isRead: true })));
+      dispatch(resetCountNoti());
+    } catch (error) {
+      showAlert(getErrorMessage(error), 'error');
+    }
+  };
+
+  const ShowContent = ({ noti }) => {
+    switch (noti.type) {
+      case 'like':
+        return (
+          <div className="text-base text-white">
+            <span className="text-primary font-semibold pr-2">
+              {noti.userSend.username}
+            </span>
+            đã thích bình luận của bạn
+          </div>
+        );
+      case 'reply':
+        return (
+          <div className="text-base text-white">
+            <span className="text-primary font-semibold pr-2">
+              {noti.userSend.username}
+            </span>{' '}
+            đã nhắc đến bạn:
+            <Typography className="font-semibold">{noti.content}</Typography>
+          </div>
+        );
+      case 'system':
+        return <div className="text-base text-white">{noti.content}</div>;
+
+      default:
+        break;
+    }
+  };
+
   return (
     <Popover
       placement="bottom"
@@ -127,7 +177,7 @@ function NotificationPopup({ setOpenNoti, openNoti }) {
       handler={() => setOpenNoti(!openNoti)}
     >
       {countNoti > 0 ? (
-        <Badge content={countNoti}>
+        <Badge content={countNoti > 9 ? '9+' : countNoti}>
           <PopoverHandler>
             <IconButton>
               <BellAlertIcon className="w-6 text-white hover:text-primary transition-colors"></BellAlertIcon>
@@ -142,11 +192,21 @@ function NotificationPopup({ setOpenNoti, openNoti }) {
         </PopoverHandler>
       )}
 
-      <PopoverContent className="w-[600px] min-h-96 bg-gray-800 border-black z-40">
-        <div className="sticky top-0 bg-gray-800 z-50 pb-2 border-b border-gray-400">
+      <PopoverContent className="w-[500px] min-h-96 bg-gray-800 border-black z-40">
+        <div className="sticky top-0 bg-gray-800 z-50 pb-2 border-b border-gray-400 flex items-center justify-between">
           <Typography variant="h4" color="white" className="mb-2">
             Thông báo
           </Typography>
+          {data.length > 0 && (
+            <Button
+              variant="text"
+              onClick={handelReadAllNotification}
+              className="text-primary font-semibold text-sm"
+              size="sm"
+            >
+              Đánh dẫu đã đọc
+            </Button>
+          )}
         </div>
 
         {isLoading && page === 1 ? (
@@ -169,22 +229,18 @@ function NotificationPopup({ setOpenNoti, openNoti }) {
                         <div className="w-2 h-2 rounded-full bg-primary"></div>
                       )}
                       <img
-                        src={el.userSend.avatar}
+                        src={
+                          el.type === 'system'
+                            ? SystemImage
+                            : el.userSend.avatar
+                        }
                         alt="avatar"
                         className="w-12 h-12 rounded-full object-cover"
                       />
                     </div>
 
                     <div className="flex-1 self-start">
-                      <div className="text-base text-white">
-                        <span className="text-primary font-semibold pr-2">
-                          {el.userSend.username}
-                        </span>{' '}
-                        đã nhắc đến bạn:
-                        <Typography className="font-semibold">
-                          {el.content}
-                        </Typography>
-                      </div>
+                      <ShowContent noti={el}></ShowContent>
                       <Typography className="text-gray-400 text-sm font-semibold mt-2">
                         {formatDistanceToNow(new Date(el.createdAt), {
                           addSuffix: true,
@@ -192,12 +248,22 @@ function NotificationPopup({ setOpenNoti, openNoti }) {
                         })}
                       </Typography>
                     </div>
-
-                    <img
-                      src={el.movieData.image}
-                      alt="image-movie"
-                      className="w-40 h-24 rounded-lg object-cover self-start"
-                    />
+                    {el.type !== 'system' && (
+                      <Link
+                        to={
+                          el.movieData?.type
+                            ? `/xem-phim-goi/${el.movieData.slug}`
+                            : `/xem-phim-mien-phi/${el.movieData.slug}`
+                        }
+                        className="self-start"
+                      >
+                        <img
+                          src={el.movieData.image}
+                          alt="image-movie"
+                          className="w-30 h-12 rounded-lg object-cover "
+                        />
+                      </Link>
+                    )}
 
                     <Menu>
                       <MenuHandler>
@@ -228,7 +294,7 @@ function NotificationPopup({ setOpenNoti, openNoti }) {
               })
             ) : (
               <div className="flex items-center justify-center">
-                <img src={Empty} alt="Empty" className="w-40" />
+                <img src={Empty} alt="Empty" className="w-40 pt-8" />
               </div>
             )}
           </div>

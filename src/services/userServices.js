@@ -110,6 +110,23 @@ const UserServices = {
       throw error;
     }
   },
+  readAllNotification: async () => {
+    try {
+      const response = await apiClient.post(
+        `/user/readAllNotification`,
+        {},
+        {
+          headers: {
+            // Gửi token qua header
+            Authorization: `Bearer ${getAuthToken()}`,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
   hidenNotification: async (data) => {
     try {
       const response = await apiClient.post(`/user/hidenNotification`, data, {
