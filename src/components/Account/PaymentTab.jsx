@@ -122,11 +122,8 @@ const PaymentTab = ({ numberTab }) => {
   }, [currentPage, numberTab]);
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-      <div className="bg-customDark col-span-1 text-whiteText uppercase font-bold ps-[24px] pt-[20px] pb-[24px]">
-        phương thức thanh toán
-      </div>
-      <div className="col-span-2 w-full">
+    <div>
+      <div className="w-full">
         <div className="bg-customDark text-whiteText uppercase font-bold ps-[24px] pt-[20px] pb-[24px]">
           Lịch sử giao dịch
         </div>
@@ -163,7 +160,7 @@ const PaymentTab = ({ numberTab }) => {
                         scope="row"
                         className="!font-bold !text-center"
                       >
-                        {row.purchaseDate}
+                        {row.createdAt}
                       </TableCell>
                       <TableCell className="!font-bold !text-center">
                         {TypeText(row.packageType)}
@@ -172,13 +169,13 @@ const PaymentTab = ({ numberTab }) => {
                         {ShowIconPaymentMethod(row.paymentMethod)}
                       </TableCell>
                       <TableCell className="!text-primary !font-bold !text-center">
-                        {row.name}
+                        {row.packageName}
                       </TableCell>
                       <TableCell className="!font-bold !text-center">
                         {formatCurrency(row.price)}
                       </TableCell>
-                      <TableCell className="!font-bold !text-center">
-                        <StatusText status={row?.status}></StatusText>
+                      <TableCell className="!font-bold !flex !justify-center !items-center">
+                        <StatusText status={row?.paymentStatus}></StatusText>
                       </TableCell>
                     </TableRow>
                   ))}

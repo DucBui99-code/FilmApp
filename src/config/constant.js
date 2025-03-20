@@ -1,6 +1,7 @@
 import zalo from '../assets/zalo.png';
 import atmCard from '../assets/AtmCard.png';
 import momo from '../assets/momo.png';
+import bank from '../assets/bank.png';
 
 const ImageDescription = ({ img }) => {
   return (
@@ -20,12 +21,16 @@ const MOVIE_TYPE = {
 };
 const MIN_LENGTH_PASSWORD = 3;
 const MAX_LENGTH_PASSWORD = 15;
-const TIME_CALL_CHECK_BILL = 6000;
 const LIST_PAYMENT_METHOD = [
   {
     _id: 'ZaloPay',
     name: 'Zalo Pay',
     icon: <ImageDescription img={zalo} />,
+  },
+  {
+    _id: 'Bank',
+    name: 'Bank',
+    icon: <ImageDescription img={bank} />,
   },
   {
     _id: 'ATMCard',
@@ -46,7 +51,6 @@ export {
   MOVIE_TYPE,
   MIN_LENGTH_PASSWORD,
   MAX_LENGTH_PASSWORD,
-  TIME_CALL_CHECK_BILL,
   LIST_PAYMENT_METHOD,
   LINK_AVATAR_DEFAULT,
 };

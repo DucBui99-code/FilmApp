@@ -2,14 +2,13 @@ import React, { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import { Button, Radio } from '@material-tailwind/react';
 import { useParams } from 'react-router';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import './paymentPage.css';
 
 import { useAlert } from '../../components/Message/AlertContext';
 import { formatCurrency } from '../../utils/utils';
 import movieServices from '../../services/movieServices';
-import { addBill } from '../../store/authSlice';
 import getErrorMessage from '../../utils/handelMessageError';
 import { LIST_PAYMENT_METHOD } from '../../config/constant';
 
@@ -174,7 +173,6 @@ const PaymentOrder = ({ setStep, setInforTransaction }) => {
   const { showAlert } = useAlert();
 
   const { movieId } = useParams();
-  const dispatch = useDispatch();
 
   const [typeService, setTypeService] = useState('Phim gói');
   const [listPackage, setListPackage] = useState([]);
@@ -231,10 +229,12 @@ const PaymentOrder = ({ setStep, setInforTransaction }) => {
       } else if (typeService == 'Phim lẻ') {
         res = await movieServices.buyPackageSingle(form);
       }
-      dispatch(addBill({ billId: res.data.transactionId }));
+
       setInforTransaction({
         url: res.data.billData.order_url,
         transactionId: res.data.transactionId,
+        data: res.data.billData?.data || {},
+        paymentMethod: selectedPaymentMethod,
       });
       showAlert(res.data.billData.return_message, 'success');
       setStep(2);

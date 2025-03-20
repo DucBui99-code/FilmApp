@@ -26,7 +26,7 @@ const NotificationPopup = () => {
   };
   return (
     <>
-      {billInfor.status === 1 && <Confetti></Confetti>}
+      {billInfor.status === 0 && <Confetti></Confetti>}
       <Dialog open={billInfor.isShow} handler={handelClosePopup}>
         <DialogHeader>
           <Typography variant="h5" color="blue-gray">
@@ -48,7 +48,7 @@ const NotificationPopup = () => {
           </svg>
 
           <Typography className="text-center font-normal text-black">
-            Bạn đã đăng ký {billInfor.status == 1 ? 'thành công' : 'thất bại'}{' '}
+            Bạn đã đăng ký {billInfor.status === 0 ? 'thành công' : 'thất bại'}{' '}
             gói{' '}
             <Typography className="text-primary font-medium">
               {billInfor.packageName}

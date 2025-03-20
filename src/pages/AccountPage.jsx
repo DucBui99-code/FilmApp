@@ -112,7 +112,7 @@ export default function Account() {
           ))}
         </TabsHeader>
 
-        <TabsBody className="min-h-[400px]">
+        <TabsBody className="min-h-[450px]">
           {tabConfigs.map(({ component: Component, defaultData }, index) => (
             <TabPanel key={index} value={index}>
               <Component

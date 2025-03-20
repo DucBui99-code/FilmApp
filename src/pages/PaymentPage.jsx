@@ -42,6 +42,8 @@ const PaymentPage = () => {
   const [inforTransaction, setInforTransaction] = useState({
     url: '',
     transactionId: '',
+    paymentMethod: '',
+    data: {},
   });
   const renderStepContent = () => {
     switch (step) {

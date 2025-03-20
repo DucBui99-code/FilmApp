@@ -248,17 +248,17 @@ function NotificationPopup({ setOpenNoti, openNoti }) {
                         })}
                       </Typography>
                     </div>
-                    {el.type !== 'system' && (
+                    {el.type !== 'system' && el.movieData && (
                       <Link
                         to={
                           el.movieData?.type
-                            ? `/xem-phim-goi/${el.movieData.slug}`
-                            : `/xem-phim-mien-phi/${el.movieData.slug}`
+                            ? `/xem-phim-goi/${el.movieData?.slug}`
+                            : `/xem-phim-mien-phi/${el.movieData?.slug}`
                         }
                         className="self-start"
                       >
                         <img
-                          src={el.movieData.image}
+                          src={el.movieData?.image}
                           alt="image-movie"
                           className="w-30 h-12 rounded-lg object-cover "
                         />

@@ -8,28 +8,35 @@ import {
   addCountNoti,
 } from './store/authSlice';
 import { useEffect } from 'react';
-import useBillChecker from './hooks/useBillChecker';
 import NotificationPopup from './components/Notification/NotificationPopup';
 import './styles/App.css';
 import socketClient from './services/socketClient';
+import { setPopup } from './store/appStore';
 
 function App() {
   const dispatch = useDispatch();
   const { isLogin } = useSelector((state) => state.auth);
-
-  // Call check bill interval
-  useBillChecker();
 
   useEffect(() => {
     if (isLogin) {
       dispatch(fetchUserProfile());
       dispatch(fetchNotificationCount());
     }
-    socketClient.on('receiveNotification', (data) => {
+    socketClient.on('receiveNotification', () => {
       dispatch(addCountNoti());
+    });
+    socketClient.on('billUpdated', (data) => {
+      dispatch(
+        setPopup({
+          isShow: true,
+          packageName: data.packageName,
+          status: data.status,
+        })
+      );
     });
     return () => {
       socketClient.off('receiveNotification');
+      socketClient.off('billUpdated');
     };
   }, [isLogin]);
 
