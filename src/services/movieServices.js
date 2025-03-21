@@ -1,4 +1,3 @@
-import getAuthToken from '../utils/getAuthToken';
 import apiClient from './apiClient';
 
 const movieServices = {
@@ -37,11 +36,7 @@ const movieServices = {
 
   getSingleEpisode: async (data) => {
     try {
-      const response = await apiClient.post('/movie/getMovieEpisode', data, {
-        headers: {
-          Authorization: `Bearer ${getAuthToken()}`,
-        },
-      });
+      const response = await apiClient.post('/movie/getMovieEpisode', data);
       return response.data;
     } catch (error) {
       console.error('API error:', error);
@@ -51,12 +46,7 @@ const movieServices = {
   getMoviePackage: async (data) => {
     try {
       const response = await apiClient.get(
-        `/payment/packagePrice?movieId=${data}`,
-        {
-          headers: {
-            Authorization: `Bearer ${getAuthToken()}`,
-          },
-        }
+        `/payment/packagePrice?movieId=${data}`
       );
       return response.data;
     } catch (error) {
@@ -77,9 +67,7 @@ const movieServices = {
   },
   buyPackageMonth: async (data) => {
     try {
-      const response = await apiClient.post('/bill/createBillPackMonth', data, {
-        headers: { Authorization: `Bearer ${getAuthToken()}` },
-      });
+      const response = await apiClient.post('/bill/createBillPackMonth', data);
       return response.data;
     } catch (error) {
       console.error('API error:', error);
@@ -88,9 +76,7 @@ const movieServices = {
   },
   buyPackageSingle: async (data) => {
     try {
-      const response = await apiClient.post('/bill/createBillPackRent', data, {
-        headers: { Authorization: `Bearer ${getAuthToken()}` },
-      });
+      const response = await apiClient.post('/bill/createBillPackRent', data);
       return response.data;
     } catch (error) {
       console.error('API error:', error);
@@ -99,9 +85,7 @@ const movieServices = {
   },
   checkBill: async (data) => {
     try {
-      const response = await apiClient.post('/bill/checkBill', data, {
-        headers: { Authorization: `Bearer ${getAuthToken()}` },
-      });
+      const response = await apiClient.post('/bill/checkBill', data);
       return response.data;
     } catch (error) {
       console.error('API error:', error);
@@ -110,9 +94,7 @@ const movieServices = {
   },
   cancelledBill: async (data) => {
     try {
-      const response = await apiClient.post('/bill/cancelBill', data, {
-        headers: { Authorization: `Bearer ${getAuthToken()}` },
-      });
+      const response = await apiClient.post('/bill/cancelBill', data);
       return response.data;
     } catch (error) {
       console.error('API error:', error);
@@ -121,9 +103,7 @@ const movieServices = {
   },
   postComment: async (data) => {
     try {
-      const response = await apiClient.post('/user/addCommentMovie', data, {
-        headers: { Authorization: `Bearer ${getAuthToken()}` },
-      });
+      const response = await apiClient.post('/user/addCommentMovie', data);
       return response.data;
     } catch (error) {
       console.error('API error:', error);
@@ -143,9 +123,7 @@ const movieServices = {
   },
   deleteComment: async (data) => {
     try {
-      const response = await apiClient.post('/user/deleteCommentMovie', data, {
-        headers: { Authorization: `Bearer ${getAuthToken()}` },
-      });
+      const response = await apiClient.post('/user/deleteCommentMovie', data);
       return response.data;
     } catch (error) {
       console.error('API error:', error);
@@ -154,7 +132,7 @@ const movieServices = {
   },
   editComment: async (data) => {
     try {
-      const response = await apiClient.post('/user/editCommentMovie', data, { headers: { Authorization: `Bearer ${getAuthToken()}` } })
+      const response = await apiClient.post('/user/editCommentMovie', data);
       return response.data;
     } catch (error) {
       console.error('API error:', error);
@@ -163,13 +141,13 @@ const movieServices = {
   },
   toggleReactionComment: async (data) => {
     try {
-      const response = await apiClient.post('/user/actionCommentMovie', data, { headers: { Authorization: `Bearer ${getAuthToken()}` } })
+      const response = await apiClient.post('/user/actionCommentMovie', data);
       return response.data;
     } catch (error) {
       console.error('API error:', error);
       throw error;
     }
-  }
+  },
 };
 
 export default movieServices;

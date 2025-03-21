@@ -1,16 +1,10 @@
-import getAuthToken from '../utils/getAuthToken';
 import apiClient from './apiClient';
 
 const UserServices = {
   getProfile: async (type = 0, page = 1, limit = 5) => {
     try {
       const response = await apiClient.get(
-        `/user/profile?type=${type}&limit=${limit}&page=${page}`,
-        {
-          headers: {
-            Authorization: `Bearer ${getAuthToken()}`,
-          },
-        }
+        `/user/profile?type=${type}&limit=${limit}&page=${page}`
       );
       return response.data;
     } catch (error) {
@@ -19,11 +13,7 @@ const UserServices = {
   },
   editProfile: async (data) => {
     try {
-      const response = await apiClient.post(`/user/updateInfo`, data, {
-        headers: {
-          Authorization: `Bearer ${getAuthToken()}`,
-        },
-      });
+      const response = await apiClient.post(`/user/updateInfo`, data);
       return response.data;
     } catch (error) {
       throw error;
@@ -31,12 +21,7 @@ const UserServices = {
   },
   uploadAvatar: async (data) => {
     try {
-      const response = await apiClient.post(`/user/uploadAvatar`, data, {
-        headers: {
-          Authorization: `Bearer ${getAuthToken()}`,
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+      const response = await apiClient.post(`/user/uploadAvatar`, data);
       return response.data;
     } catch (error) {
       throw error;
@@ -44,11 +29,7 @@ const UserServices = {
   },
   toggleFavoriteMovie: async (data) => {
     try {
-      const response = await apiClient.post(`/user/toggleFavoriteMovie`, data, {
-        headers: {
-          Authorization: `Bearer ${getAuthToken()}`,
-        },
-      });
+      const response = await apiClient.post(`/user/toggleFavoriteMovie`, data);
       return response.data;
     } catch (error) {
       throw error;
@@ -57,12 +38,7 @@ const UserServices = {
   removeDevice: async (data) => {
     // Xóa thiết bị
     try {
-      const response = await apiClient.post(`/user/removeDevice`, data, {
-        headers: {
-          // Gửi token qua header
-          Authorization: `Bearer ${getAuthToken()}`,
-        },
-      });
+      const response = await apiClient.post(`/user/removeDevice`, data);
       return response.data;
     } catch (error) {
       throw error;
@@ -71,13 +47,7 @@ const UserServices = {
   getMyNotification: async (page = 1) => {
     try {
       const response = await apiClient.get(
-        `/user/getMyNotification?page=${page}`,
-        {
-          headers: {
-            // Gửi token qua header
-            Authorization: `Bearer ${getAuthToken()}`,
-          },
-        }
+        `/user/getMyNotification?page=${page}`
       );
       return response.data;
     } catch (error) {
@@ -86,12 +56,7 @@ const UserServices = {
   },
   getCountNotification: async () => {
     try {
-      const response = await apiClient.get(`/user/getCountNotification`, {
-        headers: {
-          // Gửi token qua header
-          Authorization: `Bearer ${getAuthToken()}`,
-        },
-      });
+      const response = await apiClient.get(`/user/getCountNotification`);
       return response.data;
     } catch (error) {
       throw error;
@@ -99,12 +64,7 @@ const UserServices = {
   },
   readNotification: async (data) => {
     try {
-      const response = await apiClient.post(`/user/readNotification`, data, {
-        headers: {
-          // Gửi token qua header
-          Authorization: `Bearer ${getAuthToken()}`,
-        },
-      });
+      const response = await apiClient.post(`/user/readNotification`, data);
       return response.data;
     } catch (error) {
       throw error;
@@ -112,16 +72,7 @@ const UserServices = {
   },
   readAllNotification: async () => {
     try {
-      const response = await apiClient.post(
-        `/user/readAllNotification`,
-        {},
-        {
-          headers: {
-            // Gửi token qua header
-            Authorization: `Bearer ${getAuthToken()}`,
-          },
-        }
-      );
+      const response = await apiClient.post(`/user/readAllNotification`);
       return response.data;
     } catch (error) {
       throw error;
@@ -129,12 +80,7 @@ const UserServices = {
   },
   hidenNotification: async (data) => {
     try {
-      const response = await apiClient.post(`/user/hidenNotification`, data, {
-        headers: {
-          // Gửi token qua header
-          Authorization: `Bearer ${getAuthToken()}`,
-        },
-      });
+      const response = await apiClient.post(`/user/hidenNotification`, data);
       return response.data;
     } catch (error) {
       throw error;

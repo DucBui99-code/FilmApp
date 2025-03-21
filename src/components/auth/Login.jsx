@@ -47,8 +47,7 @@ function Login({ handleOpen, open, handelSwitchModal, handelOpenForgotPass }) {
     dispatch(
       loginSuccess({
         userId: data.data.userId,
-        token: data.data.token,
-        loginType: data.data.loginType,
+        loginType: data.data.typeLogin,
       })
     );
 

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Typography } from '@material-tailwind/react';
 
 import PayImage from '../../assets/mobile-payment.png';
@@ -10,6 +10,25 @@ import { formatCurrency } from '../../utils/utils';
 
 const PaymentConfirm = ({ setStep, inforTransaction }) => {
   const { showAlert } = useAlert();
+  const [timeLeft, setTimeLeft] = useState(inforTransaction.expireTime * 60);
+
+  useEffect(() => {
+    if (timeLeft === 0) {
+      handelCancelTransaction();
+      return;
+    }
+    const timer = setInterval(() => {
+      setTimeLeft((prevTime) => prevTime - 1);
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [timeLeft]);
+
+  const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${minutes < 10 ? '0' : ''}${minutes}:${secs < 10 ? '0' : ''}${secs}`;
+  };
+
   const handelCancelTransaction = async () => {
     try {
       const res = await movieServices.cancelledBill({
@@ -22,6 +41,7 @@ const PaymentConfirm = ({ setStep, inforTransaction }) => {
       showAlert(getErrorMessage(error), 'error');
     }
   };
+
   useEffect(() => {
     const handleBeforeUnload = (event) => {
       event.preventDefault();
@@ -35,6 +55,7 @@ const PaymentConfirm = ({ setStep, inforTransaction }) => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
   }, []);
+
   const RenderViewPaymentConfirm = () => {
     switch (inforTransaction.paymentMethod) {
       case 'Bank':
@@ -91,16 +112,29 @@ const PaymentConfirm = ({ setStep, inforTransaction }) => {
         break;
     }
   };
+
   return (
-    <div className="flex flex-col items-center">
-      <RenderViewPaymentConfirm></RenderViewPaymentConfirm>
-      <Button
-        variant="outlined"
-        className="text-red-500 mt-2"
-        onClick={handelCancelTransaction}
-      >
-        Hủy Giao Dịch
-      </Button>
+    <div className="flex flex-col items-center min-h-[450px]">
+      {timeLeft > 0 ? (
+        <RenderViewPaymentConfirm></RenderViewPaymentConfirm>
+      ) : (
+        <div className="text-white text-xl font-semibold">
+          Giao dịch đã hết hạn
+        </div>
+      )}
+      <Typography className="text-xl font-bold text-white mb-2">
+        Thời gian còn lại:{' '}
+        <span className="text-primary">{formatTime(timeLeft)}</span>
+      </Typography>
+      {timeLeft !== 0 && (
+        <Button
+          variant="outlined"
+          className="text-red-500 mt-2"
+          onClick={handelCancelTransaction}
+        >
+          Hủy Giao Dịch
+        </Button>
+      )}
     </div>
   );
 };

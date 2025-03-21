@@ -18,8 +18,8 @@ function App() {
   const { isLogin } = useSelector((state) => state.auth);
 
   useEffect(() => {
+    dispatch(fetchUserProfile());
     if (isLogin) {
-      dispatch(fetchUserProfile());
       dispatch(fetchNotificationCount());
     }
     socketClient.on('receiveNotification', () => {

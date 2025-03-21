@@ -220,7 +220,7 @@ function NotificationPopup({ setOpenNoti, openNoti }) {
                 const isLastItem = index === data.length - 1;
                 return (
                   <div
-                    className="flex items-center gap-4 p-2 bg-gray-800 rounded-lg hover:bg-gray-700 transition-all cursor-pointer"
+                    className="flex items-center gap-4 p-2 bg-gray-800 rounded-lg hover:bg-gray-700 transition-all cursor-pointer mb-2"
                     key={el._id}
                     ref={isLastItem ? lastNotiRef : null}
                   >

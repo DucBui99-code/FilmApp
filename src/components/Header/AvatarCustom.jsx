@@ -13,6 +13,9 @@ import { useNavigate } from 'react-router';
 import { useDispatch } from 'react-redux';
 import { logout } from '../../store/authSlice';
 import { LINK_AVATAR_DEFAULT } from '../../config/constant';
+import { useAlert } from '../Message/AlertContext';
+import getErrorMessage from '../../utils/handelMessageError';
+import AuthServices from '../../services/authServices';
 
 // profile menu component
 const profileMenuItems = [
@@ -30,18 +33,24 @@ const profileMenuItems = [
 
 function AvatarCustom({ src, email }) {
   const dispatch = useDispatch();
-
+  const { showAlert } = useAlert();
   const navigate = useNavigate();
 
   const firstLetter = email ? email.charAt(0).toUpperCase() : '?';
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const closeMenu = (action) => {
+  const closeMenu = async (action) => {
     switch (action) {
       case 'account':
         navigate('tai-khoan');
         break;
       case 'logout':
+        try {
+          await AuthServices.logoutAccount();
+          showAlert('Đăng xuất thành công', 'success');
+        } catch (error) {
+          showAlert(getErrorMessage(error.message), 'error');
+        }
         dispatch(logout());
         break;
       default:

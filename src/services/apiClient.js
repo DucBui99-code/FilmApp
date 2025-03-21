@@ -10,6 +10,7 @@ const apiClient = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true, // Gửi cookie cùng request
 });
 
 apiClient.interceptors.response.use(

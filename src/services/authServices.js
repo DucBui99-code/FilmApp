@@ -1,4 +1,3 @@
-import getAuthToken from '../utils/getAuthToken';
 import apiClient from './apiClient';
 import apiGoogle from './apiGoogle';
 
@@ -11,9 +10,25 @@ const AuthServices = {
       throw error;
     }
   },
+  getAuthStatus: async (data) => {
+    try {
+      const response = await apiClient.post('/auth/me', data);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
   loginAccount: async (data) => {
     try {
       const response = await apiClient.post('/auth/login', data);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  logoutAccount: async () => {
+    try {
+      const response = await apiClient.post('/auth/logout');
       return response.data;
     } catch (error) {
       throw error;
@@ -61,9 +76,7 @@ const AuthServices = {
   },
   connectGoogleClooud: async (token) => {
     try {
-      const response = await apiGoogle.get(`/userinfo`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await apiGoogle.get(`/userinfo`);
       return response.data;
     } catch (error) {
       throw error;
@@ -71,11 +84,7 @@ const AuthServices = {
   },
   changePassword: async (data) => {
     try {
-      const response = await apiClient.post('/auth/changePassword', data, {
-        headers: {
-          Authorization: `Bearer ${getAuthToken()}`,
-        },
-      });
+      const response = await apiClient.post('/auth/changePassword', data);
       return response.data;
     } catch (error) {
       console.error('API error:', error);
@@ -84,15 +93,7 @@ const AuthServices = {
   },
   deleteAccount: async () => {
     try {
-      const response = await apiClient.post(
-        `/auth/removeMySelf`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${getAuthToken()}`,
-          },
-        }
-      );
+      const response = await apiClient.post(`/auth/removeMySelf`);
       return response.data;
     } catch (error) {
       throw error;

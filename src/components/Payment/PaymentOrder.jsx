@@ -235,6 +235,7 @@ const PaymentOrder = ({ setStep, setInforTransaction }) => {
         transactionId: res.data.transactionId,
         data: res.data.billData?.data || {},
         paymentMethod: selectedPaymentMethod,
+        expireTime: res.data.expireTime,
       });
       showAlert(res.data.billData.return_message, 'success');
       setStep(2);
