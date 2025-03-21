@@ -110,10 +110,10 @@ const movieServices = {
       throw error;
     }
   },
-  getCommentByMovieId: async (movieId) => {
+  getCommentByMovieId: async (movieId, page) => {
     try {
       const response = await apiClient.get(
-        `/movie/getMovieComments/${movieId}`
+        `/movie/getMovieComments/${movieId}?page=${page}`
       );
       return response.data;
     } catch (error) {

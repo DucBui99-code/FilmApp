@@ -20,19 +20,23 @@ import movieServices from '../../services/movieServices';
 import getErrorMessage from '../../utils/handelMessageError';
 import { useSelector } from 'react-redux';
 import iconUser from '../../assets/225-default-avatar.png';
+import AuthServices from '../../services/authServices';
 function CommentMovie(props) {
-  const { isLogin, userId } = useSelector((state) => state.auth);
+  const { isLogin, userId, userInfo } = useSelector((state) => state.auth);
+  const [loadingComment, setLoadingComment] = useState(false);
   const { showAlert } = useAlert();
   const limitCharacters = 100;
-  const [userData, setUserData] = useState();
   const [text, setText] = useState('');
   const [isShowAction, setIsShowAction] = useState(false);
+  const [isLastPage, setIsLastPage] = useState(false);
   const [listComment, setListComment] = useState([]);
+  let page = 1;
   const getListComment = async () => {
     try {
       const res = await movieServices.getCommentByMovieId(props.data.data._id);
       console.log('res: ', res);
       if (res) {
+        setIsLastPage(res.isLastPage);
         setListComment(
           res.comments.sort((a, b) => new Date(b.time) - new Date(a.time))
         );
@@ -71,10 +75,18 @@ function CommentMovie(props) {
     );
   };
 
-  const updateReaction = (commentId, likes, disLikes) => {
+  const updateReaction = (
+    commentId,
+    likes,
+    disLikes,
+    likesRef,
+    disLikesRef
+  ) => {
     setListComment((prevComments) =>
       prevComments.map((comment) =>
-        comment._id === commentId ? { ...comment, likes, disLikes } : comment
+        comment._id === commentId
+          ? { ...comment, likes, disLikes, likesRef, disLikesRef }
+          : comment
       )
     );
   };
@@ -147,18 +159,28 @@ function CommentMovie(props) {
     }
   };
 
+  const handleLoadComment = async () => {
+    page++;
+    setLoadingComment(true);
+    try {
+      const res = await movieServices.getCommentByMovieId(
+        props.data.data._id,
+        page
+      );
+      console.log('res: ', res);
+      listComment.push(...res.comments);
+      setIsLastPage(res.isLastPage);
+    } catch (error) {
+      showAlert(getErrorMessage(error), 'error');
+    } finally {
+      setLoadingComment(false);
+    }
+  };
+
   useEffect(() => {
     (async function () {
       try {
         await getListComment();
-        if (isLogin) {
-          const res = await UserServices.getProfile();
-          if (res.status) {
-            setUserData(res.data);
-          } else {
-            showAlert(res.message, 'error');
-          }
-        }
       } catch (error) {
         showAlert(error.message, 'error');
       }
@@ -186,14 +208,8 @@ function CommentMovie(props) {
           </div>
         </div>
         <div className="flex items-center gap-3 w-full mt-4">
-          {/* <Avatar
-            src={userData?.avatar.url}
-            alt="avatar"
-            size="md"
-            className="self-start"
-          /> */}
           <Avatar
-            src={userData?.avatar.url || iconUser}
+            src={userInfo?.avatar.url || iconUser}
             alt="avatar"
             size="md"
             className="self-start bg-white"
@@ -277,6 +293,19 @@ function CommentMovie(props) {
               deleteReply={deleteReply}
             ></BlockComment>
           ))}
+          {!isLastPage && (
+            <div className="flex justify-center mt-10">
+              <Button
+                className="w-3/4 normal-case text-[14px] flex justify-center"
+                loading={loadingComment}
+                variant="outlined"
+                color="deep-orange"
+                onClick={() => handleLoadComment()}
+              >
+                Tải thêm bình luận
+              </Button>
+            </div>
+          )}
         </div>
       </div>
     </div>

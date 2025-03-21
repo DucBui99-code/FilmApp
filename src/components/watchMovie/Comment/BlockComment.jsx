@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Avatar,
   Button,
@@ -62,7 +62,13 @@ const BlockComment = ({
     try {
       const res = await movieServices.toggleReactionComment(bodyData);
       if (res.status) {
-        updateReaction(data._id, res.likes, res.disLikes);
+        updateReaction(
+          data._id,
+          res.likes,
+          res.disLikes,
+          res.likesRef,
+          res.disLikesRef
+        );
       }
     } catch (error) {
       if (error.status === 401) {
@@ -83,7 +89,7 @@ const BlockComment = ({
     try {
       const res = await movieServices.toggleReactionComment(bodyData);
       if (res.status) {
-        updateReaction(data._id, res.likes, res.disLikes);
+        updateReaction(data._id, res.likes, res.disLikes,res.likesRef,res.disLikesRef);
       }
     } catch (error) {
       if (error.status === 401) {
@@ -161,6 +167,10 @@ const BlockComment = ({
       },
     },
   ];
+
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
 
   return (
     <div className="mt-2 flex justify-between items-center">

@@ -202,7 +202,7 @@ const SearchPage = () => {
           </p>
         )}
         {loading && (
-          <p className="text-center col-span-full">Đang tải thêm...</p>
+          <p className="text-center col-span-full" onClick={() => {}}>Đang tải thêm...</p>
         )}
       </div>
     </div>

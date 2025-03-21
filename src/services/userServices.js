@@ -21,7 +21,11 @@ const UserServices = {
   },
   uploadAvatar: async (data) => {
     try {
-      const response = await apiClient.post(`/user/uploadAvatar`, data);
+      const response = await apiClient.post(`/user/uploadAvatar`, data, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        }
+      })
       return response.data;
     } catch (error) {
       throw error;

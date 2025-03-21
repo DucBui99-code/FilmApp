@@ -10,7 +10,7 @@ const AuthServices = {
       throw error;
     }
   },
-  getAuthStatus: async (data) => {
+  getMyProfile: async (data) => {
     try {
       const response = await apiClient.post('/auth/me', data);
       return response.data;

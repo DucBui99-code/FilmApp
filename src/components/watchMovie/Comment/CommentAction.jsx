@@ -18,8 +18,13 @@ const CommentActions = ({
     console.log(likesRef, disLikesRef, userId);
     if (likesRef && likesRef.some((s) => s === userId)) {
       setLiked(true);
+      setDisLiked(false);
     } else if (disLikesRef && disLikesRef.some((s) => s === userId)) {
       setDisLiked(true);
+      setLiked(false);
+    } else {
+      setLiked(false);
+      setDisLiked(false);
     }
   }, [likesRef, disLikesRef]);
   return (

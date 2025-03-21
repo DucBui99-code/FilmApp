@@ -83,9 +83,13 @@ function WatchMovie({ movieType }) {
     };
   }, [name]);
 
+  let isMounted = false;
   useEffect(() => {
     if (!state.movieId) return;
-
+    if (!isMounted) {
+      isMounted = true;
+      return;
+    }
     MoviesServices.getSingleEpisode({
       movieId: state.movieId,
       indexEpisode: currentEpisode,

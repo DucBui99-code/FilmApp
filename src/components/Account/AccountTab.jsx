@@ -157,6 +157,10 @@ const AccountTab = ({ data }) => {
     }
   }, [popupInfor.isConfirm]);
 
+  useEffect(() => {
+    console.log('file: ', file);
+  }, [file]);
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-4 lg:gap-4 min-h-[300px]">
       <div className="col-span-1 mb-4">
