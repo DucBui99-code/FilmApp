@@ -100,9 +100,15 @@ const PaymentConfirm = ({ setStep, inforTransaction }) => {
             </Typography>
             <div className="flex items-center justify-center flex-col">
               <img src={PayImage} className="w-60 object-cover"></img>
-              <Link to={inforTransaction?.url} target="_blank">
-                <Button className="bg-primary mt-3">Thanh toán</Button>
-              </Link>
+              <a
+                href="https://beta-docs.zalopay.vn/docs/developer-tools/test-instructions/test-wallets/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Tải Zalo Sandbox
+              </a>
+
+              <Button className="bg-primary mt-3">Thanh toán</Button>
               <br />
             </div>
           </div>
