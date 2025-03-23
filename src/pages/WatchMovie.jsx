@@ -83,31 +83,30 @@ function WatchMovie({ movieType }) {
     };
   }, [name]);
 
-  let isMounted = false;
   useEffect(() => {
     if (!state.movieId) return;
-    if (!isMounted) {
-      isMounted = true;
-      return;
-    }
-    MoviesServices.getSingleEpisode({
-      movieId: state.movieId,
-      indexEpisode: currentEpisode,
-    })
-      .then((res) => {
+
+    const fetchEpisode = async () => {
+      try {
+        const res = await MoviesServices.getSingleEpisode({
+          movieId: state.movieId,
+          indexEpisode: currentEpisode,
+        });
         setState((prevState) => ({
           ...prevState,
           episode: res.data,
           isRent: true,
         }));
-      })
-      .catch((err) => {
+      } catch (err) {
         showAlert(err.response.data.message, 'error');
         setState((prevState) => ({
           ...prevState,
           isRent: false,
         }));
-      });
+      }
+    };
+
+    fetchEpisode();
   }, [currentEpisode, state.movieId]);
 
   if (!state.data) {

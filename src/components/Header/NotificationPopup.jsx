@@ -232,7 +232,7 @@ function NotificationPopup({ setOpenNoti, openNoti }) {
                         src={
                           el.type === 'system'
                             ? SystemImage
-                            : el.userSend.avatar
+                            : el?.userSend?.avatar
                         }
                         alt="avatar"
                         className="w-12 h-12 rounded-full object-cover"

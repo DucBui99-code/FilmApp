@@ -104,6 +104,7 @@ const PaymentConfirm = ({ setStep, inforTransaction }) => {
                 href="https://beta-docs.zalopay.vn/docs/developer-tools/test-instructions/test-wallets/"
                 target="_blank"
                 rel="noopener noreferrer"
+                className="text-primary underline"
               >
                 Tải Zalo Sandbox
               </a>
