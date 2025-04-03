@@ -2,13 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { Button, Typography } from '@material-tailwind/react';
 
 import PayImage from '../../assets/mobile-payment.png';
-import { Link } from 'react-router';
 import movieServices from '../../services/movieServices';
 import { useAlert } from '../Message/AlertContext';
 import getErrorMessage from '../../utils/handelMessageError';
 import { formatCurrency } from '../../utils/utils';
 
 const PaymentConfirm = ({ setStep, inforTransaction }) => {
+  console.log(inforTransaction);
+
   const { showAlert } = useAlert();
   const [timeLeft, setTimeLeft] = useState(inforTransaction.expireTime * 60);
 
@@ -99,7 +100,7 @@ const PaymentConfirm = ({ setStep, inforTransaction }) => {
               Vui lòng thanh toán tiền
             </Typography>
             <div className="flex items-center justify-center flex-col">
-              <img src={PayImage} className="w-60 object-cover"></img>
+              <img src={PayImage} className="w-60 object-cover" alt="Pay" />
               <a
                 href="https://beta-docs.zalopay.vn/docs/developer-tools/test-instructions/test-wallets/"
                 target="_blank"
@@ -109,7 +110,12 @@ const PaymentConfirm = ({ setStep, inforTransaction }) => {
                 Tải Zalo Sandbox
               </a>
 
-              <Button className="bg-primary mt-3">Thanh toán</Button>
+              <Button
+                className="bg-primary mt-3"
+                onClick={() => window.open(inforTransaction.url, '_blank')}
+              >
+                Thanh toán
+              </Button>
               <br />
             </div>
           </div>
@@ -129,7 +135,7 @@ const PaymentConfirm = ({ setStep, inforTransaction }) => {
           Giao dịch đã hết hạn
         </div>
       )}
-      <Typography className="text-xl font-bold text-white mb-2">
+      <Typography className="text-xl font-bold text-white mb-2 mt-4">
         Thời gian còn lại:{' '}
         <span className="text-primary">{formatTime(timeLeft)}</span>
       </Typography>
