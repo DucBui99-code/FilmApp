@@ -142,7 +142,10 @@ const Account = () => {
                   {loadingTabs[index] ? (
                     <TabSkeleton />
                   ) : (
-                    <Component data={profileData[index] || defaultData} />
+                    <Component
+                      data={profileData[index] || defaultData}
+                      numberTab={activeTab}
+                    />
                   )}
                 </Suspense>
               </TabPanel>
