@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Avatar,
   Button,
@@ -23,47 +23,57 @@ import ReplyInput from './ReplyInput';
 import CommentActions from './CommentAction';
 import Reply from './Reply';
 import RenderMenu from './RenderMenu';
+import getErrorMessage from '../../../utils/handelMessageError';
+
 const BlockComment = ({
   data,
   userId,
   movieData,
   updateComment,
   deleteComment,
-  updateReplies,
-  updateReaction,
-  updateReplyContent,
-  deleteReply,
+  updateReactionComment,
 }) => {
   const { showAlert } = useAlert();
 
   const [open, setOpen] = useState(false);
+  const [replies, setReplies] = useState([]);
   const [replyInput, setReplyInput] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
-  const [idEditReply, setIdEditReply, version] = useReactiveState('');
+  const [idEditReply, setIdEditReply] = useReactiveState('');
   const limitCharacters = 100;
   const [contentEdit, setContentEdit] = useState('');
-  const handelTextComment = (e) => {
-    setContentEdit(e);
-  };
+  const [isLastPage, setIsLastPage] = useState(true);
+  let page = 1;
 
   const onReply = () => {
-    console.log('a');
     setReplyInput(!replyInput);
   };
 
-  const handleLike = async (type, replyId = null) => {
+  const handleToggleLikeAndDislike = async (
+    typeAction,
+    type,
+    replyId = null
+  ) => {
     const bodyData = {
       movieId: movieData.data.movieId,
       commentId: data._id,
-      typeAction: 'like',
+      typeAction: typeAction,
       type: type,
       replyId: replyId,
     };
     try {
       const res = await movieServices.toggleReactionComment(bodyData);
-      if (res.status) {
-        updateReaction(
+      if (type === 'comment') {
+        updateReactionComment(
           data._id,
+          res.likes,
+          res.disLikes,
+          res.likesRef,
+          res.disLikesRef
+        );
+      } else {
+        updateReactionReply(
+          replyId,
           res.likes,
           res.disLikes,
           res.likesRef,
@@ -78,26 +88,22 @@ const BlockComment = ({
     }
   };
 
-  const handleDisLike = async (type = 'comment', replyId = null) => {
-    const bodyData = {
-      movieId: movieData.data.movieId,
-      commentId: data._id,
-      typeAction: 'disLike',
-      type: type,
-      replyId: replyId,
-    };
-    try {
-      const res = await movieServices.toggleReactionComment(bodyData);
-      if (res.status) {
-        updateReaction(data._id, res.likes, res.disLikes,res.likesRef,res.disLikesRef);
-      }
-    } catch (error) {
-      if (error.status === 401) {
-        showAlert('Vui lòng đăng nhập để thực hiện thao tác này', 'error');
-        return;
-      }
-    }
+  const updateReactionReply = (
+    replyId,
+    likes,
+    disLikes,
+    likesRef,
+    disLikesRef
+  ) => {
+    setReplies((prev) =>
+      prev.map((reply) =>
+        reply._id === replyId
+          ? { ...reply, likes, disLikes, likesRef, disLikesRef }
+          : reply
+      )
+    );
   };
+
   const handleEditComment = async () => {
     const res = await movieServices.editComment({
       movieId: movieData.data.movieId,
@@ -134,14 +140,12 @@ const BlockComment = ({
       action: async (data, type, id) => {
         if (type === 'reply') {
           const res = await movieServices.deleteComment({
-            movieId: movieData.data.movieId,
             commentId: data._id,
             replyId: id,
             type: 'reply',
           });
-          console.log('res: ', res);
           if (res.status) {
-            deleteReply(data._id, id);
+            deleteReply(id);
           }
         } else {
           const res = await movieServices.deleteComment({
@@ -168,9 +172,60 @@ const BlockComment = ({
     },
   ];
 
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
+  const updateReplies = (newReply) => {
+    setReplies((prevRelies) => [newReply, ...prevRelies]);
+    data.replyCount++;
+  };
+
+  const updateReplyContent = (idReplies, newContent) => {
+    setReplies((prevReplies) =>
+      prevReplies.map((reply) => {
+        if (reply._id === idReplies) {
+          return { ...reply, content: newContent };
+        }
+        return reply;
+      })
+    );
+  };
+
+  const deleteReply = (idReplies) => {
+    setReplies((prevReplies) =>
+      prevReplies.filter((reply) => reply._id !== idReplies)
+    );
+    data.replyCount--;
+  };
+
+  const handelOpenReplies = () => {
+    try {
+      setOpen(!open);
+
+      const fectchReplies = async () => {
+        const res = await movieServices.getReplisByCommentId(data._id);
+        setReplies(res.replies);
+        setIsLastPage(res.isLastPage);
+        console.log(res);
+      };
+
+      if (!open) {
+        fectchReplies();
+      } else {
+        setReplies([]);
+      }
+    } catch (error) {
+      showAlert(getErrorMessage(error), 'error');
+    }
+  };
+
+  const handleLoadComment = async () => {
+    page++;
+    try {
+      const res = await movieServices.getReplisByCommentId(data._id, page);
+      setReplies((prevReplies) => [...prevReplies, ...res.replies]);
+      setIsLastPage(res.isLastPage);
+    } catch (error) {
+      showAlert(getErrorMessage(error), 'error');
+    }
+  };
 
   return (
     <div className="mt-2 flex justify-between items-center">
@@ -189,6 +244,11 @@ const BlockComment = ({
             <Typography className="text-gray-600 font-normal text-sm">
               {dayjs(data?.time).format('HH:mm - DD/MM/YYYY')}
             </Typography>
+            {data.edited && (
+              <Typography className="text-gray-600 font-normal text-sm">
+                (đã chỉnh sửa)
+              </Typography>
+            )}
           </div>
           {!isEdit ? (
             <Typography className="text-white font-medium">
@@ -202,7 +262,7 @@ const BlockComment = ({
                 variant="static"
                 className="text-white"
                 color="green"
-                onChange={(e) => handelTextComment(e.target.value)}
+                onChange={(e) => setContentEdit(e.target.value)}
               />
               <div className="flex justify-end mt-1">
                 <Button
@@ -234,14 +294,12 @@ const BlockComment = ({
           <CommentActions
             likes={data?.likes}
             disLikes={data?.disLikes}
-            onReply={() => {
-              setReplyInput(!replyInput);
-            }}
-            handleLike={handleLike}
-            handleDisLike={handleDisLike}
+            onReply={onReply}
+            handleToggleLikeAndDislike={handleToggleLikeAndDislike}
             likesRef={data?.likesRef}
             disLikesRef={data?.disLikesRef}
             userId={userId}
+            type={'comment'}
           />
 
           {replyInput && (
@@ -253,22 +311,22 @@ const BlockComment = ({
               setReplyInput={onReply}
             ></ReplyInput>
           )}
-          {data?.replies?.length > 0 && (
+          {data?.replyCount > 0 && (
             <div>
               <Button
                 variant="text"
                 className="text-primary w-fit normal-case flex items-center gap-2 p-0"
-                onClick={() => setOpen(!open)}
+                onClick={handelOpenReplies}
               >
-                {open ? (
+                {!open ? (
                   <ChevronUpIcon className="w-6" />
                 ) : (
                   <ChevronDownIcon className="w-6" />
                 )}
-                <Typography>{data?.replies?.length} phản hồi</Typography>
+                <Typography>{data?.replyCount} phản hồi</Typography>
               </Button>
               <Collapse open={open}>
-                {data.replies.map((reply, i) => (
+                {replies.map((reply, i) => (
                   <Reply
                     data={data}
                     key={i}
@@ -276,15 +334,25 @@ const BlockComment = ({
                     movieId={movieData.data.movieId}
                     menuItemsSelf={MenuListCommentSelf}
                     menuItemsAnother={MenuListCommentAnother}
-                    handleLike={handleLike}
-                    handleDisLike={handleDisLike}
+                    handleToggleLikeAndDislike={handleToggleLikeAndDislike}
                     onReplyInput={onReply}
                     updateReplies={updateReplies}
                     idEditReply={idEditReply}
-                    versionEditReply={version}
                     updateReplyContent={updateReplyContent}
                   />
                 ))}
+                {!isLastPage && (
+                  <div className="flex justify-center mt-10">
+                    <Button
+                      className="w-3/4 normal-case text-[14px] flex justify-center"
+                      variant="outlined"
+                      color="deep-orange"
+                      onClick={() => handleLoadComment()}
+                    >
+                      Tải thêm bình luận
+                    </Button>
+                  </div>
+                )}
               </Collapse>
             </div>
           )}

@@ -74,9 +74,13 @@ const AuthServices = {
       throw error;
     }
   },
-  connectGoogleClooud: async (token) => {
+  connectGoogleClooud: async (typeToken, token) => {
     try {
-      const response = await apiGoogle.get(`/userinfo`);
+      const response = await apiGoogle.get(`/userinfo`, {
+        headers: {
+          Authorization: `${typeToken} ${token}`,
+        },
+      });
       return response.data;
     } catch (error) {
       throw error;

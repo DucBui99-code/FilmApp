@@ -5,17 +5,17 @@ import { HandThumbDownIcon, HandThumbUpIcon } from '@heroicons/react/16/solid';
 const CommentActions = ({
   likes,
   disLikes,
-  handleLike,
-  handleDisLike,
+  handleToggleLikeAndDislike,
   onReply,
   likesRef,
   disLikesRef,
   userId,
+  type,
+  replyId,
 }) => {
   const [liked, setLiked] = useState(false);
   const [disLiked, setDisLiked] = useState(false);
   useEffect(() => {
-    console.log(likesRef, disLikesRef, userId);
     if (likesRef && likesRef.some((s) => s === userId)) {
       setLiked(true);
       setDisLiked(false);
@@ -32,14 +32,14 @@ const CommentActions = ({
       <div className="flex items-center justify-center gap-2 select-none">
         <HandThumbUpIcon
           className={`w-6 cursor-pointer hover:opacity-70 ${liked ? 'text-primary' : 'text-gray-500'}`}
-          onClick={() => handleLike('comment')}
+          onClick={() => handleToggleLikeAndDislike('like', type, replyId)}
         />
         <Typography className="text-gray-600 font-semibold">{likes}</Typography>
       </div>
       <div className="flex items-center justify-center gap-2 select-none">
         <HandThumbDownIcon
           className={`w-6 cursor-pointer hover:opacity-70 ${disLiked ? 'text-primary' : 'text-gray-500'}`}
-          onClick={() => handleDisLike('comment')}
+          onClick={() => handleToggleLikeAndDislike('disLike', type, replyId)}
         />
         <Typography className="text-gray-600 font-semibold">
           {disLikes}

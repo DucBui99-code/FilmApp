@@ -121,6 +121,17 @@ const movieServices = {
       throw error;
     }
   },
+  getReplisByCommentId: async (commentId, page) => {
+    try {
+      const response = await apiClient.get(
+        `/movie/getReplyComments/${commentId}?page=${page}`
+      );
+      return response.data;
+    } catch (error) {
+      console.error('API error:', error);
+      throw error;
+    }
+  },
   deleteComment: async (data) => {
     try {
       const response = await apiClient.post('/user/deleteCommentMovie', data);

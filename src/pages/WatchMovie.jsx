@@ -146,7 +146,7 @@ function WatchMovie({ movieType }) {
       )}
       {state.isRent && (
         <>
-          <div className="flex flex-col lg:flex-row items-center justify-center gap-5 p-4 lg:p-12">
+          <div className="flex flex-col lg:flex-row items-center justify-center gap-5 p-4 lg:p-6">
             <div className="flex-1 w-full lg:w-auto">
               <VideoPlayer
                 linkEmbed={state.episode?.link_embed}
@@ -161,7 +161,7 @@ function WatchMovie({ movieType }) {
           </div>
         </>
       )}
-      <div className="p-4 md:p-12">
+      <div className="p-4 md:p-6">
         <InformationMovie
           data={state.data}
           type={movieType}

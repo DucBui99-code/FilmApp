@@ -6,16 +6,7 @@ import {
   MenuList,
 } from '@material-tailwind/react';
 import React from 'react';
-import {
-  HandThumbUpIcon,
-  HandThumbDownIcon,
-  ChevronDownIcon,
-  ChevronUpIcon,
-  EllipsisVerticalIcon,
-  PencilIcon,
-  TrashIcon,
-  FlagIcon,
-} from '@heroicons/react/16/solid';
+import { EllipsisVerticalIcon } from '@heroicons/react/16/solid';
 const RenderMenu = ({
   data,
   isOwner,

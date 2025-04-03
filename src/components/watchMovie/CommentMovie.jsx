@@ -14,68 +14,24 @@ import EmojiPicker from 'emoji-picker-react';
 import React, { useEffect, useState } from 'react';
 import { FaceSmileIcon } from '@heroicons/react/16/solid';
 import BlockComment from './Comment/BlockComment';
-import UserServices from '../../services/userServices';
 import { useAlert } from '../Message/AlertContext';
 import movieServices from '../../services/movieServices';
 import getErrorMessage from '../../utils/handelMessageError';
 import { useSelector } from 'react-redux';
 import iconUser from '../../assets/225-default-avatar.png';
-import AuthServices from '../../services/authServices';
+
 function CommentMovie(props) {
+  let page = 1;
   const { isLogin, userId, userInfo } = useSelector((state) => state.auth);
-  const [loadingComment, setLoadingComment] = useState(false);
-  const { showAlert } = useAlert();
   const limitCharacters = 100;
+  const { showAlert } = useAlert();
+  const [loadingComment, setLoadingComment] = useState(false);
   const [text, setText] = useState('');
   const [isShowAction, setIsShowAction] = useState(false);
   const [isLastPage, setIsLastPage] = useState(false);
   const [listComment, setListComment] = useState([]);
-  let page = 1;
-  const getListComment = async () => {
-    try {
-      const res = await movieServices.getCommentByMovieId(props.data.data._id);
-      console.log('res: ', res);
-      if (res) {
-        setIsLastPage(res.isLastPage);
-        setListComment(
-          res.comments.sort((a, b) => new Date(b.time) - new Date(a.time))
-        );
-      } else {
-        showAlert(getErrorMessage(error), 'error');
-      }
-    } catch (error) {}
-  };
 
-  const updateReplies = (commentId, newReply) => {
-    setListComment((prevComments) =>
-      prevComments.map((comment) =>
-        comment._id === commentId
-          ? { ...comment, replies: [...comment.replies, newReply] }
-          : comment
-      )
-    );
-  };
-
-  const updateReplyContent = (idComment, idReplies, newContent) => {
-    setListComment((prevComments) =>
-      prevComments.map((comment) => {
-        if (comment._id === idComment) {
-          return {
-            ...comment,
-            replies: comment.replies.map((reply) => {
-              if (reply._id === idReplies) {
-                return { ...reply, content: newContent };
-              }
-              return reply;
-            }),
-          };
-        }
-        return comment;
-      })
-    );
-  };
-
-  const updateReaction = (
+  const updateReactionComment = (
     commentId,
     likes,
     disLikes,
@@ -107,20 +63,6 @@ function CommentMovie(props) {
     );
   };
 
-  const deleteReply = (idComment, idReplies) => {
-    setListComment((prevComments) =>
-      prevComments.map((comment) => {
-        if (comment._id === idComment) {
-          return {
-            ...comment,
-            replies: comment.replies.filter((reply) => reply._id !== idReplies),
-          };
-        }
-        return comment;
-      })
-    );
-  };
-
   const handelTextComment = (value) => {
     if (value.length > limitCharacters) {
       return;
@@ -136,7 +78,7 @@ function CommentMovie(props) {
     setText((prev) => prev + event.emoji);
   };
 
-  const commentMovie = async (type) => {
+  const commentMovie = async () => {
     if (!isLogin) {
       showAlert('Vui lòng đăng nhập để đóng góp ý kiến!', 'error');
       return;
@@ -167,7 +109,6 @@ function CommentMovie(props) {
         props.data.data._id,
         page
       );
-      console.log('res: ', res);
       listComment.push(...res.comments);
       setIsLastPage(res.isLastPage);
     } catch (error) {
@@ -178,13 +119,19 @@ function CommentMovie(props) {
   };
 
   useEffect(() => {
-    (async function () {
+    const getListComment = async () => {
       try {
-        await getListComment();
+        const res = await movieServices.getCommentByMovieId(
+          props.data.data._id
+        );
+
+        setIsLastPage(res.isLastPage);
+        setListComment(res.comments);
       } catch (error) {
         showAlert(error.message, 'error');
       }
-    })();
+    };
+    getListComment();
   }, []);
 
   return (
@@ -287,25 +234,9 @@ function CommentMovie(props) {
               key={i}
               updateComment={updateComment}
               deleteComment={deleteComment}
-              updateReplies={updateReplies}
-              updateReaction={updateReaction}
-              updateReplyContent={updateReplyContent}
-              deleteReply={deleteReply}
+              updateReactionComment={updateReactionComment}
             ></BlockComment>
           ))}
-          {!isLastPage && (
-            <div className="flex justify-center mt-10">
-              <Button
-                className="w-3/4 normal-case text-[14px] flex justify-center"
-                loading={loadingComment}
-                variant="outlined"
-                color="deep-orange"
-                onClick={() => handleLoadComment()}
-              >
-                Tải thêm bình luận
-              </Button>
-            </div>
-          )}
         </div>
       </div>
     </div>

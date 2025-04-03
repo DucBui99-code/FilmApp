@@ -71,6 +71,7 @@ function Login({ handleOpen, open, handelSwitchModal, handelOpenForgotPass }) {
     onSuccess: async (tokenResponse) => {
       try {
         const resGoogle = await AuthServices.connectGoogleClooud(
+          tokenResponse.token_type,
           tokenResponse.access_token
         );
 

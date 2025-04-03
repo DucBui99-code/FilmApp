@@ -51,7 +51,7 @@ function InputSearch({ isFull = false }) {
 
       {isShow && (
         <XMarkIcon
-          className="w-6 text-red-400 hover:opacity-80 absolute right-2 top-2"
+          className="w-6 text-white hover:opacity-80 absolute right-2 top-2"
           onClick={handelRemoveText}
         />
       )}

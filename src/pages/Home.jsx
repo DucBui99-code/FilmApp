@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 
 import Slider from '../components/Body/Slider';
 import SliderStatic from '../components/Body/SliderStatic';
-import MoviesServices from '../services/movieServices';
 import SliderHover from '../components/Body/SliderHover';
+import MoviesServices from '../services/movieServices';
 import { useAlert } from '../components/Message/AlertContext';
 import { setLoading } from '../store/appStore';
 import getErrorMessage from '../utils/handelMessageError';
@@ -12,11 +12,12 @@ import getErrorMessage from '../utils/handelMessageError';
 function Home({ type }) {
   const dispatch = useDispatch();
   const { showAlert } = useAlert();
+  const [moviesData, setMoviesData] = useState({});
+  const observers = useRef({});
 
-  const [moviesData, setMoviesData] = useState({}); // Lưu trữ kết quả theo từng trang
-
-  const fetchMovies = async (page, type) => {
+  const fetchMovies = async (page) => {
     try {
+      dispatch(setLoading(true));
       const res = await MoviesServices.getListMovie({ page, type });
       setMoviesData((prev) => ({
         ...prev,
@@ -27,49 +28,76 @@ function Home({ type }) {
       }));
     } catch (error) {
       showAlert(getErrorMessage(error), 'error');
+    } finally {
+      dispatch(setLoading(false));
     }
   };
 
   useEffect(() => {
-    let isMounted = true; // Cờ kiểm tra component còn mounted
     setMoviesData({}); // Reset dữ liệu khi type thay đổi
-
-    const fetchAllMovies = async () => {
-      dispatch(setLoading(true));
-
-      try {
-        await Promise.all([
-          fetchMovies(1, type),
-          fetchMovies(2, type),
-          fetchMovies(3, type),
-        ]);
-      } catch (error) {
-        console.error('Lỗi khi tải phim:', error);
-      } finally {
-        if (isMounted) dispatch(setLoading(false));
-      }
-    };
-
-    fetchAllMovies();
-
-    return () => {
-      isMounted = false;
-    };
+    Object.values(observers.current).forEach((observer) =>
+      observer.disconnect()
+    );
+    observers.current = {};
   }, [type]);
+
+  const observeElement = (element, page) => {
+    if (!element || observers.current[page]) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          fetchMovies(page);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.5 }
+    );
+
+    observer.observe(element);
+    observers.current[page] = observer;
+  };
 
   return (
     <div>
-      <Slider data={moviesData[1]} type={type}></Slider>
-      <SliderStatic
-        title={'Phim hay mỗi ngày'}
-        data={moviesData[2]}
-        type={type}
-      ></SliderStatic>
-      <SliderHover
-        title="TOP 10 TRONG NGÀY"
-        data={moviesData[3]}
-        type={type}
-      ></SliderHover>
+      <div ref={(el) => observeElement(el, 1)}>
+        <Slider data={moviesData[1]} type={type} />
+      </div>
+      <div ref={(el) => observeElement(el, 2)}>
+        <SliderStatic
+          title={'Phim hay mỗi ngày'}
+          data={moviesData[2]}
+          type={type}
+        />
+      </div>
+      <div ref={(el) => observeElement(el, 3)}>
+        <SliderHover
+          title="TOP 10 TRONG NGÀY"
+          data={moviesData[3]}
+          type={type}
+        />
+      </div>
+      <div ref={(el) => observeElement(el, 4)}>
+        <SliderHover
+          title="Phim Hot Nhất Hôm Nay"
+          data={moviesData[4]}
+          type={type}
+        />
+      </div>
+      <div ref={(el) => observeElement(el, 5)}>
+        <SliderHover
+          title="Xu Hướng Xem Nhiều Nhất"
+          data={moviesData[5]}
+          type={type}
+        />
+      </div>
+      <div ref={(el) => observeElement(el, 6)}>
+        <SliderHover
+          title="Siêu Phẩm Đáng Xem Nhất"
+          data={moviesData[6]}
+          type={type}
+        />
+      </div>
     </div>
   );
 }

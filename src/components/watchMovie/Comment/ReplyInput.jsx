@@ -1,5 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Avatar, Button, IconButton, Input, Menu, MenuHandler, MenuList } from '@material-tailwind/react';
+import {
+  Avatar,
+  Button,
+  IconButton,
+  Input,
+  Menu,
+  MenuHandler,
+  MenuList,
+} from '@material-tailwind/react';
 
 import iconUser from '../../../assets/225-default-avatar.png';
 import movieServices from '../../../services/movieServices';
@@ -20,6 +28,7 @@ const ReplyInput = ({
   const [isShowAction, setIsShowAction] = useState(false);
   const [paddingInput, setPaddingInput] = useState('0px');
   const spanRef = useRef(null);
+
   const replyComment = async () => {
     const bodyData = {
       movieId: movieData.data.movieId,
@@ -28,7 +37,7 @@ const ReplyInput = ({
       commentId: data._id, // Dùng để reply comment
     };
     const res = await movieServices.postComment(bodyData);
-    updateReplies(data._id, res.data);
+    updateReplies(res.data);
     setIsShowAction(false);
     setReplyInput();
     setText('');

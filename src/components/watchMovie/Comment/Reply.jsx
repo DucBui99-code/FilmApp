@@ -1,5 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Avatar, Button, Input, Typography } from '@material-tailwind/react';
+import {
+  Avatar,
+  Button,
+  IconButton,
+  Input,
+  Menu,
+  MenuHandler,
+  MenuList,
+  Typography,
+} from '@material-tailwind/react';
 
 import dayjs from 'dayjs';
 import { useAlert } from '../../Message/AlertContext';
@@ -9,24 +18,23 @@ import movieServices from '../../../services/movieServices';
 import { useSelector } from 'react-redux';
 import CommentActions from './CommentAction';
 import RenderMenu from './RenderMenu';
-import socketClient from '../../../services/socketClient';
+import { FaceSmileIcon } from '@heroicons/react/16/solid';
+import EmojiPicker from 'emoji-picker-react';
 
 const Reply = ({
   data,
   reply,
   menuItemsSelf,
   menuItemsAnother,
-  handleLike,
-  handleDisLike,
+  handleToggleLikeAndDislike,
   movieId,
   updateReplies,
   onReplyInput,
   idEditReply,
-  versionEditReply,
   updateReplyContent,
 }) => {
   const { showAlert } = useAlert();
-  const { userInfo } = useSelector((state) => state.auth);
+  const { userInfo, userId } = useSelector((state) => state.auth);
   const spanRef = useRef(null);
   const [showReply, setShowReply] = useState(false);
   const [text, setText] = useState('');
@@ -34,6 +42,7 @@ const Reply = ({
   const [contentEdit, setContentEdit] = useState('');
   const limitCharacters = 100;
   const [isEdit, setEdit] = useState(false);
+
   const onEmojiClick = (event) => {
     if (text.length + event.emoji.length > 100) {
       return;
@@ -53,11 +62,10 @@ const Reply = ({
       type: 'reply', //Type có 2 loai bao gồm: comment hoặc reply
       replyId: idEditReply, // Bắt buộc truyền khi có edit reply
     };
-    console.log(dataBody);
     try {
       const res = await movieServices.editComment(dataBody);
       if (res.status) {
-        updateReplyContent(data._id, idEditReply, contentEdit);
+        updateReplyContent(idEditReply, contentEdit);
         setEdit(false);
       }
     } catch (error) {
@@ -67,26 +75,20 @@ const Reply = ({
 
   const replyComment = async () => {
     const dataBody = {
-      movieId: movieId,
       content: text,
       type: 'reply',
       commentId: data._id,
-      replyTo: reply._id,
+      replyId: reply._id,
+      isTagName: true,
     };
 
     try {
       const res = await movieServices.postComment(dataBody);
-      updateReplies(data._id, res.data);
-      console.log(res.data);
+      updateReplies(res.data);
 
       setShowReply(false);
       setText('');
       onReplyInput();
-      socketClient.emit('newReply', {
-        movieId,
-        replyId: res.data._id,
-        commentId: data._id,
-      });
     } catch (error) {
       if (error?.status == '401') {
         showAlert('Vui lòng đăng nhập để thực hiện thao tác này', 'error');
@@ -97,21 +99,14 @@ const Reply = ({
   useEffect(() => {
     if (reply._id === idEditReply) {
       setEdit(true);
-      console.log(idEditReply);
       setContentEdit(reply.content);
     }
-  }, [idEditReply, versionEditReply]);
+  }, [idEditReply]);
 
   useEffect(() => {
     if (spanRef.current) {
       setPaddingInput(spanRef.current.offsetWidth + 4 + 'px');
     }
-    socketClient.on('error', (message) => {
-      showAlert(message, 'error');
-    });
-    return () => {
-      socketClient.off('error');
-    };
   }, [showReply]);
 
   return (
@@ -132,6 +127,11 @@ const Reply = ({
               <Typography className="text-gray-600 font-normal text-sm">
                 {dayjs(reply?.time).format('HH:mm - DD/MM/YYYY')}
               </Typography>
+              {reply.edited && (
+                <Typography className="text-gray-600 font-normal text-sm">
+                  (đã chỉnh sửa)
+                </Typography>
+              )}
             </div>
             {!isEdit ? (
               <Typography className="text-white font-medium flex items-center gap-1">
@@ -179,9 +179,13 @@ const Reply = ({
             <CommentActions
               likes={reply.likes}
               disLikes={reply.disLikes}
-              handleLike={handleLike}
-              handleDisLike={handleDisLike}
+              likesRef={reply?.likesRef}
+              disLikesRef={reply?.disLikesRef}
+              handleToggleLikeAndDislike={handleToggleLikeAndDislike}
               onReply={onReply}
+              userId={userId}
+              type="reply"
+              replyId={reply._id}
             />
           </div>
         </div>
