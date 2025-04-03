@@ -31,6 +31,7 @@ const LazyImage = ({ src, alt, className }) => {
   return (
     <img
       ref={imgRef}
+      loading="eager"
       src={isVisible ? src : ''}
       alt={alt}
       className={className}

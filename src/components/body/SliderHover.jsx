@@ -2,7 +2,6 @@ import {
   Button,
   Card,
   CardBody,
-  CardFooter,
   CardHeader,
   Typography,
 } from '@material-tailwind/react';
@@ -109,9 +108,9 @@ function SliderHover({ title = 'Test', data, type }) {
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.9 }}
                       transition={{ duration: 0.3 }}
-                      className={`absolute top-0 ${index === 0 ? 'left-2' : 'right-2'} w-96 h-full flex items-center justify-center shadow-lg`}
+                      className={`absolute top-0 ${index === 0 ? 'left-2' : 'right-2'} w-96 flex items-center justify-center shadow-lg z-[999999]`}
                     >
-                      <Card className="max-w-[24rem] overflow-hidden">
+                      <Card className="overflow-hidden">
                         <CardHeader
                           floated={false}
                           shadow={false}
@@ -123,7 +122,6 @@ function SliderHover({ title = 'Test', data, type }) {
                             alt={`Posster ${index}`}
                             className="w-full"
                           ></LazyImage>
-                          <img />
                         </CardHeader>
                         <CardBody className="bg-black">
                           <Typography variant="h4" color="white">
@@ -148,34 +146,34 @@ function SliderHover({ title = 'Test', data, type }) {
                             <span>⭐ {e.tmdb.vote_average.toFixed(1)}</span> |{' '}
                             <span>{e.tmdb.vote_count} votes</span>
                           </div>
-                        </CardBody>
-                        <CardFooter className="flex items-center justify-between bg-black">
-                          <Link
-                            to={
-                              type === 'movieRent'
-                                ? `/xem-phim-goi/${e.slug}`
-                                : `/xem-phim-mien-phi/${e.slug}`
-                            }
-                          >
+                          <div className="flex items-center justify-between mt-2">
+                            <Link
+                              to={
+                                type === 'movieRent'
+                                  ? `/xem-phim-goi/${e.slug}`
+                                  : `/xem-phim-mien-phi/${e.slug}`
+                              }
+                            >
+                              <Button
+                                className="flex items-center gap-3 mt-6 text-base"
+                                variant="outlined"
+                                color="light-green"
+                              >
+                                <PlayCircleIcon className="w-6" />
+                                Xem Ngay
+                              </Button>
+                            </Link>
+
                             <Button
                               className="flex items-center gap-3 mt-6 text-base"
+                              color="light-blue"
                               variant="outlined"
-                              color="light-green"
                             >
-                              <PlayCircleIcon className="w-6" />
-                              Xem Ngay
+                              <InformationCircleIcon className="w-6" />
+                              Chi tiết
                             </Button>
-                          </Link>
-
-                          <Button
-                            className="flex items-center gap-3 mt-6 text-base"
-                            color="light-blue"
-                            variant="outlined"
-                          >
-                            <InformationCircleIcon className="w-6" />
-                            Chi tiết
-                          </Button>
-                        </CardFooter>
+                          </div>
+                        </CardBody>
                       </Card>
                     </motion.div>
                   )}

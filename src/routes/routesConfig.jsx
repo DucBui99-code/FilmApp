@@ -8,6 +8,7 @@ const PaymentPage = React.lazy(() => import('../pages/PaymentPage'));
 const ResetPassowordPage = React.lazy(() => import('../pages/ResetPassoword'));
 const AccountPage = React.lazy(() => import('../pages/AccountPage'));
 const SearchPage = React.lazy(() => import('../pages/SearchPage'));
+const ResultMovie = React.lazy(() => import('../pages/ResultMovie'));
 
 const routesConfig = {
   public: [
@@ -19,8 +20,13 @@ const routesConfig = {
       props: { movieType: MOVIE_TYPE.movieFree },
     },
     {
-      path: '/search',
+      path: '/tim-kiem',
       element: SearchPage,
+      props: { type: '' },
+    },
+    {
+      path: '/quoc-gia/:country',
+      element: ResultMovie,
       props: { type: '' },
     },
     { path: '/phim-goi', element: HomePage, props: { type: 'movieRent' } },

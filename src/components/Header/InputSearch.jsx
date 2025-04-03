@@ -21,7 +21,7 @@ function InputSearch({ isFull = false }) {
   // Debounce function để hoãn việc navigate
   const debouncedSearch = debounce((searchQuery) => {
     if (searchQuery.trim() !== '') {
-      navigate(`/search?query=${encodeURIComponent(searchQuery)}`);
+      navigate(`/tim-kiem?query=${encodeURIComponent(searchQuery)}`);
     }
   }, 500);
 
@@ -42,7 +42,7 @@ function InputSearch({ isFull = false }) {
       <input
         type="text"
         value={query}
-        placeholder="Search Film..."
+        placeholder="Tìm kiếm phim..."
         onChange={(e) => seQuery(e.target.value)}
         className={`${
           isFull ? 'w-full' : isShow ? 'w-80' : 'w-4'

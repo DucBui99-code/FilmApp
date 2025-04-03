@@ -3,6 +3,10 @@ import {
   Button,
   Collapse,
   IconButton,
+  Menu,
+  MenuHandler,
+  MenuItem,
+  MenuList,
   Navbar,
   Typography,
 } from '@material-tailwind/react';
@@ -14,11 +18,38 @@ import ActionBarMobile from './ActionBarMobile';
 import NotificationPopup from './NotificationPopup';
 import { setLoadingAsync } from '../../store/appStore';
 import ActionBarPC from './ActionBarPC';
+import { ChevronDownIcon } from '@heroicons/react/16/solid';
 
 function Header() {
   const ListMenu = [
     { name: 'Miễn phí', router: '/mien-phi' },
     { name: 'Phim Gói', router: '/phim-goi' },
+    {
+      name: 'Quốc gia',
+      withIcon: <ChevronDownIcon className="h-4 w-4 ml-1" />,
+      children: [
+        {
+          name: 'Trung Quốc',
+          router: '/trung-quoc',
+        },
+        {
+          name: 'Anh',
+          router: '/anh',
+        },
+        {
+          name: 'Đức',
+          router: '/duc',
+        },
+        {
+          name: 'Hàn Quốc',
+          router: '/han-quoc',
+        },
+        {
+          name: 'Nhật Bản',
+          router: '/nhat-ban',
+        },
+      ],
+    },
     { name: 'Truyền Hình', router: '/truyen-hinh' },
   ];
 
@@ -46,18 +77,51 @@ function Header() {
           as="li"
           variant="small"
           color="white"
-          className="p-1 font-bold text-[17px]"
+          className="p-1 font-bold text-[17px] relative group"
           key={i}
         >
-          <Link
-            to={el.router}
-            onClick={() => dispatch(setLoadingAsync(true))}
-            className={`hover:text-primary transition-colors ${
-              location.pathname.includes(el.router) ? 'text-primary' : ''
-            }`}
-          >
-            {el.name}
-          </Link>
+          {el.children ? (
+            <Menu placement="bottom-start">
+              <MenuHandler>
+                <div className="flex items-center">
+                  <span
+                    className={`hover:text-primary transition-colors cursor-pointer ${
+                      location.pathname.includes(el.router)
+                        ? 'text-primary'
+                        : ''
+                    }`}
+                  >
+                    {el.name}
+                  </span>
+                  {el.withIcon && <span className="ml-1">{el.withIcon}</span>}
+                </div>
+              </MenuHandler>
+              <MenuList className="bg-black border-gray-800">
+                {el.children.map((child, childIndex) => (
+                  <Link
+                    to={`/quoc-gia${child.router}`}
+                    onClick={() => {
+                      dispatch(setLoadingAsync(true));
+                    }}
+                    className="hover:bg-gray-900 text-white"
+                    key={childIndex}
+                  >
+                    <MenuItem>{child.name}</MenuItem>
+                  </Link>
+                ))}
+              </MenuList>
+            </Menu>
+          ) : (
+            <Link
+              to={el.router}
+              onClick={() => dispatch(setLoadingAsync(true))}
+              className={`hover:text-primary transition-colors ${
+                location.pathname.includes(el.router) ? 'text-primary' : ''
+              }`}
+            >
+              {el.name}
+            </Link>
+          )}
         </Typography>
       ))}
     </ul>

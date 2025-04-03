@@ -24,6 +24,20 @@ const movieServices = {
       throw error;
     }
   },
+  getMovieByCountry: async ({ page = 0, country }) => {
+    try {
+      const response = await apiClient.get('/movie/getMovieByCountry', {
+        params: {
+          page,
+          country,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error('API error:', error);
+      throw error;
+    }
+  },
   getliveComments: async (movieId) => {
     try {
       const response = await apiClient.get(`/movie/getLiveComments/${movieId}`);

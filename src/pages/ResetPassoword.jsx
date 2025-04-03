@@ -5,7 +5,6 @@ import {
   CardBody,
   CardFooter,
   Input,
-  Spinner,
   Typography,
 } from '@material-tailwind/react';
 import React, { useState } from 'react';

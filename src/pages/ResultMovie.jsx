@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useRef, useCallback } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import {
   Button,
   Card,
@@ -16,9 +16,9 @@ import {
 import movieServices from '../services/movieServices';
 import Empty from '../assets/man.png';
 import LazyImage from '../components/LazyImage';
-const SearchPage = () => {
-  const [searchParams] = useSearchParams();
-  const query = searchParams.get('query');
+
+const ResultMovie = () => {
+  const { country } = useParams();
 
   const [data, setData] = useState({ items: [], pathImage: '' });
   const [page, setPage] = useState(1);
@@ -29,20 +29,23 @@ const SearchPage = () => {
   const observer = useRef();
 
   useEffect(() => {
-    if (query) {
+    if (country) {
       setPage(1);
       setHasMore(true);
       setData({ items: [], pathImage: '' });
       fetchMovies(1);
     }
-  }, [query]);
+  }, [country]);
 
   const fetchMovies = async (pageNumber) => {
     if (!hasMore || loading) return;
 
     setLoading(true);
     try {
-      const res = await movieServices.searchMovie(query, pageNumber);
+      const res = await movieServices.getMovieByCountry({
+        page: pageNumber,
+        country: country,
+      });
       setData((prev) => ({
         items:
           pageNumber === 1
@@ -82,12 +85,6 @@ const SearchPage = () => {
 
   return (
     <div>
-      <Typography className="text-white font-semibold flex items-center mt-2 ml-4">
-        Tìm kiếm:{' '}
-        <Typography className="text-primary font-bold ml-2 text-xl">
-          {query}
-        </Typography>
-      </Typography>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-2 min-h-screen">
         {data?.items?.length > 0 ? (
           data.items.map((item, index) => {
@@ -103,7 +100,7 @@ const SearchPage = () => {
                   onMouseLeave={() => setHoveredIndex(null)}
                 >
                   <LazyImage
-                    src={data.pathImage + item.poster_url}
+                    src={item.poster_url}
                     alt={`Thumbnail ${index}`}
                     className="w-full h-auto transition-all object-cover cursor-pointer rounded-sm"
                   ></LazyImage>
@@ -123,7 +120,7 @@ const SearchPage = () => {
                           className="m-0 rounded-none"
                         >
                           <LazyImage
-                            src={data.pathImage + item.poster_url}
+                            src={item.poster_url}
                             alt={`Posster ${index}`}
                             className="w-full"
                           ></LazyImage>
@@ -205,4 +202,4 @@ const SearchPage = () => {
   );
 };
 
-export default SearchPage;
+export default ResultMovie;
