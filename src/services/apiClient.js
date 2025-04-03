@@ -19,7 +19,7 @@ apiClient.interceptors.response.use(
     if (error.response) {
       const status = error.response.status;
       if (status === 401 || status === 403) {
-        Cookies.remove('token');
+        Cookies.remove('access_token'); // Xóa token khỏi cookie
         store.dispatch(logout());
       }
     }

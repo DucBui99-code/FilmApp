@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, startTransition } from 'react';
 import { UserIcon } from '@heroicons/react/24/solid';
 import {
   Button,
@@ -27,6 +27,7 @@ import { logout } from '../../store/authSlice';
 
 const AccountTab = ({ data }) => {
   const { loginType } = useSelector((state) => state.auth);
+
   const { showAlert } = useAlert();
   const dispatch = useDispatch();
   const {
@@ -49,35 +50,56 @@ const AccountTab = ({ data }) => {
 
   useEffect(() => {
     if (data) {
-      setAvatar(data?.avatar?.url);
-      setValue('firstName', data.firstName);
-      setValue('username', data.username);
-      setValue('lastName', data.lastName);
-      setValue('birthDay', dayjs(data.birthDay));
-      setValue('phoneNumber', data.phoneNumber);
-      setValue('sex', data.sex);
+      startTransition(() => {
+        setAvatar(data?.avatar?.url);
+        setValue('firstName', data.firstName);
+        setValue('username', data.username);
+        setValue('lastName', data.lastName);
+        setValue('birthDay', dayjs(data.birthDay));
+        setValue('phoneNumber', data.phoneNumber);
+        setValue('sex', data.sex);
+      });
     }
   }, [data]);
 
-  useEffect(() => {
-    return () => {
-      setAvatar(null);
-      setFile(null);
-    };
-  }, []);
-
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
-    if (selectedFile) {
-      setFile(selectedFile); // Cập nhật file mới
-      setShowChangeButton(true);
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setAvatar(e.target.result);
-      };
-      reader.readAsDataURL(selectedFile);
-    }
+    if (!selectedFile) return;
+
+    // 1. Cập nhật state không liên quan đến Suspense
+    setFile(selectedFile);
+    setShowChangeButton(true);
+
+    // 2. Tạo FileReader với cleanup
+    const reader = new FileReader();
+
+    // 3. Xử lý thành công
+    reader.onload = (e) => {
+      startTransition(() => {
+        setAvatar(e.target.result); // Chỉ cần nếu avatar dùng trong Suspense
+      });
+    };
+
+    // 4. Xử lý lỗi
+    reader.onerror = () => {
+      console.error('File reading failed');
+      // Có thể thêm: showAlert("Không thể đọc file", "error");
+    };
+
+    reader.readAsDataURL(selectedFile);
+
+    // 5. Cleanup nếu component unmount
+    return () => {
+      reader.abort(); // Hủy nếu chưa hoàn thành
+    };
   };
+
+  // Sử dụng với useEffect nếu cần lifecycle
+  useEffect(() => {
+    const fileInput = document.getElementById('file-input');
+    fileInput?.addEventListener('change', handleFileChange);
+    return () => fileInput?.removeEventListener('change', handleFileChange);
+  }, []);
 
   // Handel Upload Avatar
   const uploadAvatar = async () => {
@@ -95,34 +117,39 @@ const AccountTab = ({ data }) => {
     }
   };
 
-  // Handel Update Information
+  // In your onSubmit function
   const onSubmit = async (dataSubmit) => {
     setLoading(true);
     if (loginType === TYPE_LOGIN.byGoogle) {
-      delete dataSubmit.firstName;
-      delete dataSubmit.lastName;
+      startTransition(() => {
+        delete dataSubmit.firstName;
+        delete dataSubmit.lastName;
+      });
     }
 
     const handelDate = dayjs(dataSubmit.birthDay).format('MM/DD/YYYY');
     dataSubmit.birthDay = handelDate;
 
-    [
-      'phoneNumber',
-      'username',
-      'sex',
-      'firstName',
-      'lastName',
-      'birthDay',
-    ].forEach((field) => {
-      if (
-        dataSubmit[field]?.toString().trim() ===
-          data[field]?.toString().trim() ||
-        !dataSubmit[field]
-      ) {
-        delete dataSubmit[field];
-      } else {
-        dataSubmit[field] = dataSubmit[field]?.toString().trim();
-      }
+    // Wrap this block in startTransition
+    startTransition(() => {
+      [
+        'phoneNumber',
+        'username',
+        'sex',
+        'firstName',
+        'lastName',
+        'birthDay',
+      ].forEach((field) => {
+        if (
+          dataSubmit[field]?.toString().trim() ===
+            data[field]?.toString().trim() ||
+          !dataSubmit[field]
+        ) {
+          delete dataSubmit[field];
+        } else {
+          dataSubmit[field] = dataSubmit[field]?.toString().trim();
+        }
+      });
     });
 
     if (Object.keys(dataSubmit).length > 0) {
@@ -140,14 +167,19 @@ const AccountTab = ({ data }) => {
     }
   };
 
+  // // In your removeMySelf function
   const removeMySelf = async () => {
     try {
       await AuthServices.deleteAccount();
-      dispatch(logout());
+      startTransition(() => {
+        dispatch(logout());
+      });
     } catch (error) {
       showAlert(getErrorMessage(error), 'error');
     } finally {
-      setPopupInfor({ isShow: false, isConfirm: false }); // Reset popup sau khi xóa tài khoản
+      startTransition(() => {
+        setPopupInfor({ isShow: false, isConfirm: false });
+      });
     }
   };
 
@@ -156,10 +188,6 @@ const AccountTab = ({ data }) => {
       removeMySelf();
     }
   }, [popupInfor.isConfirm]);
-
-  useEffect(() => {
-    console.log('file: ', file);
-  }, [file]);
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-4 lg:gap-4 min-h-[300px]">

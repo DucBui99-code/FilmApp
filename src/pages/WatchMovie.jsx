@@ -14,7 +14,7 @@ import getErrorMessage from '../utils/handelMessageError';
 import VideoPlayer from '../components/WatchMovie/VideoPlayer';
 import BlockLiveComment from '../components/WatchMovie/BlockLiveComment';
 
-function WatchMovie({ movieType }) {
+const WatchMovie = ({ movieType }) => {
   const { name } = useParams();
   const navigate = useNavigate();
 
@@ -194,6 +194,6 @@ function WatchMovie({ movieType }) {
       </Link>
     </div>
   );
-}
+};
 
 export default WatchMovie;

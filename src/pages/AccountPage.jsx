@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, startTransition } from 'react';
 import '../components/Account/account.css';
 import {
   Tabs,
@@ -24,15 +24,21 @@ import ManagementDeviceTab from '../components/Account//ManagementDeviceTab';
 import UserServices from '../services/userServices';
 import { useAlert } from '../components/Message/AlertContext';
 import getErrorMessage from '../utils/handelMessageError';
+import {
+  FullPageSkeleton,
+  TabSkeleton,
+} from '../components/Account/SkeletonTab';
+import { Suspense } from 'react';
 
-export default function Account() {
+const Account = () => {
   const [activeTab, setActiveTab] = useState(0);
-  const [profileData, setProfileData] = useState({}); // Lưu dữ liệu từng tab
+  const [profileData, setProfileData] = useState({});
+  const [loadingTabs, setLoadingTabs] = useState({});
   const { showAlert } = useAlert();
 
   const tabConfigs = [
     {
-      label: 'Tài khoản',
+      label: 'Thông tin cá nhân',
       component: AccountTab,
       icon: <UserCircleIcon className="w-5 h-5 mr-1" />,
       defaultData: {},
@@ -44,25 +50,25 @@ export default function Account() {
       defaultData: [],
     },
     {
-      label: 'Gói đã mua',
+      label: 'Gói cước',
       component: PackageTab,
       icon: <FilmIcon className="w-5 h-5 mr-1" />,
       defaultData: [],
     },
     {
-      label: 'Phim yêu thích',
+      label: 'Yêu thích',
       component: FavoriteTab,
       icon: <HeartIcon className="w-5 h-5 mr-1" />,
       defaultData: [],
     },
     {
-      label: 'Phim đang thuê',
+      label: 'Phim đã thuê',
       component: RentFilmTab,
       icon: <VideoCameraIcon className="w-5 h-5 mr-1" />,
       defaultData: [],
     },
     {
-      label: 'Quản lý thiết bị',
+      label: 'Thiết bị',
       component: ManagementDeviceTab,
       icon: <DeviceTabletIcon className="w-5 h-5 mr-1" />,
       defaultData: [],
@@ -70,21 +76,36 @@ export default function Account() {
   ];
 
   useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const resData = await UserServices.getProfile(activeTab);
+    let ignore = false;
 
-        setProfileData((prev) => ({
-          ...prev,
-          [activeTab]: resData.data, // Lưu dữ liệu riêng cho từng tab
-        }));
-      } catch (error) {
-        showAlert(getErrorMessage(error), 'error');
+    const fetchInitialData = async () => {
+      // Chỉ gọi API nếu dữ liệu chưa có
+      if (!profileData[activeTab]) {
+        try {
+          setLoadingTabs((prev) => ({ ...prev, [activeTab]: true })); // Bật loading
+          const resData = await UserServices.getProfile(activeTab);
+
+          if (!ignore) {
+            startTransition(() => {
+              setProfileData((prev) => ({
+                ...prev,
+                [activeTab]: resData.data, // Lưu dữ liệu của từng tab
+              }));
+              setLoadingTabs((prev) => ({ ...prev, [activeTab]: false })); // Tắt loading
+            });
+          }
+        } catch (error) {
+          if (!ignore) showAlert(getErrorMessage(error), 'error');
+        }
       }
     };
 
-    fetchProfile();
-  }, [activeTab]);
+    fetchInitialData();
+
+    return () => {
+      ignore = true;
+    };
+  }, [activeTab]); // Chỉ chạy khi `activeTab` thay đổi
 
   return (
     <div className="mx-auto w-full max-w-7xl px-2">
@@ -111,18 +132,26 @@ export default function Account() {
             </Tab>
           ))}
         </TabsHeader>
-
         <TabsBody className="min-h-[450px]">
-          {tabConfigs.map(({ component: Component, defaultData }, index) => (
-            <TabPanel key={index} value={index}>
-              <Component
-                data={profileData[index] || defaultData}
-                numberTab={index}
-              />
-            </TabPanel>
-          ))}
+          {/* Loading chung khi init */}
+          <Suspense fallback={<FullPageSkeleton />}>
+            {tabConfigs.map(({ component: Component, defaultData }, index) => (
+              <TabPanel key={index} value={index}>
+                {/* Loading riêng cho mỗi tab */}
+                <Suspense fallback={<TabSkeleton />}>
+                  {loadingTabs[index] ? (
+                    <TabSkeleton />
+                  ) : (
+                    <Component data={profileData[index] || defaultData} />
+                  )}
+                </Suspense>
+              </TabPanel>
+            ))}
+          </Suspense>
         </TabsBody>
       </Tabs>
     </div>
   );
-}
+};
+
+export default Account;

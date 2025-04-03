@@ -34,7 +34,7 @@ const authSlice = createSlice({
   name: 'auth',
 
   initialState: {
-    userId: null, // Không cần lấy từ localStorage nữa
+    userId: null,
     isLogin: false,
     loginType: null,
     userInfo: null,
@@ -46,14 +46,12 @@ const authSlice = createSlice({
       state.userId = action.payload.userId;
       state.isLogin = true;
       state.loginType = action.payload.loginType;
-      localStorage.setItem('loginType', action.payload.loginType);
     },
     logout: (state) => {
       state.userId = null;
       state.userInfo = null;
       state.isLogin = false;
       state.loginType = '';
-      localStorage.removeItem('loginType');
     },
 
     addCountNoti: (state, action) => {
@@ -82,6 +80,7 @@ const authSlice = createSlice({
         state.userInfo = action.payload.userInfo;
         state.userId = action.payload.userId;
         state.isLogin = true;
+        state.loginType = action.payload.loginType;
       })
       .addCase(fetchUserProfile.rejected, (state) => {
         state.isLogin = false;

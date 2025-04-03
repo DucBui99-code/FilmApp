@@ -7,7 +7,7 @@ import {
   fetchNotificationCount,
   addCountNoti,
 } from './store/authSlice';
-import { useEffect } from 'react';
+import { useEffect, startTransition } from 'react';
 import NotificationPopup from './components/Notification/NotificationPopup';
 import './styles/App.css';
 import socketClient from './services/socketClient';
@@ -20,19 +20,25 @@ function App() {
   useEffect(() => {
     dispatch(fetchUserProfile());
     if (isLogin) {
-      dispatch(fetchNotificationCount());
+      startTransition(() => {
+        dispatch(fetchNotificationCount());
+      });
     }
     socketClient.on('receiveNotification', () => {
-      dispatch(addCountNoti());
+      startTransition(() => {
+        dispatch(addCountNoti());
+      });
     });
     socketClient.on('billUpdated', (data) => {
-      dispatch(
-        setPopup({
-          isShow: true,
-          packageName: data.packageName,
-          status: data.status,
-        })
-      );
+      startTransition(() => {
+        dispatch(
+          setPopup({
+            isShow: true,
+            packageName: data.packageName,
+            status: data.status,
+          })
+        );
+      });
     });
     return () => {
       socketClient.off('receiveNotification');

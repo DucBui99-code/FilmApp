@@ -168,7 +168,7 @@ function InformationMovie({ data, type, isRent }) {
           <Typography className="text-white font-bold">
             {data?.director?.length && data?.director[0]
               ? data.director.join(',')
-              : 'Not Found Information'}
+              : 'Đang cập nhật'}
           </Typography>
         </div>
         <div className="flex items-center gap-4">
@@ -178,13 +178,13 @@ function InformationMovie({ data, type, isRent }) {
           <Typography className="text-white font-bold">
             {data?.actor?.length && data?.actor[0]
               ? data.actor.join(', ')
-              : 'Not Found Information'}
+              : 'Đang cập nhật'}
           </Typography>
         </div>
         <div className="flex items-center gap-4">
           <Typography className="text-gray-700 font-bold">Danh mục:</Typography>
           <Typography className="text-white font-bold first-letter:uppercase">
-            {data?.type ? data.type : 'Not Found Information'}
+            {data?.type ? data.type : 'Đang cập nhật'}
           </Typography>
         </div>
         <div className="flex items-center gap-4">
@@ -192,7 +192,7 @@ function InformationMovie({ data, type, isRent }) {
           <Typography className="text-white font-bold">
             {data?.country?.length && data?.country[0]
               ? data.country.map((c) => c.name).join(', ')
-              : 'Not Found Information'}
+              : 'Đang cập nhật'}
           </Typography>
         </div>
         <div className="flex items-center gap-4">
@@ -200,7 +200,7 @@ function InformationMovie({ data, type, isRent }) {
           <Typography className="text-white font-bold">
             {data?.category && data?.category?.length > 0
               ? data.category.map((c) => c.name).join(', ')
-              : 'Not Found Information'}
+              : 'Đang cập nhật'}
           </Typography>
         </div>
         <div className="flex items-center gap-4">
@@ -208,7 +208,7 @@ function InformationMovie({ data, type, isRent }) {
             Năm phát hành:
           </Typography>
           <Typography className="text-white font-bold">
-            {data?.year ? data.year : 'Not Found Information'}
+            {data?.year ? data.year : 'Đang cập nhật'}
           </Typography>
         </div>
       </div>

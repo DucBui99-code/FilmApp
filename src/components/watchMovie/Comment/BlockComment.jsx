@@ -24,6 +24,9 @@ import CommentActions from './CommentAction';
 import Reply from './Reply';
 import RenderMenu from './RenderMenu';
 import getErrorMessage from '../../../utils/handelMessageError';
+import MaleIcon from '@mui/icons-material/Male';
+import FemaleIcon from '@mui/icons-material/Female';
+import AllInclusiveIcon from '@mui/icons-material/AllInclusive';
 
 const BlockComment = ({
   data,
@@ -227,6 +230,18 @@ const BlockComment = ({
     }
   };
 
+  const Usersex = ({ sex }) => {
+    return (
+      <div className="flex items-start justify-start">
+        {sex === 'Male' && <MaleIcon className="text-primary w-3 h-3" />}
+        {sex === 'Female' && <FemaleIcon className="text-primary w-3 h-3" />}
+        {sex === 'Other' && (
+          <AllInclusiveIcon className="text-primary w-3 h-3" />
+        )}
+      </div>
+    );
+  };
+
   return (
     <div className="mt-2 flex justify-between items-center">
       <div className="flex items-center gap-3 w-full">
@@ -241,6 +256,7 @@ const BlockComment = ({
             <Typography className="text-white font-bold">
               {data?.userDetails.username}
             </Typography>
+            <Usersex sex={data?.userDetails.sex}></Usersex>
             <Typography className="text-gray-600 font-normal text-sm">
               {dayjs(data?.time).format('HH:mm - DD/MM/YYYY')}
             </Typography>

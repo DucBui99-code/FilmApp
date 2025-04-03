@@ -18,7 +18,7 @@ import AuthServices from '../services/authServices';
 import getErrorMessage from '../utils/handelMessageError';
 import { MAX_LENGTH_PASSWORD, MIN_LENGTH_PASSWORD } from '../config/constant';
 
-function ResetPassoword() {
+const ResetPassoword = () => {
   const { code } = useParams();
 
   const {
@@ -150,6 +150,6 @@ function ResetPassoword() {
       </Card>
     </div>
   );
-}
+};
 
 export default ResetPassoword;

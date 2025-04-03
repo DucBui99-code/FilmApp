@@ -9,7 +9,7 @@ import { useAlert } from '../components/Message/AlertContext';
 import { setLoading } from '../store/appStore';
 import getErrorMessage from '../utils/handelMessageError';
 
-function Home({ type }) {
+const Home = ({ type }) => {
   const dispatch = useDispatch();
   const { showAlert } = useAlert();
   const [moviesData, setMoviesData] = useState({});
@@ -100,6 +100,6 @@ function Home({ type }) {
       </div>
     </div>
   );
-}
+};
 
 export default Home;
