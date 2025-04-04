@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 
-const LazyImage = ({ src, alt, className }) => {
+const LazyImage = ({ src, alt, className, style }) => {
   const imgRef = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
 
@@ -35,7 +35,11 @@ const LazyImage = ({ src, alt, className }) => {
       src={isVisible ? src : ''}
       alt={alt}
       className={className}
-      style={{ opacity: isVisible ? 1 : 0.5, transition: 'opacity 0.5s' }}
+      style={{
+        opacity: isVisible ? 1 : 0.5,
+        transition: 'opacity 0.5s',
+        ...style,
+      }}
     />
   );
 };

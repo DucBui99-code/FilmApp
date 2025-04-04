@@ -17,8 +17,8 @@ import movieServices from '../services/movieServices';
 import Empty from '../assets/man.png';
 import LazyImage from '../components/LazyImage';
 
-const ResultMovie = () => {
-  const { country } = useParams();
+const ResultMovie = ({ type }) => {
+  const { country, category } = useParams();
 
   const [data, setData] = useState({ items: [], pathImage: '' });
   const [page, setPage] = useState(1);
@@ -29,23 +29,42 @@ const ResultMovie = () => {
   const observer = useRef();
 
   useEffect(() => {
-    if (country) {
-      setPage(1);
-      setHasMore(true);
-      setData({ items: [], pathImage: '' });
-      fetchMovies(1);
-    }
-  }, [country]);
+    if (!type) return;
+
+    // Reset state
+    setPage(1);
+    setHasMore(true);
+    setData({ items: [], pathImage: '' });
+
+    // Gọi API với tham số phù hợp
+    fetchMovies(1);
+  }, [type, country, category]); // Theo dõi cả 3 giá trị
 
   const fetchMovies = async (pageNumber) => {
     if (!hasMore || loading) return;
 
     setLoading(true);
     try {
-      const res = await movieServices.getMovieByCountry({
-        page: pageNumber,
-        country: country,
-      });
+      let res;
+      if (type == 'category') {
+        res = await movieServices.getMovieByCategory({
+          page: pageNumber,
+          category: category,
+        });
+      } else if (type === 'country') {
+        res = await movieServices.getMovieByCountry({
+          page: pageNumber,
+          country: country,
+        });
+      } else if (type === 'single' || type === 'series') {
+        res = await movieServices.getMovieByType({
+          page: pageNumber,
+          type: type,
+        });
+      } else {
+        return;
+      }
+
       setData((prev) => ({
         items:
           pageNumber === 1
@@ -153,7 +172,7 @@ const ResultMovie = () => {
                           <div className="flex items-center justify-between mt-2">
                             <Link
                               to={
-                                item?.__t === 'MovieRent'
+                                item?.__t === 'DetailMovieRent'
                                   ? `/xem-phim-goi/${item.slug}`
                                   : `/xem-phim-mien-phi/${item.slug}`
                               }
@@ -167,16 +186,15 @@ const ResultMovie = () => {
                                 Xem Ngay
                               </Button>
                             </Link>
-                            <Link to={`/movie/${item.slug}`}>
-                              <Button
-                                className="flex items-center gap-3 text-base"
-                                color="light-blue"
-                                variant="outlined"
-                              >
-                                <InformationCircleIcon className="w-6" />
-                                Chi tiết
-                              </Button>
-                            </Link>
+
+                            <Button
+                              className="flex items-center gap-3 text-base"
+                              color="light-blue"
+                              variant="outlined"
+                            >
+                              <InformationCircleIcon className="w-6" />
+                              Chi tiết
+                            </Button>
                           </div>
                         </CardBody>
                       </Card>

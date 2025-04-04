@@ -9,9 +9,23 @@ const apiClient = axios.create({
   timeout: 10000, // Thời gian timeout
   headers: {
     'Content-Type': 'application/json',
+    'X-Requested-With': 'XMLHttpRequest', // Thêm header đặc biệt
   },
   withCredentials: true, // Gửi cookie cùng request
 });
+
+// Xử lý riêng cho mobile
+if (
+  /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+    navigator.userAgent
+  )
+) {
+  apiClient.defaults.withCredentials = true;
+  apiClient.interceptors.request.use((config) => {
+    config.headers['Sec-Fetch-Site'] = 'none'; // Thêm header bảo mật
+    return config;
+  });
+}
 
 apiClient.interceptors.response.use(
   (response) => response, // Nếu thành công thì trả về response

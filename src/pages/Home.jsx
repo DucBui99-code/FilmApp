@@ -8,6 +8,7 @@ import MoviesServices from '../services/movieServices';
 import { useAlert } from '../components/Message/AlertContext';
 import { setLoading } from '../store/appStore';
 import getErrorMessage from '../utils/handelMessageError';
+import CareSlider from '../components/Body/CareSlider';
 
 const Home = ({ type }) => {
   const dispatch = useDispatch();
@@ -63,6 +64,7 @@ const Home = ({ type }) => {
       <div ref={(el) => observeElement(el, 1)}>
         <Slider data={moviesData[1]} type={type} />
       </div>
+      <CareSlider></CareSlider>
       <div ref={(el) => observeElement(el, 2)}>
         <SliderStatic
           title={'Phim hay mỗi ngày'}

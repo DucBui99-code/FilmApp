@@ -38,6 +38,34 @@ const movieServices = {
       throw error;
     }
   },
+  getMovieByType: async ({ page = 0, type }) => {
+    try {
+      const response = await apiClient.get('/movie/getMovieByType', {
+        params: {
+          page,
+          type,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error('API error:', error);
+      throw error;
+    }
+  },
+  getMovieByCategory: async ({ page = 0, category }) => {
+    try {
+      const response = await apiClient.get('/movie/getMovieByCategory', {
+        params: {
+          page,
+          category,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error('API error:', error);
+      throw error;
+    }
+  },
   getliveComments: async (movieId) => {
     try {
       const response = await apiClient.get(`/movie/getLiveComments/${movieId}`);

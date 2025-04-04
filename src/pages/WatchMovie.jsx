@@ -139,9 +139,11 @@ const WatchMovie = ({ movieType }) => {
           <IconButton onClick={() => navigate(-1)}>
             <ArrowLeftIcon className="w-6 text-white"></ArrowLeftIcon>
           </IconButton>
-          <Typography className="text-white font-bold uppercase">
-            {state.data?.name + ' - Tập ' + state.episode?.name}
-          </Typography>
+          {state.data.type !== 'single' && (
+            <Typography className="text-white font-bold uppercase">
+              {state.data?.name + ' - Tập ' + state.episode?.name}
+            </Typography>
+          )}
         </div>
       )}
       {state.isRent && (
@@ -168,7 +170,7 @@ const WatchMovie = ({ movieType }) => {
           isRent={state.isRent}
         ></InformationMovie>
 
-        {state.isRent && (
+        {state.isRent && state.data.type !== 'single' && (
           <EpisodesMovie
             data={state.data}
             currentEpisode={currentEpisode}

@@ -47,7 +47,7 @@ function App() {
   }, [isLogin]);
 
   return (
-    <div className="bg-black custom-scrollbar">
+    <div className="bg-black custom-scrollbar relative">
       <AlertProvider>
         <AlertCustom />
         <NotificationPopup></NotificationPopup>

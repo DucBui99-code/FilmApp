@@ -92,7 +92,11 @@ function SliderStatic({ title = 'Test', data, type }) {
                     <LazyImage
                       src={data.pathImage + e.thumb_url}
                       alt={`Thumbnail ${index}`}
-                      className={`w-full h-[550px] transition-all object-cover cursor-pointer rounded-sm group-hover:bg-black`}
+                      className={`w-full h-[550px] transition-all object-cover cursor-pointer rounded-2xl group-hover:bg-black hover:border-4 group-hover:border-primary `}
+                      style={{
+                        clipPath:
+                          'polygon(19% 4%, 100% 0%, 100% 100%, 0% 100%)',
+                      }}
                     ></LazyImage>
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
                       <PlayCircleIcon className="text-primary w-20"></PlayCircleIcon>

@@ -23,7 +23,7 @@ import { ChevronDownIcon } from '@heroicons/react/16/solid';
 function Header() {
   const ListMenu = [
     { name: 'Miễn phí', router: '/mien-phi' },
-    { name: 'Phim Gói', router: '/phim-goi' },
+    { name: 'Phim gói', router: '/phim-goi' },
     {
       name: 'Quốc gia',
       withIcon: <ChevronDownIcon className="h-4 w-4 ml-1" />,
@@ -50,7 +50,9 @@ function Header() {
         },
       ],
     },
-    { name: 'Truyền Hình', router: '/truyen-hinh' },
+    { name: 'Phim lẻ', router: '/phim-le' },
+    { name: 'Phim bộ', router: '/phim-bo' },
+    { name: 'Truyền hình', router: '/truyen-hinh' },
   ];
 
   const [openNav, setOpenNav] = useState(false);

@@ -27,7 +27,22 @@ const routesConfig = {
     {
       path: '/quoc-gia/:country',
       element: ResultMovie,
-      props: { type: '' },
+      props: { type: 'country' },
+    },
+    {
+      path: '/chu-de/:category',
+      element: ResultMovie,
+      props: { type: 'category' },
+    },
+    {
+      path: '/phim-le',
+      element: ResultMovie,
+      props: { type: 'single' },
+    },
+    {
+      path: '/phim-bo',
+      element: ResultMovie,
+      props: { type: 'series' },
     },
     { path: '/phim-goi', element: HomePage, props: { type: 'movieRent' } },
     { path: '/truyen-hinh', element: TelevisionPage, props: { type: '' } },
