@@ -8,7 +8,6 @@ const apiClient = axios.create({
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
-    'X-Requested-With': 'XMLHttpRequest',
   },
   withCredentials: true, // BẮT BUỘC phải có
 });
@@ -27,7 +26,7 @@ apiClient.interceptors.request.use((config) => {
     config.headers['Sec-Fetch-Dest'] = 'empty';
 
     // Đính kèm token chỉ khi là mobile
-    const token = Cookies.get('access_token');
+    const token = localStorage.getItem('access_token');
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
     }
@@ -38,17 +37,12 @@ apiClient.interceptors.request.use((config) => {
 
 apiClient.interceptors.response.use(
   (response) => {
-    console.log('Response cookies:', response.headers['set-cookie']);
     return response;
   },
   (error) => {
     if (error.response?.status === 401 || error.response?.status === 403) {
       Cookies.remove('access_token');
       store.dispatch(logout());
-
-      if (isMobile) {
-        window.location.href = '/';
-      }
     }
     return Promise.reject(error);
   }

@@ -24,7 +24,7 @@ const movieServices = {
       throw error;
     }
   },
-  getMovieByCountry: async ({ page = 0, country }) => {
+  getMovieByCountry: async ({ page = 1, country }) => {
     try {
       const response = await apiClient.get('/movie/getMovieByCountry', {
         params: {
@@ -38,7 +38,7 @@ const movieServices = {
       throw error;
     }
   },
-  getMovieByType: async ({ page = 0, type }) => {
+  getMovieByType: async ({ page = 1, type }) => {
     try {
       const response = await apiClient.get('/movie/getMovieByType', {
         params: {
@@ -152,7 +152,7 @@ const movieServices = {
       throw error;
     }
   },
-  getCommentByMovieId: async (movieId, page) => {
+  getCommentByMovieId: async (movieId, page = 1) => {
     try {
       const response = await apiClient.get(
         `/movie/getMovieComments/${movieId}?page=${page}`
@@ -163,7 +163,7 @@ const movieServices = {
       throw error;
     }
   },
-  getReplisByCommentId: async (commentId, page) => {
+  getReplisByCommentId: async (commentId, page = 1) => {
     try {
       const response = await apiClient.get(
         `/movie/getReplyComments/${commentId}?page=${page}`

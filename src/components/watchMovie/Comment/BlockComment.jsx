@@ -219,7 +219,7 @@ const BlockComment = ({
     }
   };
 
-  const handleLoadComment = async () => {
+  const handleLoadMoreReplies = async () => {
     page++;
     try {
       const res = await movieServices.getReplisByCommentId(data._id, page);
@@ -363,7 +363,7 @@ const BlockComment = ({
                       className="w-3/4 normal-case text-[14px] flex justify-center"
                       variant="outlined"
                       color="deep-orange"
-                      onClick={() => handleLoadComment()}
+                      onClick={() => handleLoadMoreReplies()}
                     >
                       Tải thêm bình luận
                     </Button>

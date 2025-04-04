@@ -48,6 +48,7 @@ function Login({ handleOpen, open, handelSwitchModal, handelOpenForgotPass }) {
       loginSuccess({
         userId: data.data.userId,
         loginType: data.data.typeLogin,
+        token: data.data.token,
       })
     );
 

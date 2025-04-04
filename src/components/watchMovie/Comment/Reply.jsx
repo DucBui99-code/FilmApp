@@ -216,7 +216,7 @@ const Reply = ({
       {showReply && (
         <div className="flex items-center gap-3 w-full">
           <Avatar
-            src={userInfo?.avatar.url || iconUser}
+            src={userInfo?.avatar?.url || iconUser}
             alt="avatar"
             size="sm"
             className="self-start bg-white"

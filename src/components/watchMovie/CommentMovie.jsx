@@ -23,6 +23,7 @@ import iconUser from '../../assets/225-default-avatar.png';
 function CommentMovie(props) {
   let page = 1;
   const { isLogin, userId, userInfo } = useSelector((state) => state.auth);
+
   const limitCharacters = 100;
   const { showAlert } = useAlert();
   const [loadingComment, setLoadingComment] = useState(false);
@@ -109,7 +110,7 @@ function CommentMovie(props) {
         props.data.data._id,
         page
       );
-      listComment.push(...res.comments);
+      setListComment((prev) => [...prev, ...res.comments]);
       setIsLastPage(res.isLastPage);
     } catch (error) {
       showAlert(getErrorMessage(error), 'error');
@@ -156,7 +157,7 @@ function CommentMovie(props) {
         </div>
         <div className="flex items-center gap-3 w-full mt-4">
           <Avatar
-            src={userInfo?.avatar.url || iconUser}
+            src={userInfo?.avatar?.url || iconUser}
             alt="avatar"
             size="md"
             className="self-start bg-white"
@@ -237,6 +238,18 @@ function CommentMovie(props) {
               updateReactionComment={updateReactionComment}
             ></BlockComment>
           ))}
+          {!isLastPage && (
+            <div className="flex justify-center mt-10">
+              <Button
+                className="w-3/4 normal-case text-[14px] flex justify-center"
+                variant="outlined"
+                color="deep-orange"
+                onClick={() => handleLoadComment()}
+              >
+                Tải thêm bình luận
+              </Button>
+            </div>
+          )}
         </div>
       </div>
     </div>

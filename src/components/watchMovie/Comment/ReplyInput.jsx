@@ -67,7 +67,7 @@ const ReplyInput = ({
   return (
     <div className="w-full flex gap-2 mb-2">
       <Avatar
-        src={userInfo?.avatar.url || iconUser}
+        src={userInfo?.avatar?.url || iconUser}
         alt="avatar"
         size="sm"
         className="mt-2 bg-white"

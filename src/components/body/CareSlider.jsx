@@ -7,8 +7,8 @@ const CareSlider = () => {
     {
       title: 'Hành động',
       color: {
-        from: '#E90000',
-        to: '#FAA6FF',
+        to: '#E90000',
+        from: '#FAA6FF',
       },
       router: '/hanh-dong',
     },
@@ -47,8 +47,8 @@ const CareSlider = () => {
     {
       title: 'Viến tưởng',
       color: {
-        from: '#353A5F',
-        to: '#9EBAF3',
+        to: '#353A5F',
+        from: '#9EBAF3',
       },
       router: '/vien-tuong',
     },

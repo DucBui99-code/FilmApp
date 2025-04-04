@@ -46,12 +46,14 @@ const authSlice = createSlice({
       state.userId = action.payload.userId;
       state.isLogin = true;
       state.loginType = action.payload.loginType;
+      localStorage.setItem('access_token', action.payload.token);
     },
     logout: (state) => {
       state.userId = null;
       state.userInfo = null;
       state.isLogin = false;
       state.loginType = '';
+      localStorage.removeItem('access_token');
     },
 
     addCountNoti: (state, action) => {
