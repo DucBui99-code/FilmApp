@@ -13,24 +13,24 @@ const apiClient = axios.create({
   withCredentials: true, // BẮT BUỘC phải có
 });
 
-// Mobile-specific config
+// Kiểm tra nếu là mobile
 const isMobile =
   /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
     navigator.userAgent
   );
 
 apiClient.interceptors.request.use((config) => {
-  // Fix cho Chrome mobile
   if (isMobile) {
+    // Fix cho Chrome mobile
     config.headers['Sec-Fetch-Site'] = 'none';
     config.headers['Sec-Fetch-Mode'] = 'cors';
     config.headers['Sec-Fetch-Dest'] = 'empty';
-  }
 
-  // Thêm token thủ công nếu có
-  const token = Cookies.get('access_token');
-  if (token) {
-    config.headers['Authorization'] = `Bearer ${token}`;
+    // Đính kèm token chỉ khi là mobile
+    const token = Cookies.get('access_token');
+    if (token) {
+      config.headers['Authorization'] = `Bearer ${token}`;
+    }
   }
 
   return config;
@@ -38,7 +38,6 @@ apiClient.interceptors.request.use((config) => {
 
 apiClient.interceptors.response.use(
   (response) => {
-    // Debug: Log cookie từ response
     console.log('Response cookies:', response.headers['set-cookie']);
     return response;
   },
@@ -47,9 +46,8 @@ apiClient.interceptors.response.use(
       Cookies.remove('access_token');
       store.dispatch(logout());
 
-      // Redirect trên mobile
       if (isMobile) {
-        window.location.href = '/login?session_expired=1';
+        window.location.href = '/';
       }
     }
     return Promise.reject(error);
