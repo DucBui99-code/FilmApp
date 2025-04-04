@@ -291,8 +291,11 @@ const PaymentOrder = ({ setStep, setInforTransaction }) => {
           effectiveTime={dayjs().format('DD/MM/YYYY')}
           nextPaymentPeriod={dayjs()
             .add(
-              listPackage.find((item) => item._id == selectedValue)?.duration,
-              'month'
+              typeService === 'Phim lẻ'
+                ? listPackageFilm?.duration
+                : listPackage.find((item) => item._id == selectedValue)
+                    ?.duration,
+              typeService === 'Phim lẻ' ? 'day' : 'month'
             )
             .format('DD/MM/YYYY')}
           voucher={voucher}
