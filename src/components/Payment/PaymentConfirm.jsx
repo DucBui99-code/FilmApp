@@ -8,8 +8,6 @@ import getErrorMessage from '../../utils/handelMessageError';
 import { formatCurrency } from '../../utils/utils';
 
 const PaymentConfirm = ({ setStep, inforTransaction }) => {
-  console.log(inforTransaction);
-
   const { showAlert } = useAlert();
   const [timeLeft, setTimeLeft] = useState(inforTransaction.expireTime * 60);
 
@@ -47,7 +45,6 @@ const PaymentConfirm = ({ setStep, inforTransaction }) => {
     const handleBeforeUnload = (event) => {
       event.preventDefault();
       event.returnValue = 'Hello'; // Required for modern browsers to show the confirmation dialog
-      console.log('User attempted to close the component or web page.');
     };
 
     window.addEventListener('beforeunload', handleBeforeUnload);

@@ -169,9 +169,7 @@ const BlockComment = ({
       id: 0,
       content: 'Báo cáo',
       icon: <FlagIcon className="w-4" />,
-      action: () => {
-        console.log('Báo cáo');
-      },
+      action: () => {},
     },
   ];
 
@@ -206,7 +204,6 @@ const BlockComment = ({
         const res = await movieServices.getReplisByCommentId(data._id);
         setReplies(res.replies);
         setIsLastPage(res.isLastPage);
-        console.log(res);
       };
 
       if (!open) {

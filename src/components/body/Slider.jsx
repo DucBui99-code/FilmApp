@@ -34,12 +34,10 @@ const Slider = ({ data, type }) => {
   const nextRef = useRef(null);
 
   const [currentSlide, setCurrentSlide] = useState(0);
-  const handleClickSlider = () => {
-    console.log('data', data);
-  };
+
   if (!data) {
     return (
-      <div className="flex animate-pulse flex-col" onClick={handleClickSlider}>
+      <div className="flex animate-pulse flex-col">
         <div className="h-[550px] w-full  place-items-center rounded-lg bg-gray-300 flex items-center justify-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"
