@@ -24,6 +24,15 @@ const movieServices = {
       throw error;
     }
   },
+  getRandomMovieLive: async () => {
+    try {
+      const response = await apiClient.get(`/movie/geRandomLiveMovie`);
+      return response.data;
+    } catch (error) {
+      console.error('API error:', error);
+      throw error;
+    }
+  },
   getMovieByCountry: async ({ page = 1, country }) => {
     try {
       const response = await apiClient.get('/movie/getMovieByCountry', {

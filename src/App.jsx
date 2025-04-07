@@ -12,6 +12,8 @@ import NotificationPopup from './components/Notification/NotificationPopup';
 import './styles/App.css';
 import socketClient from './services/socketClient';
 import { setPopup } from './store/appStore';
+import PopupWelcome from './components/PopupWelcome';
+import { Router } from 'react-router';
 
 function App() {
   const dispatch = useDispatch();
@@ -49,9 +51,11 @@ function App() {
   return (
     <div className="bg-black custom-scrollbar relative">
       <AlertProvider>
-        <AlertCustom />
-        <NotificationPopup></NotificationPopup>
         <AppRouter></AppRouter>
+        <AlertCustom />
+
+        <PopupWelcome></PopupWelcome>
+        <NotificationPopup></NotificationPopup>
       </AlertProvider>
     </div>
   );

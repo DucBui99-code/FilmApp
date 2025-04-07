@@ -102,7 +102,7 @@ const Rate = ({ props }) => {
       <div className="p-2 w-full mt-8">
         {listComment.length > 0 ? (
           listComment.map((comment, i) => (
-            <div className="flex items-center gap-3 w-full" key={i}>
+            <div className="flex items-center gap-3 w-full mb-9" key={i}>
               <Avatar
                 src={comment?.user.avatar.url || iconUser}
                 alt="avatar"

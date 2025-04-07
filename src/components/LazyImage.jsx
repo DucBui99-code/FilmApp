@@ -15,7 +15,7 @@ const LazyImage = ({ src, alt, className, style }) => {
           }
         });
       },
-      { rootMargin: '100px' } // Tải ảnh sớm khi còn cách 100px
+      { rootMargin: '300px' } // Tải ảnh sớm khi còn cách 100px
     );
 
     if (imgRef.current) {
