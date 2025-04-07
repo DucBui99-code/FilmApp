@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 const LazyImage = ({ src, alt, className, style }) => {
   const imgRef = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -14,7 +15,7 @@ const LazyImage = ({ src, alt, className, style }) => {
           }
         });
       },
-      { rootMargin: '100px' } // Tải ảnh sớm hơn khi còn cách 100px
+      { rootMargin: '100px' } // Tải ảnh sớm khi còn cách 100px
     );
 
     if (imgRef.current) {
@@ -31,13 +32,14 @@ const LazyImage = ({ src, alt, className, style }) => {
   return (
     <img
       ref={imgRef}
-      loading="eager"
       src={isVisible ? src : ''}
       alt={alt}
       className={className}
+      onLoad={() => setIsLoaded(true)}
       style={{
-        opacity: isVisible ? 1 : 0.5,
-        transition: 'opacity 0.5s',
+        filter: isLoaded ? 'none' : 'blur(10px)', // Áp dụng hiệu ứng blur khi ảnh chưa load
+        opacity: isLoaded ? 1 : 0.5, // Điều chỉnh độ mờ nhẹ khi chưa load
+        transition: 'filter 0.5s ease-out, opacity 0.5s ease-out',
         ...style,
       }}
     />

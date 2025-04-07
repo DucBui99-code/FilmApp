@@ -53,17 +53,20 @@ const BlockLiveComment = ({ movieId }) => {
       }
     };
     fetchLiveComments();
-    socketClient.emit('joinMovie', { movieId });
+    if (isLogin) {
+      socketClient.connect();
+      socketClient.emit('joinMovie', { movieId });
 
-    socketClient.on('receiveComment', (data) => {
-      setData((prev) => [...prev, data]);
-    });
-    socketClient.on('viewersCount', (data) => {
-      setViews(data.count);
-    });
-    socketClient.on('error', (message) => {
-      showAlert(message, 'error');
-    });
+      socketClient.on('receiveComment', (data) => {
+        setData((prev) => [...prev, data]);
+      });
+      socketClient.on('viewersCount', (data) => {
+        setViews(data.count);
+      });
+      socketClient.on('error', (message) => {
+        showAlert(message, 'error');
+      });
+    }
 
     return () => {
       socketClient.off('receiveComment');
@@ -71,7 +74,7 @@ const BlockLiveComment = ({ movieId }) => {
       socketClient.off('viewersCount');
       socketClient.emit('leaveMovie', { movieId });
     };
-  }, [movieId]);
+  }, [movieId, isLogin]);
 
   const handelSubmit = () => {
     if (message.trim() && isLogin) {

@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import UserServices from '../services/userServices';
 import AuthServices from '../services/authServices';
+import socketClient from '../services/socketClient';
 
 export const fetchNotificationCount = createAsyncThunk(
   'auth/fetchNotificationCount',
@@ -47,6 +48,7 @@ const authSlice = createSlice({
       state.isLogin = true;
       state.loginType = action.payload.loginType;
       localStorage.setItem('access_token', action.payload.token);
+      socketClient.connect();
     },
     logout: (state) => {
       state.userId = null;
@@ -54,6 +56,7 @@ const authSlice = createSlice({
       state.isLogin = false;
       state.loginType = '';
       localStorage.removeItem('access_token');
+      socketClient.disconnect();
     },
 
     addCountNoti: (state, action) => {
