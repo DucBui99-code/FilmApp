@@ -85,6 +85,27 @@ const movieServices = {
       throw error;
     }
   },
+
+  addRateMovie: async (data) => {
+    try {
+      const response = await apiClient.post('/movie/rateMovie', data);
+      return response.data;
+    } catch (error) {
+      console.error('API error:', error);
+      throw error;
+    }
+  },
+  getRateMovie: async (movieId, page = 1) => {
+    try {
+      const response = await apiClient.get(
+        `/movie/getRateMovie/${movieId}?page=${page}`
+      );
+      return response.data;
+    } catch (error) {
+      console.error('API error:', error);
+      throw error;
+    }
+  },
   getMoviePackage: async (data) => {
     try {
       const response = await apiClient.get(

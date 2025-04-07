@@ -13,7 +13,7 @@ import {
 } from '@material-tailwind/react';
 import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
-import { useGoogleLogin, googleLogout } from '@react-oauth/google';
+import { useGoogleLogin } from '@react-oauth/google';
 
 import IconGG from '../../assets/IconGG.png';
 import IconQR from '../../assets/IconQR.png';
@@ -23,8 +23,6 @@ import { loginSuccess } from '../../store/authSlice';
 import getErrorMessage from '../../utils/handelMessageError';
 
 function Login({ handleOpen, open, handelSwitchModal, handelOpenForgotPass }) {
-  const regex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
-
   const {
     register,
     handleSubmit,

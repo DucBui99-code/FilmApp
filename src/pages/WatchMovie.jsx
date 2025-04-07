@@ -148,7 +148,7 @@ const WatchMovie = ({ movieType }) => {
       )}
       {state.isRent && (
         <>
-          <div className="flex flex-col lg:flex-row items-center justify-center gap-5 p-4 lg:p-6">
+          <div className="flex flex-col lg:flex-row items-center justify-center gap-5 p-2">
             <div className="flex-1 w-full lg:w-auto">
               <VideoPlayer
                 linkEmbed={state.episode?.link_embed}

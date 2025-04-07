@@ -7,6 +7,7 @@ import {
   LanguageIcon,
   ShareIcon,
   CurrencyDollarIcon,
+  StarIcon,
 } from '@heroicons/react/16/solid';
 import {
   Button,
@@ -24,6 +25,7 @@ import { useSelector } from 'react-redux';
 import { useAlert } from '../Message/AlertContext';
 import getErrorMessage from '../../utils/handelMessageError';
 import UserServices from '../../services/userServices';
+import PopupRating from './PopupRating';
 
 function InformationMovie({ data, type, isRent }) {
   const maxLengthContent = 300;
@@ -31,6 +33,7 @@ function InformationMovie({ data, type, isRent }) {
   const { showAlert } = useAlert();
   const [value, copy] = useCopyToClipboard();
   const [isExpanded, setIsExpanded] = useState(false);
+  const [showRating, setShowRating] = useState(false);
 
   const toggleExpand = () => setIsExpanded((prev) => !prev);
 
@@ -96,6 +99,11 @@ function InformationMovie({ data, type, isRent }) {
               <ClipboardDocumentCheckIcon className="w-6 text-primary"></ClipboardDocumentCheckIcon>
             </IconButton>
           </Tooltip>
+          <Tooltip content="Đánh giá phim">
+            <IconButton onClick={() => setShowRating(true)}>
+              <StarIcon className="w-6 text-primary"></StarIcon>
+            </IconButton>
+          </Tooltip>
         </div>
         <div className="flex items-center gap-4 mt-2 text-white">
           <div className="border-[1px] px-2 py-1 rounded-md text-white text-sm">
@@ -107,6 +115,12 @@ function InformationMovie({ data, type, isRent }) {
           </div>
         </div>
         <div className="mt-4 text-white flex flex-col gap-2">
+          <div className="flex items-center gap-2">
+            <StarIcon className="w-6 text-yellow-500"></StarIcon>
+            <Typography as={'small'} className="font-bold">
+              {data.tmdb.vote_average} / {data.tmdb.vote_count} lượt đánh giá
+            </Typography>
+          </div>
           <div className="flex items-center gap-2">
             <EyeIcon className="w-6"></EyeIcon>
             <Typography as={'small'} className="font-bold">
@@ -212,6 +226,11 @@ function InformationMovie({ data, type, isRent }) {
           </Typography>
         </div>
       </div>
+      <PopupRating
+        handleOpen={setShowRating}
+        open={showRating}
+        movie={data}
+      ></PopupRating>
     </div>
   );
 }
