@@ -1,24 +1,20 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { useDispatch } from 'react-redux';
 
 import Slider from '../components/Body/Slider';
 import SliderStatic from '../components/Body/SliderStatic';
 import SliderHover from '../components/Body/SliderHover';
 import MoviesServices from '../services/movieServices';
 import { useAlert } from '../components/Message/AlertContext';
-import { setLoading } from '../store/appStore';
 import getErrorMessage from '../utils/handelMessageError';
 import CareSlider from '../components/Body/CareSlider';
 
 const Home = ({ type }) => {
-  const dispatch = useDispatch();
   const { showAlert } = useAlert();
   const [moviesData, setMoviesData] = useState({});
   const observers = useRef({});
 
   const fetchMovies = async (page) => {
     try {
-      dispatch(setLoading(true));
       const res = await MoviesServices.getListMovie({ page, type });
       setMoviesData((prev) => ({
         ...prev,
@@ -30,7 +26,6 @@ const Home = ({ type }) => {
     } catch (error) {
       showAlert(getErrorMessage(error), 'error');
     } finally {
-      dispatch(setLoading(false));
     }
   };
 

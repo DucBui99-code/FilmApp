@@ -42,7 +42,13 @@ const BlockLiveComment = ({ movieId }) => {
   const formatDate = (isoString) => {
     return format(new Date(isoString), 'hh:mm a');
   };
-
+  // Effect để tự động scroll khi có comment mới
+  useEffect(() => {
+    const commentSection = document.querySelector('.test');
+    if (commentSection) {
+      commentSection.scrollTop = commentSection.scrollHeight;
+    }
+  }, [data]);
   useEffect(() => {
     const fetchLiveComments = async () => {
       try {
@@ -53,20 +59,17 @@ const BlockLiveComment = ({ movieId }) => {
       }
     };
     fetchLiveComments();
-    if (isLogin) {
-      socketClient.connect();
-      socketClient.emit('joinMovie', { movieId });
+    socketClient.emit('joinMovie', { movieId });
 
-      socketClient.on('receiveComment', (data) => {
-        setData((prev) => [...prev, data]);
-      });
-      socketClient.on('viewersCount', (data) => {
-        setViews(data.count);
-      });
-      socketClient.on('error', (message) => {
-        showAlert(message, 'error');
-      });
-    }
+    socketClient.on('receiveComment', (data) => {
+      setData((prev) => [...prev, data]);
+    });
+    socketClient.on('viewersCount', (data) => {
+      setViews(data.count);
+    });
+    socketClient.on('error', (message) => {
+      showAlert(message, 'error');
+    });
 
     return () => {
       socketClient.off('receiveComment');
@@ -109,7 +112,7 @@ const BlockLiveComment = ({ movieId }) => {
         </CardHeader>
         <CardBody className="transition-all duration-300 p-3">
           <Collapse open={open} className="flex-1 overflow-hidden">
-            <div className="max-h-[470px] min-h-[470px] overflow-y-scroll">
+            <div className="max-h-[470px] min-h-[470px] overflow-y-scroll test">
               {data.length === 0 ? (
                 <Typography className="text-gray-400 text-center mt-4">
                   Không có bình luận nào.
