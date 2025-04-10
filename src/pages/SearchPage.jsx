@@ -103,7 +103,7 @@ const SearchPage = () => {
                   onMouseLeave={() => setHoveredIndex(null)}
                 >
                   <LazyImage
-                    src={data.pathImage + item.poster_url}
+                    src={item.poster_url}
                     alt={`Thumbnail ${index}`}
                     className="w-full h-auto transition-all object-cover cursor-pointer rounded-sm"
                   ></LazyImage>
@@ -123,7 +123,7 @@ const SearchPage = () => {
                           className="m-0 rounded-none"
                         >
                           <LazyImage
-                            src={data.pathImage + item.poster_url}
+                            src={item.poster_url}
                             alt={`Posster ${index}`}
                             className="w-full"
                           ></LazyImage>

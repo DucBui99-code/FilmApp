@@ -46,17 +46,17 @@ function SliderHover({ title = 'Test', data, type }) {
     );
   }
   return (
-    <div className="mt-3 p-3">
+    <div className="mt-3 p-3 relative">
       <Typography as={'h1'} className="text-white text-2xl font-bold">
         {title}
       </Typography>
-      <div className="cursor-grab relative">
+      <div className="cursor-grab">
         {data?.items?.length > 0 && (
           <Swiper
             modules={[Navigation, Pagination, Scrollbar, A11y]}
             spaceBetween={5}
             slidesPerView={5}
-            className="mt-3 relative z-0"
+            className="mt-3"
             onBeforeInit={(swiper) => {
               if (prevRef.current && nextRef.current) {
                 swiper.params.navigation.prevEl = prevRef.current;
@@ -84,20 +84,20 @@ function SliderHover({ title = 'Test', data, type }) {
             }}
           >
             {data.items.map((e, index) => (
-              <SwiperSlide key={index}>
+              <SwiperSlide key={index} className="">
                 <div
-                  className="relative z-0"
+                  className=""
                   onMouseEnter={() => setHoveredIndex(index)}
                   onMouseLeave={() => setHoveredIndex(null)}
                 >
                   {e.isLiveComment && (
-                    <div className="absolute top-1 right-1 pr-3 pl-3 text-white rounded-md bg-red-400 flex items-center gap-2 justify-center">
+                    <div className="absolute top-1 right-1 pr-3 pl-3 text-white rounded-md bg-red-400 flex items-center gap-2 justify-center z-10">
                       Live
                       <SignalIcon className="w-6 text-whites"></SignalIcon>
                     </div>
                   )}
                   <LazyImage
-                    src={data.pathImage + e.thumb_url}
+                    src={e.poster_url}
                     alt={`Thumbnail ${index}`}
                     className="w-full h-[550px] transition-all object-cover cursor-pointer rounded-sm"
                   ></LazyImage>
@@ -108,9 +108,9 @@ function SliderHover({ title = 'Test', data, type }) {
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.9 }}
                       transition={{ duration: 0.3 }}
-                      className={`absolute top-0 ${index === 0 ? 'left-2' : 'right-2'} w-96 flex items-center justify-center shadow-lg z-[999999]`}
+                      className={`absolute top-0 ${index === 0 ? 'left-2' : 'right-2'} min-w-[200px] shadow-lg z-50`}
                     >
-                      <Card className="overflow-hidden">
+                      <Card className="w-96 z-50">
                         <CardHeader
                           floated={false}
                           shadow={false}
@@ -118,9 +118,9 @@ function SliderHover({ title = 'Test', data, type }) {
                           className="m-0 rounded-none"
                         >
                           <LazyImage
-                            src={data.pathImage + e.poster_url}
+                            src={e.poster_url}
                             alt={`Posster ${index}`}
-                            className="w-full"
+                            className="w-full h-80 object-cover rounded-t-lg"
                           ></LazyImage>
                         </CardHeader>
                         <CardBody className="bg-black">

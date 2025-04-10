@@ -96,7 +96,7 @@ const Slider = ({ data, type }) => {
                 </div>
               )}
               <LazyImage
-                src={data.pathImage + e.poster_url}
+                src={e.thumb_url}
                 alt={`Slide ${index}`}
                 className="w-full h-[550px] object-cover cursor-grab"
               ></LazyImage>
@@ -221,7 +221,7 @@ const Slider = ({ data, type }) => {
             <SwiperSlide key={index}>
               <div className="relative">
                 <LazyImage
-                  src={data.pathImage + e.poster_url}
+                  src={e.poster_url}
                   alt={`Thumbnail ${index}`}
                   className={`w-full h-32 transition-all object-cover cursor-pointer rounded-sm ${
                     index === currentSlide && 'border-2 border-primary'

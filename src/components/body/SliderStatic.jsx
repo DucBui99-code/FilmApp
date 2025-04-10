@@ -90,7 +90,7 @@ function SliderStatic({ title = 'Test', data, type }) {
                       </div>
                     )}
                     <LazyImage
-                      src={data.pathImage + e.thumb_url}
+                      src={e.thumb_url}
                       alt={`Thumbnail ${index}`}
                       className={`w-full h-[550px] transition-all object-cover cursor-pointer rounded-2xl group-hover:bg-black hover:border-4 group-hover:border-primary `}
                       style={{
