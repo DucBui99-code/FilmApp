@@ -121,7 +121,8 @@ const ResultMovie = ({ type }) => {
                   <LazyImage
                     src={item.poster_url}
                     alt={`Thumbnail ${index}`}
-                    className="w-full h-auto transition-all object-cover cursor-pointer rounded-sm"
+                    className="w-full transition-all object-cover cursor-pointer rounded-sm"
+                    style={{ height: '400px' }}
                   ></LazyImage>
 
                   {hoveredIndex === index && (
@@ -130,9 +131,12 @@ const ResultMovie = ({ type }) => {
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.9 }}
                       transition={{ duration: 0.3 }}
-                      className="absolute -top-10 w-96 flex items-center justify-center shadow-xl z-[99999]"
+                      className="absolute top-0 w-96 flex items-center justify-center shadow-xl z-[99999]"
                     >
-                      <Card className="overflow-hidden">
+                      <Card
+                        className="overflow-hidden"
+                        style={{ width: '400px' }}
+                      >
                         <CardHeader
                           floated={false}
                           shadow={false}
@@ -141,7 +145,7 @@ const ResultMovie = ({ type }) => {
                           <LazyImage
                             src={item.poster_url}
                             alt={`Posster ${index}`}
-                            className="w-full"
+                            className="w-full h-60 object-cover"
                           ></LazyImage>
                         </CardHeader>
                         <CardBody className="bg-black">
@@ -211,7 +215,10 @@ const ResultMovie = ({ type }) => {
           </p>
         )}
         {loading && (
-          <p className="text-center col-span-full" onClick={() => {}}>
+          <p
+            className="text-center text-white col-span-full"
+            onClick={() => {}}
+          >
             Đang tải thêm...
           </p>
         )}

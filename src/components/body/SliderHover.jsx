@@ -110,7 +110,10 @@ function SliderHover({ title = 'Test', data, type }) {
                       transition={{ duration: 0.3 }}
                       className={`absolute top-0 ${index === 0 ? 'left-2' : 'right-2'} min-w-[200px] shadow-lg z-50`}
                     >
-                      <Card className="w-96 z-50">
+                      <Card
+                        className="w-96 z-50"
+                        style={{ width: '400px', zIndex: '9999' }}
+                      >
                         <CardHeader
                           floated={false}
                           shadow={false}

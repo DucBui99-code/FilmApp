@@ -24,6 +24,7 @@ const routesConfig = {
       element: SearchPage,
       props: { type: '' },
     },
+
     {
       path: '/quoc-gia/:country',
       element: ResultMovie,
